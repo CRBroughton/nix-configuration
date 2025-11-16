@@ -10,10 +10,13 @@
       shell-integration = "fish";
       command = "${pkgs.fish}/bin/fish";
 
-      # Add your Ghostty configuration here
-      # Example:
-      # theme = "catppuccin-mocha";
-      # font-family = "JetBrainsMono Nerd Font";
+      # Font
+      font-family = "FiraCode Nerd Font Mono";
+      font-size = 14;
+
+      # Colors
+      background = "#171717";
+      foreground = "#dedacf";
     };
   };
 }

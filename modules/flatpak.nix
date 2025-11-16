@@ -14,5 +14,8 @@
     "md.obsidian.Obsidian"
     "org.gnome.Loupe"
     "com.brave.Browser"
+    "com.github.neithern.g4music"
+    "io.gitlab.news_flash.NewsFlash"
+    "io.github.flattool.Warehouse"
   ];
 }

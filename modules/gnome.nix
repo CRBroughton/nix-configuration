@@ -25,7 +25,6 @@
         "com.bitwarden.desktop.desktop"
         "code.desktop"
         "ghostty.desktop"
-        "com.ranfdev.DistroShelf.desktop"
         "steam.desktop"
         "net.lutris.Lutris.desktop"
         "com.heroicgameslauncher.hgl.desktop"

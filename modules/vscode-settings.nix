@@ -9,11 +9,11 @@
       userSettings = {
       # UI & Theme Settings
       "workbench.iconTheme" = "vscode-icons";
-      "workbench.colorTheme" = "Pop Cosmic";
+      "workbench.colorTheme" = "Vitesse Dark";
       "window.zoomLevel" = 1;
       "editor.fontFamily" = "'FiraCode Nerd Font', monospace";
       "editor.fontLigatures" = true;
-      "editor.fontWeight" = "400";
+      "editor.fontWeight" = "600";
       "editor.lineNumbers" = "relative";
       "editor.wordWrap" = "on";
       "editor.inlineSuggest.enabled" = true;

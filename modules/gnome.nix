@@ -1,6 +1,11 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
+  # GNOME Extensions
+  home.packages = with pkgs.gnomeExtensions; [
+    tiling-shell
+  ];
+
   # GNOME dconf settings
   dconf.settings = {
     # Set favorite apps in GNOME dock
@@ -17,6 +22,9 @@
         "net.lutris.Lutris.desktop"
         "com.heroicgameslauncher.hgl.desktop"
         "md.obsidian.Obsidian.desktop"
+      ];
+      enabled-extensions = [
+        "tilingshell@ferrarodomenico.com"
       ];
     };
   };

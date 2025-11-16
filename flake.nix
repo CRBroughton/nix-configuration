@@ -25,7 +25,7 @@
         ];
       };
     in {
-      homeConfigurations."craig@fedora" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."craig" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
         modules = [

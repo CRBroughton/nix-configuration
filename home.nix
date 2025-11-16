@@ -11,6 +11,7 @@
     ./modules/ghostty.nix
     ./modules/flatpak.nix
     ./modules/gnome.nix
+    ./modules/gnome-extensions-installer.nix
     ./modules/keyboard.nix
     ./modules/lazydocker.nix
   ];

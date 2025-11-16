@@ -11,8 +11,8 @@
     "org/gnome/desktop/input-sources" = {
       sources = [
         # Default layouts
-        (lib.hm.gvariant.mkTuple [ "xkb" "us" ])
         (lib.hm.gvariant.mkTuple [ "xkb" "gb" ])
+        (lib.hm.gvariant.mkTuple [ "xkb" "us" ])
         (lib.hm.gvariant.mkTuple [ "xkb" "us+colemak_dh" ])
 
         # Custom layouts

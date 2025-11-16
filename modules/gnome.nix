@@ -33,6 +33,13 @@
           cd - > /dev/null
           rm -rf "$TEMP_DIR"
         fi
+
+        # Compile schemas if they exist
+        EXTENSION_DIR="$HOME/.local/share/gnome-shell/extensions/$EXTENSION_UUID"
+        if [ -d "$EXTENSION_DIR/schemas" ]; then
+          echo "Compiling schemas for $EXTENSION_NAME..."
+          ${pkgs.glib}/bin/glib-compile-schemas "$EXTENSION_DIR/schemas/" 2>/dev/null || true
+        fi
       else
         echo "$EXTENSION_NAME already installed"
       fi

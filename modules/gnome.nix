@@ -10,11 +10,14 @@
       local EXTENSION_NAME=$3
 
       echo "Checking for $EXTENSION_NAME..."
-      if ! gnome-extensions list 2>/dev/null | grep -q "$EXTENSION_UUID"; then
+
+      # Check if extension is already installed
+      GNOME_EXTENSIONS_CMD="${pkgs.gnome-shell}/bin/gnome-extensions"
+      if ! $GNOME_EXTENSIONS_CMD list 2>/dev/null | grep -q "$EXTENSION_UUID"; then
         echo "Installing $EXTENSION_NAME from $EXTENSION_URL..."
 
         # Try using gnome-extensions install
-        if gnome-extensions install "$EXTENSION_URL" 2>&1; then
+        if $GNOME_EXTENSIONS_CMD install "$EXTENSION_URL" 2>&1; then
           echo "Successfully installed $EXTENSION_NAME"
         else
           echo "gnome-extensions install failed, trying manual installation..."

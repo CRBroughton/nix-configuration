@@ -17,7 +17,7 @@
         "io.github.equicord.equibop.desktop"
         "com.bitwarden.desktop.desktop"
         "code.desktop"
-        "com.mitchellh.ghostty.desktop"
+        "ghostty.desktop"
         "com.ranfdev.DistroShelf.desktop"
         "steam.desktop"
         "net.lutris.Lutris.desktop"

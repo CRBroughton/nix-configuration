@@ -33,9 +33,6 @@
     # Flatpak management
     flatpak
 
-    # GNOME tools
-    gnome-extension-manager
-
     # Additional utilities
     chezmoi  # For dotfiles management
 

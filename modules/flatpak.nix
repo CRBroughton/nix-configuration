@@ -4,6 +4,7 @@
   # Flatpak applications - declaratively managed via nix-flatpak
   services.flatpak.enable = true;
   services.flatpak.packages = [
+    "com.mattjakeman.ExtensionManager"
     "io.github.equicord.equibop"
     "app.zen_browser.zen"
     "com.google.Chrome"

@@ -12,6 +12,7 @@
     ./modules/flatpak.nix
     ./modules/gnome.nix
     ./modules/keyboard.nix
+    ./modules/lazydocker.nix
   ];
 
   # Home Manager needs a bit of information about you and the

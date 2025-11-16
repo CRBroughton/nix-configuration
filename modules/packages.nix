@@ -11,6 +11,8 @@
 
     # Development tools
     ansible
+    lazydocker
+    lazygit
 
     # File transfer and backup
     croc
@@ -32,5 +34,7 @@
 
     # Additional utilities
     chezmoi  # For dotfiles management
+
+    lutris
   ];
 }

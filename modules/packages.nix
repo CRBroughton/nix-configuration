@@ -38,5 +38,6 @@
     chezmoi  # For dotfiles management
 
     lutris
+    warp
   ];
 }

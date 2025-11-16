@@ -1,28 +1,40 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 
-let
-  # Override tiling-shell to use version 17.1 for GNOME Shell 49
-  tiling-shell-v17 = pkgs.gnomeExtensions.tiling-shell.overrideAttrs (oldAttrs: rec {
-    version = "17.1";
-    src = pkgs.fetchFromGitHub {
-      owner = "domferr";
-      repo = "tilingshell";
-      rev = version;
-      hash = "sha256-0000000000000000000000000000000000000000000="; # Placeholder - will be replaced by correct hash
-    };
-  });
-in
 {
-  # GNOME Extensions
-  home.packages = with pkgs; [
-    # Use our custom version of tiling-shell
-    tiling-shell-v17
+  # Install GNOME extensions via gnome-extensions install command
+  home.activation.installGnomeExtensions = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    # Install Tiling Shell extension v61 (compatible with GNOME Shell 49)
+    EXTENSION_UUID="tilingshell@ferrarodomenico.com"
+    EXTENSION_URL="https://extensions.gnome.org/extension-data/tilingshellferrarodomenico.com.v61.shell-extension.zip"
 
-    # Environment/integration packages
-    # glib-networking
-    # gsettings-desktop-schemas
-    # cacert  # CA certificates for TLS/SSL
-  ];
+    echo "Checking for Tiling Shell extension..."
+    if ! gnome-extensions list 2>/dev/null | grep -q "$EXTENSION_UUID"; then
+      echo "Installing Tiling Shell extension from $EXTENSION_URL..."
+
+      # Try using gnome-extensions install
+      if gnome-extensions install "$EXTENSION_URL" 2>&1; then
+        echo "Successfully installed Tiling Shell extension"
+      else
+        echo "gnome-extensions install failed, trying manual installation..."
+
+        # Manual installation fallback
+        TEMP_DIR=$(mktemp -d)
+        cd "$TEMP_DIR"
+
+        if ${pkgs.curl}/bin/curl -L -o extension.zip "$EXTENSION_URL"; then
+          ${pkgs.unzip}/bin/unzip -q extension.zip
+          mkdir -p "$HOME/.local/share/gnome-shell/extensions/$EXTENSION_UUID"
+          cp -r * "$HOME/.local/share/gnome-shell/extensions/$EXTENSION_UUID/"
+          echo "Manually installed Tiling Shell extension"
+        fi
+
+        cd - > /dev/null
+        rm -rf "$TEMP_DIR"
+      fi
+    else
+      echo "Tiling Shell extension already installed"
+    fi
+  '';
 
   # Environment variables for GNOME apps to find TLS support
   # home.sessionVariables = {

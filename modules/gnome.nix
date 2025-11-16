@@ -3,37 +3,58 @@
 {
   # Install GNOME extensions via gnome-extensions install command
   home.activation.installGnomeExtensions = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    # Install Tiling Shell extension v61 (compatible with GNOME Shell 49)
-    EXTENSION_UUID="tilingshell@ferrarodomenico.com"
-    EXTENSION_URL="https://extensions.gnome.org/extension-data/tilingshellferrarodomenico.com.v61.shell-extension.zip"
+    # Function to install an extension
+    install_extension() {
+      local EXTENSION_UUID=$1
+      local EXTENSION_URL=$2
+      local EXTENSION_NAME=$3
 
-    echo "Checking for Tiling Shell extension..."
-    if ! gnome-extensions list 2>/dev/null | grep -q "$EXTENSION_UUID"; then
-      echo "Installing Tiling Shell extension from $EXTENSION_URL..."
+      echo "Checking for $EXTENSION_NAME..."
+      if ! gnome-extensions list 2>/dev/null | grep -q "$EXTENSION_UUID"; then
+        echo "Installing $EXTENSION_NAME from $EXTENSION_URL..."
 
-      # Try using gnome-extensions install
-      if gnome-extensions install "$EXTENSION_URL" 2>&1; then
-        echo "Successfully installed Tiling Shell extension"
-      else
-        echo "gnome-extensions install failed, trying manual installation..."
+        # Try using gnome-extensions install
+        if gnome-extensions install "$EXTENSION_URL" 2>&1; then
+          echo "Successfully installed $EXTENSION_NAME"
+        else
+          echo "gnome-extensions install failed, trying manual installation..."
 
-        # Manual installation fallback
-        TEMP_DIR=$(mktemp -d)
-        cd "$TEMP_DIR"
+          # Manual installation fallback
+          TEMP_DIR=$(mktemp -d)
+          cd "$TEMP_DIR"
 
-        if ${pkgs.curl}/bin/curl -L -o extension.zip "$EXTENSION_URL"; then
-          ${pkgs.unzip}/bin/unzip -q extension.zip
-          mkdir -p "$HOME/.local/share/gnome-shell/extensions/$EXTENSION_UUID"
-          cp -r * "$HOME/.local/share/gnome-shell/extensions/$EXTENSION_UUID/"
-          echo "Manually installed Tiling Shell extension"
+          if ${pkgs.curl}/bin/curl -L -o extension.zip "$EXTENSION_URL"; then
+            ${pkgs.unzip}/bin/unzip -q extension.zip
+            mkdir -p "$HOME/.local/share/gnome-shell/extensions/$EXTENSION_UUID"
+            cp -r * "$HOME/.local/share/gnome-shell/extensions/$EXTENSION_UUID/"
+            echo "Manually installed $EXTENSION_NAME"
+          fi
+
+          cd - > /dev/null
+          rm -rf "$TEMP_DIR"
         fi
-
-        cd - > /dev/null
-        rm -rf "$TEMP_DIR"
+      else
+        echo "$EXTENSION_NAME already installed"
       fi
-    else
-      echo "Tiling Shell extension already installed"
-    fi
+    }
+
+    # Install Tiling Shell extension v61 (compatible with GNOME Shell 49)
+    install_extension \
+      "tilingshell@ferrarodomenico.com" \
+      "https://extensions.gnome.org/extension-data/tilingshellferrarodomenico.com.v61.shell-extension.zip" \
+      "Tiling Shell"
+
+    # Install Blur my Shell extension
+    install_extension \
+      "blur-my-shell@aunetx" \
+      "https://extensions.gnome.org/extension-data/blur-my-shellaunetx.v70.shell-extension.zip" \
+      "Blur my Shell"
+
+    # Install Caffeine extension
+    install_extension \
+      "caffeine@patapon.info" \
+      "https://extensions.gnome.org/extension-data/caffeinepatapon.info.v58.shell-extension.zip" \
+      "Caffeine"
   '';
 
   # Environment variables for GNOME apps to find TLS support
@@ -61,6 +82,8 @@
       ];
       enabled-extensions = [
         "tilingshell@ferrarodomenico.com"
+        "blur-my-shell@aunetx"
+        "caffeine@patapon.info"
       ];
     };
   };

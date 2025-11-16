@@ -14,6 +14,7 @@
     ./modules/gnome-extensions-installer.nix
     ./modules/keyboard.nix
     ./modules/lazydocker.nix
+    ./modules/ssh.nix
   ];
 
   # Home Manager needs a bit of information about you and the

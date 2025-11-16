@@ -3,6 +3,7 @@
 {
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
 
     matchBlocks = {
       "*" = {
@@ -15,6 +16,5 @@
     text = ''
       ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG6fDKEifgPIGajJMXb7bZX0IiEUlbqLWxNt8dX2er8+ craig@pop-os
     '';
-    # Home manager will set permissions automatically for files in .ssh
   };
 }

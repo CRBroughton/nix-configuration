@@ -5,7 +5,7 @@
     enable = true;
 
     signing = {
-      key = "A28B475638A29DA4ACB36D69B53E1BC28B18FC17";
+      key = "~/.ssh/id_ed25519";
       signByDefault = true;
     };
 
@@ -16,6 +16,9 @@
       };
       init = {
         defaultBranch = "master";
+      };
+      gpg = {
+        format = "ssh";
       };
     };
   };

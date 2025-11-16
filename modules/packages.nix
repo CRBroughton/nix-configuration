@@ -20,10 +20,11 @@
     restic
 
     # GPG/YubiKey tools
-    # kleopatra
+    kdePackages.kleopatra
     gnupg
     pcsc-tools
     yubikey-manager
+    yubico-pam
     opensc
 
     # Terminal and audio

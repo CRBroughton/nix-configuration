@@ -3,6 +3,7 @@
 {
   imports = [
     ./modules/packages.nix
+    ./modules/fonts.nix
     ./modules/shell.nix
     ./modules/vscode.nix
     ./modules/vscode-extensions.nix

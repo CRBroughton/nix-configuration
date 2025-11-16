@@ -18,9 +18,4 @@
     enable = true;
     enableFishIntegration = true;
   };
-
-  # Git configuration (basic)
-  programs.git = {
-    enable = true;
-  };
 }

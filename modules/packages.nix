@@ -13,6 +13,7 @@
     ansible
     lazydocker
     lazygit
+    podman
 
     # File transfer and backup
     croc

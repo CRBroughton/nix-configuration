@@ -7,6 +7,14 @@
       enableExtensionUpdateCheck = false;
 
       userSettings = {
+      "zig.path" = "zig";
+      "zig.zls.enabled" = "on";
+      "zig.zls.path" = "zls";
+      "zig.formattingProvider" = "zig";
+      "[zig]" = {
+        "editor.defaultFormatter" = "ziglang.vscode-zig";
+        "editor.formatOnSave" = true;
+      };
       # UI & Theme Settings
       "workbench.iconTheme" = "vscode-icons";
       "workbench.colorTheme" = "Vitesse Dark";

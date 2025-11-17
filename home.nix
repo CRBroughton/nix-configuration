@@ -12,6 +12,8 @@
     ./modules/flatpak.nix
     ./modules/gnome.nix
     ./modules/gnome-extensions-installer.nix
+    ./modules/go.nix
+    ./modules/zig.nix
     ./modules/keyboard.nix
     ./modules/lazydocker.nix
     ./modules/ssh.nix
@@ -37,6 +39,14 @@
 
   # Font configuration
   fonts.fontconfig.enable = true;
+
+  programs.go-installer = {
+    enable = true;
+  };
+
+  programs.zig-installer = {
+    enable = true;
+  };
 
   # Copy fonts from the parent directory
   # home.file.".local/share/fonts/shavian" = {

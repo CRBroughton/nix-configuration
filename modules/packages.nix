@@ -14,6 +14,8 @@
     lazydocker
     lazygit
     podman
+    pnpm
+    bun
 
     # File transfer and backup
     croc

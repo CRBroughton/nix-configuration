@@ -14,6 +14,7 @@
     ./modules/gnome-extensions-installer.nix
     ./modules/go.nix
     ./modules/zig.nix
+    ./modules/node.nix
     ./modules/keyboard.nix
     ./modules/lazydocker.nix
     ./modules/ssh.nix
@@ -46,6 +47,11 @@
 
   programs.zig-installer = {
     enable = true;
+  };
+
+  programs.node-installer = {
+    enable = true;
+    # version = "18.18.0";  # Uncomment to use a specific version
   };
 
   # Copy fonts from the parent directory

@@ -30,14 +30,11 @@
     opensc
 
     # Terminal and audio
-    # ghostty - using ghostty-wrapped module instead (see below)
+    # ghostty - using ghostty-wrapped module instead
     qpwgraph
 
     # Flatpak management
     flatpak
-
-    # Additional utilities
-    chezmoi  # For dotfiles management
 
     lutris
     warp

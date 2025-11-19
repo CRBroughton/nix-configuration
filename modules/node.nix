@@ -5,8 +5,9 @@ with lib;
 let
   cfg = config.programs.node-installer;
 
-  # UPDATE THIS when new Node.js LTS versions are released
-  latestLTSVersion = "24.8.0";
+  # UPDATE THIS when new Node.js versions are released
+  latestVersion = "25.2.1";
+  latestLTSVersion = "24.11.1";
 
   # Function to create a Node.js derivation for a specific version
   buildNode = { version, sha256 }:
@@ -48,6 +49,14 @@ let
   # To get hash for a new version, run:
   # nix-prefetch-url https://nodejs.org/dist/v24.8.0/node-v24.8.0-linux-x64.tar.gz
   nodeVersions = {
+    "25.2.1" = {
+      version = "25.2.1";
+      sha256 = "0h5rdckjsnnwhyjr6h904wyxd76qn1r2di6afybix8afhkffr510";
+    };
+    "24.11.1" = {
+      version = "24.11.1";
+      sha256 = "1jirhbai297c8v59km0in6hlm6f1slly68paid2hw87jr1fgz9aq";
+    };
     "24.8.0" = {
       version = "24.8.0";
       sha256 = "0mg6j07ffp6n6h0lv7j31y61890aa010sn36crhw7d3qnh289xns";
@@ -58,13 +67,17 @@ let
     };
   };
 
-  selectedVersion = if cfg.version == "latest"
-    then latestLTSVersion
+  selectedVersion =
+    if cfg.version == "latest" then latestVersion
+    else if cfg.version == "lts" then latestLTSVersion
     else cfg.version;
+
+  # Filter out versions that are already represented by "latest" and "lts"
+  otherVersions = filter (v: v != latestVersion && v != latestLTSVersion) (attrNames nodeVersions);
 
   versionConfig = nodeVersions.${selectedVersion} or (throw ''
     Node.js version ${selectedVersion} is not defined.
-    Available versions: ${concatStringsSep ", " (attrNames nodeVersions)}
+    Available versions: latest, lts${optionalString (otherVersions != []) ", ${concatStringsSep ", " otherVersions}"}
 
     To add a new version, get its hash by running:
       nix-prefetch-url https://nodejs.org/dist/v${selectedVersion}/node-v${selectedVersion}-linux-x64.tar.gz
@@ -83,11 +96,13 @@ in
       default = "latest";
       description = ''
         Node.js version to install.
-        Use "latest" or specify a version like "24.8.0" or "18.18.0".
+        - "latest": Latest version (${latestVersion})
+        - "lts": Latest LTS version (${latestLTSVersion})
+        - Or specify a version like "25.2.1", "24.11.1", "24.8.0", or "18.18.0"
 
-        Available versions: ${concatStringsSep ", " (attrNames nodeVersions)}
+        Available versions: latest, lts${optionalString (otherVersions != []) ", ${concatStringsSep ", " otherVersions}"}
       '';
-      example = "18.18.0";
+      example = "lts";
     };
   };
 

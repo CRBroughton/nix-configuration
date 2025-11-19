@@ -18,6 +18,9 @@
     bun
     btop
     navi
+    jq
+    jnv
+
 
     # File transfer and backup
     croc

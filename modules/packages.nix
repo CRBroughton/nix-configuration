@@ -16,6 +16,8 @@
     podman
     pnpm
     bun
+    btop
+    navi
 
     # File transfer and backup
     croc

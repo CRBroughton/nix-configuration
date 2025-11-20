@@ -28,7 +28,7 @@ cd nix-configuration
 ### 3. Apply the Home Manager configuration
 
 ```bash
-nix run home-manager/master -- switch --flake .#craig
+nix run home-manager/master -- switch --flake .#craig -b backup
 ```
 
 

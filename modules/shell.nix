@@ -7,6 +7,7 @@
     shellAliases = {
       cd = "z";
       cat = "bat";
+      ls = "eza";
     };
 
   };

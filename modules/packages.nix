@@ -23,6 +23,9 @@
     jq
     jnv
     posting
+    hurl
+    eza
+    tokei
 
 
     # File transfer and backup

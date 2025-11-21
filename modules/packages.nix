@@ -5,6 +5,8 @@
     # Shell and prompt
     fish
     starship
+    zoxide
+    bat
 
     # Text editors
     micro

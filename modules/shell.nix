@@ -4,17 +4,21 @@
   # Fish shell configuration
   programs.fish = {
     enable = true;
-    # shellInit = ''
-    #   # Add development tools to PATH
-    #   fish_add_path ~/.bun/bin
-    #   fish_add_path ~/.volta/bin
-    #   fish_add_path ~/.local/go/bin
-    #   fish_add_path ~/.local/zig
-    # '';
+    shellAliases = {
+      cd = "z";
+      cat = "bat";
+    };
+
   };
 
   # Starship prompt
   programs.starship = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
+  # Zoxide (smarter cd)
+  programs.zoxide = {
     enable = true;
     enableFishIntegration = true;
   };

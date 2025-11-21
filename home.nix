@@ -19,6 +19,7 @@
     ./modules/lazydocker.nix
     ./modules/ssh.nix
     ./modules/git.nix
+    ./modules/posting.nix
   ];
 
   # Home Manager needs a bit of information about you and the

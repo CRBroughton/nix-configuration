@@ -37,8 +37,8 @@
       success: '#00dc82'
       warning: '#fbbf24'
 
-      author: Craig Broughton
-      description: A dark theme inspired by Nuxt.js with its signature green colors
+      author: Craig R Broughton
+      description: A dark theme inspired by Vue & Nuxt
       homepage: https://github.com/craigrbroughton/nix-configuration
 
       text_area:

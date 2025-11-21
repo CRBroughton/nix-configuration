@@ -20,6 +20,7 @@
     navi
     jq
     jnv
+    posting
 
 
     # File transfer and backup

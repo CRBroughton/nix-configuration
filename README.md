@@ -49,6 +49,24 @@ nix flake update
 home-manager switch --flake .#craig
 ```
 
+### Removing unused packages
+
+To clean up old generations and free up disk space:
+
+```bash
+# Remove old home-manager generations (keeps last 7 days)
+home-manager expire-generations "-7 days"
+
+# Collect garbage and remove unused packages
+nix-collect-garbage --delete-old
+
+# Or be more aggressive (remove everything not currently in use, including all previous generations)
+nix-collect-garbage -d
+
+# Optimize the Nix store (deduplicate files)
+nix-store --optimise
+```
+
 ## Troubleshooting
 
 ### Ghostty won't launch

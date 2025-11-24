@@ -9,7 +9,9 @@
       cat = "bat";
       ls = "eza";
     };
-
+    shellInit = ''
+      set -gx CGO_ENABLED 1
+    '';
   };
 
   # Starship prompt

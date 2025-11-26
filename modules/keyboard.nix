@@ -2,7 +2,8 @@
 
 {
   # XKB custom keyboard layouts
-  home.file.".config/xkb/symbols/colemak_dh".source = ../xkb/colemak_dh;
+  home.file.".config/xkb/symbols/colemak_dh_ansi".source = ../xkb/colemak_dh_ansi;
+  home.file.".config/xkb/symbols/colemak_dh_iso".source = ../xkb/colemak_dh_iso;
   home.file.".config/xkb/symbols/canary".source = ../xkb/canary;
   home.file.".config/xkb/symbols/shavian".source = ../xkb/shavian;
   home.file.".config/xkb/symbols/gallium_v2".source = ../xkb/gallium_v2;
@@ -16,9 +17,19 @@
       <layoutList>
         <layout>
           <configItem>
-            <name>colemak_dh</name>
-            <shortDescription>ColemakDH</shortDescription>
-            <description>English (Colemak Mod-DH)</description>
+            <name>colemak_dh_ansi</name>
+            <shortDescription>ColemakDH ANSI</shortDescription>
+            <description>English (Colemak Mod-DH ANSI)</description>
+            <languageList>
+              <iso639Id>eng</iso639Id>
+            </languageList>
+          </configItem>
+        </layout>
+        <layout>
+          <configItem>
+            <name>colemak_dh_iso</name>
+            <shortDescription>ColemakDH ISO</shortDescription>
+            <description>English (Colemak Mod-DH ISO)</description>
             <languageList>
               <iso639Id>eng</iso639Id>
             </languageList>
@@ -103,7 +114,8 @@
         (lib.hm.gvariant.mkTuple [ "xkb" "us" ])
 
         # Custom layouts
-        (lib.hm.gvariant.mkTuple [ "xkb" "colemak_dh" ])
+        (lib.hm.gvariant.mkTuple [ "xkb" "colemak_dh_ansi" ])
+        (lib.hm.gvariant.mkTuple [ "xkb" "colemak_dh_iso" ])
         (lib.hm.gvariant.mkTuple [ "xkb" "canary" ])
         (lib.hm.gvariant.mkTuple [ "xkb" "shavian" ])
         (lib.hm.gvariant.mkTuple [ "xkb" "gallium_v2" ])

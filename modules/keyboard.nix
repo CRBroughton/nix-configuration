@@ -2,10 +2,11 @@
 
 {
   # XKB custom keyboard layouts
+  home.file.".config/xkb/symbols/colemak_dh".source = ../xkb/colemak_dh;
+  home.file.".config/xkb/symbols/canary".source = ../xkb/canary;
   home.file.".config/xkb/symbols/shavian".source = ../xkb/shavian;
   home.file.".config/xkb/symbols/gallium_v2".source = ../xkb/gallium_v2;
   home.file.".config/xkb/symbols/graphite".source = ../xkb/graphite;
-  home.file.".config/xkb/symbols/canary".source = ../xkb/canary;
 
   # XKB rules file to register custom layouts with GNOME
   home.file.".config/xkb/rules/evdev.xml".text = ''
@@ -13,6 +14,16 @@
     <!DOCTYPE xkbConfigRegistry SYSTEM "xkb.dtd">
     <xkbConfigRegistry version="1.1">
       <layoutList>
+        <layout>
+          <configItem>
+            <name>colemak_dh</name>
+            <shortDescription>ColemakDH</shortDescription>
+            <description>English (Colemak Mod-DH)</description>
+            <languageList>
+              <iso639Id>eng</iso639Id>
+            </languageList>
+          </configItem>
+        </layout>
         <layout>
           <configItem>
             <name>shavian</name>
@@ -90,9 +101,9 @@
         # Default layouts
         (lib.hm.gvariant.mkTuple [ "xkb" "gb" ])
         (lib.hm.gvariant.mkTuple [ "xkb" "us" ])
-        (lib.hm.gvariant.mkTuple [ "xkb" "us+colemak_dh" ])
 
         # Custom layouts
+        (lib.hm.gvariant.mkTuple [ "xkb" "colemak_dh" ])
         (lib.hm.gvariant.mkTuple [ "xkb" "canary" ])
         (lib.hm.gvariant.mkTuple [ "xkb" "shavian" ])
         (lib.hm.gvariant.mkTuple [ "xkb" "gallium_v2" ])

@@ -5,6 +5,7 @@
   home.file.".config/xkb/symbols/shavian".source = ../xkb/shavian;
   home.file.".config/xkb/symbols/gallium_v2".source = ../xkb/gallium_v2;
   home.file.".config/xkb/symbols/graphite".source = ../xkb/graphite;
+  home.file.".config/xkb/symbols/canary".source = ../xkb/canary;
 
   # XKB rules file to register custom layouts with GNOME
   home.file.".config/xkb/rules/evdev.xml".text = ''
@@ -68,6 +69,16 @@
             </languageList>
           </configItem>
         </layout>
+        <layout>
+          <configItem>
+            <name>canary</name>
+            <shortDescription>Canary</shortDescription>
+            <description>English (Canary)</description>
+            <languageList>
+              <iso639Id>eng</iso639Id>
+            </languageList>
+          </configItem>
+        </layout>
       </layoutList>
     </xkbConfigRegistry>
   '';
@@ -82,6 +93,7 @@
         (lib.hm.gvariant.mkTuple [ "xkb" "us+colemak_dh" ])
 
         # Custom layouts
+        (lib.hm.gvariant.mkTuple [ "xkb" "canary" ])
         (lib.hm.gvariant.mkTuple [ "xkb" "shavian" ])
         (lib.hm.gvariant.mkTuple [ "xkb" "gallium_v2" ])
         (lib.hm.gvariant.mkTuple [ "xkb" "graphite" ])

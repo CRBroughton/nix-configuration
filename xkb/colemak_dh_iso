@@ -1,4 +1,4 @@
-// Colemak Mod-DH layout
+// Colemak Mod-DH layout (ISO)
 // https://colemakmods.github.io/mod-dh/
 
 default partial alphanumeric_keys
@@ -6,7 +6,7 @@ xkb_symbols "basic" {
 
     include "us(basic)"
 
-    name[Group1] = "ColemakDH";
+    name[Group1] = "ColemakDH (ISO)";
 
     // Alphanumeric section
     key <AD01> {[ q, Q ]};
@@ -31,11 +31,12 @@ xkb_symbols "basic" {
     key <AC09> {[ i, I ]};
     key <AC10> {[ o, O ]};
 
-    key <AB01> {[ z, Z ]};
-    key <AB02> {[ x, X ]};
-    key <AB03> {[ c, C ]};
-    key <AB04> {[ d, D ]};
-    key <AB05> {[ v, V ]};
+    key <LSGT> {[ z, Z ]};
+    key <AB01> {[ x, X ]};
+    key <AB02> {[ c, C ]};
+    key <AB03> {[ d, D ]};
+    key <AB04> {[ v, V ]};
+    key <AB05> {[ backslash, bar ]};
     key <AB06> {[ k, K ]};
     key <AB07> {[ h, H ]};
     key <AB08> {[ comma, less ]};

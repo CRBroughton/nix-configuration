@@ -26,6 +26,13 @@
     hurl
     eza
     tokei
+    httpyac
+    gcc
+    protobuf
+    go-task
+    grpcurl
+    php
+    php84Packages.composer
 
 
     # File transfer and backup

@@ -5,6 +5,8 @@
     mutableExtensionsDir = false;
 
     profiles.default.extensions = with pkgs.vscode-marketplace; [
+      anweber.vscode-httpyac
+
       # Themes
       boydmeyer.pop-dark
       antfu.theme-vitesse
@@ -54,6 +56,9 @@
       oven.bun-vscode
       adpyke.codesnap
       formulahendry.auto-rename-tag
+
+      anthropic.claude-code
+      peterj.proto
     ];
   };
 }

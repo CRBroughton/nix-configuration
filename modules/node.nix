@@ -6,7 +6,7 @@ let
   cfg = config.programs.node-installer;
 
   # UPDATE THIS when new Node.js LTS versions are released
-  latestLTSVersion = "24.8.0";
+  latestLTSVersion = "24.11.1";
 
   # Function to create a Node.js derivation for a specific version
   buildNode = { version, sha256 }:
@@ -48,6 +48,10 @@ let
   # To get hash for a new version, run:
   # nix-prefetch-url https://nodejs.org/dist/v24.8.0/node-v24.8.0-linux-x64.tar.gz
   nodeVersions = {
+    "24.11.1" = {
+      version = "24.11.1";
+      sha256 = "1jirhbai297c8v59km0in6hlm6f1slly68paid2hw87jr1fgz9aq";
+    };
     "24.8.0" = {
       version = "24.8.0";
       sha256 = "0mg6j07ffp6n6h0lv7j31y61890aa010sn36crhw7d3qnh289xns";

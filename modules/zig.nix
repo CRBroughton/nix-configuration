@@ -131,6 +131,7 @@ in
     home.activation.checkZigUpdates = updateChecker.mkUpdateChecker {
       name = "Zig";
       currentVersion = selectedVersion;
+      availableVersions = attrNames zigVersions;
       fetchLatest = ''
         ${pkgs.curl}/bin/curl -sL https://ziglang.org/download/index.json 2>/dev/null | ${pkgs.gnugrep}/bin/grep -oP '"[0-9]+\.[0-9]+\.[0-9]+"' | tr -d '"' | sort -V | tail -n1
       '';

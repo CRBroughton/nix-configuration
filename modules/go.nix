@@ -7,7 +7,7 @@ let
   updateChecker = import ./update-checker.nix { inherit pkgs lib; };
 
   # UPDATE THIS when new Go versions are released
-  latestStableVersion = "1.25.4";
+  latestStableVersion = "1.25.5";
 
   # Function to create a Go derivation for a specific version
   buildGo = { version, sha256 }:
@@ -49,6 +49,10 @@ let
   # To get hash for a new version, run:
   # nix-prefetch-url https://go.dev/dl/go1.25.4.linux-amd64.tar.gz
   goVersions = {
+    "1.25.5" = {
+      version = "1.25.5";
+      sha256 = "0nxkxcvg6dx63n375pfkqv0i8dr4g71kz6iaq4qcysmkcdfpb6wy";
+    };
     "1.25.4" = {
       version = "1.25.4";
       sha256 = "1v0vr9cn2pg3q4ry28acfax22r229s10zapkcw7yc38plknzz9cz";

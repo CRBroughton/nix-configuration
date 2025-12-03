@@ -4,6 +4,7 @@ with lib;
 
 let
   cfg = config.programs.zig-installer;
+  updateChecker = import ./update-checker.nix { inherit pkgs lib; };
 
   # UPDATE THESE when new Zig versions are released
   latestStableVersion = "0.15.2";
@@ -125,5 +126,26 @@ in
 
     # Zig doesn't require special environment variables like Go
     # The binary is self-contained
+
+    # Check for updates on activation
+    home.activation.checkZigUpdates = updateChecker.mkUpdateChecker {
+      name = "Zig";
+      currentVersion = selectedVersion;
+      fetchLatest = ''
+        ${pkgs.curl}/bin/curl -sL https://ziglang.org/download/index.json 2>/dev/null | ${pkgs.gnugrep}/bin/grep -oP '"[0-9]+\.[0-9]+\.[0-9]+"' | tr -d '"' | sort -V | tail -n1
+      '';
+      updateInstructions = ''
+        echo "To update, run:"
+        echo "  nix-prefetch-url https://ziglang.org/download/\$LATEST_VERSION/zig-linux-x86_64-\$LATEST_VERSION.tar.xz"
+        echo ""
+        echo "Then add to modules/zig.nix zigVersions:"
+        echo "  \"\$LATEST_VERSION\" = {"
+        echo "    version = \"\$LATEST_VERSION\";"
+        echo "    sha256 = \"<hash-from-above>\";"
+        echo "  };"
+        echo ""
+        echo "And update: latestStableVersion = \"\$LATEST_VERSION\";"
+      '';
+    };
   };
 }

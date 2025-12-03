@@ -4,6 +4,7 @@ with lib;
 
 let
   cfg = config.programs.go-installer;
+  updateChecker = import ./update-checker.nix { inherit pkgs lib; };
 
   # UPDATE THIS when new Go versions are released
   latestStableVersion = "1.25.4";
@@ -108,5 +109,26 @@ in
     home.sessionPath = [
       "$HOME/go/bin"
     ];
+
+    # Check for updates on activation
+    home.activation.checkGoUpdates = updateChecker.mkUpdateChecker {
+      name = "Go";
+      currentVersion = selectedVersion;
+      fetchLatest = ''
+        ${pkgs.curl}/bin/curl -sL https://go.dev/VERSION?m=text 2>/dev/null | head -n1 | sed 's/go//'
+      '';
+      updateInstructions = ''
+        echo "To update, run:"
+        echo "  nix-prefetch-url https://go.dev/dl/go\$LATEST_VERSION.linux-amd64.tar.gz"
+        echo ""
+        echo "Then add to modules/go.nix goVersions:"
+        echo "  \"\$LATEST_VERSION\" = {"
+        echo "    version = \"\$LATEST_VERSION\";"
+        echo "    sha256 = \"<hash-from-above>\";"
+        echo "  };"
+        echo ""
+        echo "And update: latestStableVersion = \"\$LATEST_VERSION\";"
+      '';
+    };
   };
 }

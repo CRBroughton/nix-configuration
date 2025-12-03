@@ -4,6 +4,7 @@ with lib;
 
 let
   cfg = config.programs.node-installer;
+  updateChecker = import ./update-checker.nix { inherit pkgs lib; };
 
   # UPDATE THIS when new Node.js LTS versions are released
   latestLTSVersion = "24.11.1";
@@ -106,6 +107,27 @@ in
     # Set npm prefix for global packages
     home.sessionVariables = {
       NPM_CONFIG_PREFIX = "$HOME/.npm-global";
+    };
+
+    # Check for updates on activation
+    home.activation.checkNodeUpdates = updateChecker.mkUpdateChecker {
+      name = "Node.js LTS";
+      currentVersion = selectedVersion;
+      fetchLatest = ''
+        ${pkgs.curl}/bin/curl -sL https://nodejs.org/dist/index.json 2>/dev/null | ${pkgs.gnugrep}/bin/grep -B1 '"lts":' | ${pkgs.gnugrep}/bin/grep -oP '"version":"v\K[^"]+' | ${pkgs.gnugrep}/bin/grep -v false | head -n1
+      '';
+      updateInstructions = ''
+        echo "To update, run:"
+        echo "  nix-prefetch-url https://nodejs.org/dist/v\$LATEST_VERSION/node-v\$LATEST_VERSION-linux-x64.tar.gz"
+        echo ""
+        echo "Then add to modules/node.nix nodeVersions:"
+        echo "  \"\$LATEST_VERSION\" = {"
+        echo "    version = \"\$LATEST_VERSION\";"
+        echo "    sha256 = \"<hash-from-above>\";"
+        echo "  };"
+        echo ""
+        echo "And update: latestLTSVersion = \"\$LATEST_VERSION\";"
+      '';
     };
   };
 }

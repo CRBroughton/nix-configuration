@@ -2,38 +2,53 @@
 
 {
   home.packages = with pkgs; [
-    # Shell and prompt
+    # Shell and CLI utilities
     fish
     starship
     zoxide
     bat
+    eza
+    navi
 
     # Text editors
     micro
 
-    # Development tools
-    ansible
-    lazydocker
-    lazygit
+    # System monitoring
+    btop
+
+    # Container and orchestration tools
     podman
+    lazydocker
+
+    # Version control
+    lazygit
+
+    # JavaScript tools
     pnpm
     bun
-    btop
-    navi
-    jq
-    jnv
-    posting
-    hurl
-    eza
-    tokei
-    httpyac
-    gcc
-    protobuf
-    go-task
-    grpcurl
+
+    # PHP tools
     php
     php84Packages.composer
 
+    # API and HTTP testing
+    posting
+    hurl
+    httpyac
+    grpcurl
+
+    # DevOps and automation
+    ansible
+    go-task
+
+    # Data tools
+    jq
+    jnv
+    gcc # needed for protobuf compilation
+    protobuf
+
+    # Code analysis
+    tokei
 
     # File transfer and backup
     croc
@@ -47,14 +62,17 @@
     yubico-pam
     opensc
 
-    # Terminal and audio
-    # ghostty - using ghostty-wrapped module instead
+    # Audio
     qpwgraph
 
-    # Flatpak management
+    # Package management
     flatpak
 
+    # Gaming
     lutris
+
+    # Terminal
+    # ghostty - using ghostty-wrapped module instead
     warp
   ];
 }

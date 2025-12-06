@@ -22,4 +22,14 @@
       };
     };
   };
+
+  programs.jujutsu = {
+    enable = true;
+    settings = {
+      user = {
+        name = "CRBroughton";
+        email = "crbroughton@posteo.uk";
+      };
+    };
+  };
 }

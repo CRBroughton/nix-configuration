@@ -22,6 +22,7 @@
 
     # Version control
     lazygit
+    jujutsu
 
     # JavaScript tools
     pnpm

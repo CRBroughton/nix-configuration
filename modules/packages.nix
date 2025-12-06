@@ -31,6 +31,7 @@
     # PHP tools
     php
     php84Packages.composer
+    laravel
 
     # API and HTTP testing
     posting

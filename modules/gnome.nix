@@ -16,6 +16,10 @@
 
   # GNOME dconf settings
   dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+      accent-color = "purple";
+    };
     # Set favorite apps in GNOME dock
     "org/gnome/shell" = {
       favorite-apps = [

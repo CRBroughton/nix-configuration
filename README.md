@@ -31,6 +31,14 @@ cd nix-configuration
 nix run home-manager/master -- switch --flake .#craig -b backup
 ```
 
+### 4. Install Gnome Extensions
+
+Installs the specified Gnome Extensions in `gnome-extensions-installer.nix` (requires a restart)
+
+```bash
+install-gnome-extensions
+```
+
 
 ## Usage
 

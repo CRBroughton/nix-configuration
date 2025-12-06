@@ -13,6 +13,7 @@
     ./modules/gnome.nix
     ./modules/gnome-extensions-installer.nix
     ./modules/create-laravel-api.nix
+    ./modules/laravel-api-cleanup.nix
     ./modules/go.nix
     ./modules/zig.nix
     ./modules/node.nix

@@ -16,7 +16,7 @@
 
   home.file.".ssh/id_ed25519.pub" = {
     text = ''
-      ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG6fDKEifgPIGajJMXb7bZX0IiEUlbqLWxNt8dX2er8+ craig@pop-os
+      ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrDtLXrygEh0uessk5PifLw+t6SDKJz08w6u9iQxMpo crbroughton@posteo.uk
     '';
   };
 

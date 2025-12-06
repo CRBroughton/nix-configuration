@@ -147,16 +147,98 @@ file_put_contents("composer.json", json_encode($composer, JSON_PRETTY_PRINT | JS
           if [ -d "$MODULE_PATH" ]; then
               MODULE_NAME=$(basename "$MODULE_PATH")
 
-              # Check if it's a Laravel module (has artisan file)
-              if [ -f "$MODULE_PATH/artisan" ]; then
+              # Check if it's a Laravel module (has module.json or composer.json)
+              if [ -f "$MODULE_PATH/module.json" ] || [ -f "$MODULE_PATH/composer.json" ]; then
                   echo "======================================"
                   echo "Processing module: $MODULE_NAME"
                   echo "======================================"
-                  laravel-api-cleanup "$MODULE_PATH"
-                  ((PROCESSED++))
+
+                  cd "$MODULE_PATH"
+                  echo "Cleaning up frontend files from: $MODULE_NAME"
+                  echo "Working directory: $(pwd)"
                   echo ""
+
+                  echo "Removing frontend files and dependencies..."
+
+                  # Remove frontend configuration files
+                  rm -f vite.config.js
+                  rm -f postcss.config.js
+                  rm -f tailwind.config.js
+                  rm -f package.json
+                  rm -f package-lock.json
+                  rm -f pnpm-lock.yaml
+                  rm -f yarn.lock
+
+                  # Remove frontend directories
+                  rm -rf resources/js
+                  rm -rf resources/css
+                  rm -rf node_modules
+                  rm -rf Resources/js
+                  rm -rf Resources/css
+
+                  # Remove welcome view (frontend route)
+                  rm -f resources/views/welcome.blade.php
+                  rm -f Resources/views/welcome.blade.php
+
+                  # Remove web routes if they exist
+                  if [ -f "routes/web.php" ]; then
+                      echo "Cleaning up web routes..."
+                      echo "<?php
+
+use Illuminate\Support\Facades\Route;
+
+// Web routes removed for API-only application
+// All API routes should be defined in routes/api.php
+" > routes/web.php
+                  fi
+
+                  if [ -f "Routes/web.php" ]; then
+                      echo "Cleaning up web routes..."
+                      echo "<?php
+
+use Illuminate\Support\Facades\Route;
+
+// Web routes removed for API-only application
+// All API routes should be defined in Routes/api.php
+" > Routes/web.php
+                  fi
+
+                  # Update composer.json to remove frontend-related scripts
+                  if [ -f "composer.json" ]; then
+                      echo "Updating composer.json..."
+                      ${pkgs.php}/bin/php -r '
+$composer = json_decode(file_get_contents("composer.json"), true);
+
+// Remove post-update-cmd scripts related to npm
+if (isset($composer["scripts"]["post-update-cmd"])) {
+    $composer["scripts"]["post-update-cmd"] = array_filter(
+        $composer["scripts"]["post-update-cmd"],
+        function($cmd) {
+            return !preg_match("/npm|vite/i", $cmd);
+        }
+    );
+}
+
+// Remove post-install-cmd scripts related to npm
+if (isset($composer["scripts"]["post-install-cmd"])) {
+    $composer["scripts"]["post-install-cmd"] = array_filter(
+        $composer["scripts"]["post-install-cmd"],
+        function($cmd) {
+            return !preg_match("/npm|vite/i", $cmd);
+        }
+    );
+}
+
+file_put_contents("composer.json", json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n");
+'
+                  fi
+
+                  echo "✓ Frontend cleanup completed for '$MODULE_NAME'!"
+                  echo ""
+
+                  ((PROCESSED++))
               else
-                  echo "Skipping '$MODULE_NAME' (not a Laravel project)"
+                  echo "Skipping '$MODULE_NAME' (no module.json or composer.json found)"
                   ((SKIPPED++))
               fi
           fi

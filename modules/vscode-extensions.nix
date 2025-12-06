@@ -15,6 +15,11 @@
       catppuccin.catppuccin-vsc-icons
       vscode-icons-team.vscode-icons
 
+      # Languages - PHP
+      bmewburn.vscode-intelephense-client
+      emeraldwalk.runonsave
+      swordev.phpstan
+
       # Languages - TypeScript/JavaScript
       dbaeumer.vscode-eslint
       yoavbls.pretty-ts-errors

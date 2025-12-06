@@ -12,6 +12,7 @@
     ./modules/flatpak.nix
     ./modules/gnome.nix
     ./modules/gnome-extensions-installer.nix
+    ./modules/create-laravel-api.nix
     ./modules/go.nix
     ./modules/zig.nix
     ./modules/node.nix

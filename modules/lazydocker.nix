@@ -22,4 +22,23 @@
     unqualified-search-registries = ["docker.io"]
     short-name-mode = "enforcing"
   '';
+
+  # Container image trust policy
+  # Matches Fedora's default policy - accepts images without signature verification
+  home.file.".config/containers/policy.json".text = ''
+    {
+        "default": [
+            {
+                "type": "insecureAcceptAnything"
+            }
+        ],
+        "transports":
+            {
+                "docker-daemon":
+                    {
+                        "": [{"type":"insecureAcceptAnything"}]
+                    }
+            }
+    }
+  '';
 }

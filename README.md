@@ -90,4 +90,4 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 ```
 
 ### VS Code extensions not loading
-Extensions are managed immutably by Nix. To modify them, edit `modules/vscode-extensions.nix` and run `home-manager switch`.
+Extensions are managed immutably by Nix. To modify them, edit `modules/vscode-extensions.nix` and run `just switch`.

@@ -56,31 +56,4 @@
     enable = true;
     # version = "18.18.0";  # Uncomment to use a specific version
   };
-
-  # Copy fonts from the parent directory
-  # home.file.".local/share/fonts/shavian" = {
-  #   source = ../files/fonts;
-  #   recursive = true;
-  # };
-
-  # Copy setup scripts
-  # home.file.".config/home-manager/scripts" = {
-  #   source = ../files/scripts;
-  #   recursive = true;
-  # };
-
-  # systemd user services
-  # systemd.user.services.pcscd = {
-  #   Unit = {
-  #     Description = "PC/SC Smart Card Daemon";
-  #     After = [ "sockets.target" ];
-  #   };
-  #   Service = {
-  #     ExecStart = "${pkgs.pcsclite}/bin/pcscd --foreground --auto-exit";
-  #     Restart = "on-failure";
-  #   };
-  #   Install = {
-  #     WantedBy = [ "default.target" ];
-  #   };
-  # };
 }

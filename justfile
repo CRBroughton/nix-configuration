@@ -13,7 +13,7 @@ switch-verbose:
 # Update all flake inputs (nixpkgs, home-manager, etc.)
 update:
     nix flake update
-    @echo "Run 'just switch' to apply updates"
+    @echo "Run 'nix-just switch' to apply updates"
 
 # Update and switch in one command
 update-all: update switch
@@ -62,9 +62,58 @@ outdated:
 backup:
     home-manager switch --flake . -b backup
 
-# Search for a package
+# Search for a package using nix-search-cli
 search PACKAGE:
-    nix search nixpkgs {{PACKAGE}}
+    nix-search {{PACKAGE}}
+
+# Add a package to modules/packages.nix
+add PACKAGE:
+    #!/usr/bin/env bash
+    set -e
+    PACKAGES_FILE="modules/packages.nix"
+
+    # Check if package already exists
+    if grep -q "^\s*{{PACKAGE}}\s*$" "$PACKAGES_FILE"; then
+        echo "Package '{{PACKAGE}}' already exists in $PACKAGES_FILE"
+        exit 1
+    fi
+
+    # Insert after the __DYNAMIC_CLI_PACKAGES__ marker
+    sed -i '/# __DYNAMIC_CLI_PACKAGES__/a\    {{PACKAGE}}' "$PACKAGES_FILE"
+
+    echo "✓ Added '{{PACKAGE}}' to $PACKAGES_FILE (dynamic packages section)"
+    echo "Run 'just switch' to install the package"
+
+# Remove a package from modules/packages.nix
+remove PACKAGE:
+    #!/usr/bin/env bash
+    set -e
+    PACKAGES_FILE="modules/packages.nix"
+
+    # Check if package exists
+    if ! grep -q "^\s*{{PACKAGE}}\s*$" "$PACKAGES_FILE"; then
+        echo "Package '{{PACKAGE}}' not found in $PACKAGES_FILE"
+        exit 1
+    fi
+
+    # Remove the package line
+    sed -i "/^\s*{{PACKAGE}}\s*$/d" "$PACKAGES_FILE"
+
+    echo "✓ Removed '{{PACKAGE}}' from $PACKAGES_FILE"
+    echo "Run 'just switch' to uninstall the package"
+
+# Search and add a package interactively
+search-add QUERY:
+    #!/usr/bin/env bash
+    echo "Searching for packages matching '{{QUERY}}'..."
+    nix-search '{{QUERY}}'
+    echo ""
+    read -p "Enter the exact package name to add (or press Enter to cancel): " PACKAGE
+    if [ -n "$PACKAGE" ]; then
+        just add "$PACKAGE"
+    else
+        echo "Cancelled."
+    fi
 
 # Show what would be built (dry run)
 dry-run:

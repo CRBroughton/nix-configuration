@@ -4,11 +4,11 @@ default:
 
 # Switch home-manager configuration
 switch:
-    home-manager switch --flake .#craig
+    home-manager switch --flake .
 
 # Switch and show what changed
 switch-verbose:
-    home-manager switch --flake .#craig --show-trace
+    home-manager switch --flake . --show-trace
 
 # Update all flake inputs (nixpkgs, home-manager, etc.)
 update:
@@ -60,7 +60,7 @@ outdated:
 
 # Rebuild and create backup
 backup:
-    home-manager switch --flake .#craig -b backup
+    home-manager switch --flake . -b backup
 
 # Search for a package
 search PACKAGE:
@@ -68,7 +68,7 @@ search PACKAGE:
 
 # Show what would be built (dry run)
 dry-run:
-    home-manager switch --flake .#craig --dry-run
+    home-manager switch --flake . --dry-run
 
 # Format all Nix files
 format:

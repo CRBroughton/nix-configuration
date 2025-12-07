@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   # Fish shell configuration
@@ -33,6 +33,20 @@
       };
     };
   };
+
+  # Add Fish completion for nix-just that wraps just's completion
+  home.file.".config/fish/completions/nix-just.fish".text = ''
+    # Completions for nix-just - wraps just completions
+    function __nix_just_complete
+      set -l nix_config_dir "$HOME/nix-configuration"
+      if test -f "$nix_config_dir/justfile"
+        just --justfile "$nix_config_dir/justfile" --summary 2>/dev/null | string split ' '
+      end
+    end
+
+    # Complete nix-just with recipe names
+    complete -c nix-just -f -a "(__nix_just_complete)"
+  '';
 
   # Starship prompt
   programs.starship = {

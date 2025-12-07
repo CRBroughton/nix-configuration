@@ -20,6 +20,19 @@
     '';
   };
 
-  # Use the following to set the key to the proper permissions
-  # chmod 600 ~/.ssh/id_ed25519
+  # Automatically fix SSH key permissions
+  home.activation.fixSshPermissions = {
+    after = [ "writeBoundary" ];
+    before = [ ];
+    data = ''
+      if [ -f ~/.ssh/id_ed25519 ]; then
+        chmod 600 ~/.ssh/id_ed25519
+        echo "Fixed permissions for ~/.ssh/id_ed25519"
+      fi
+
+      if [ -d ~/.ssh ]; then
+        chmod 700 ~/.ssh
+      fi
+    '';
+  };
 }

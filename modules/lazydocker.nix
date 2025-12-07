@@ -47,35 +47,38 @@
     DOCKER_HOST = "unix:///run/user/$UID/podman/podman.sock";
   };
 
-  # Activation script to enable and start Podman socket
-  home.activation.enablePodmanSocket = {
-    after = [ "linkGeneration" ];
-    before = [ "reloadSystemd" ];
-    data = ''
-      # Try to find systemctl - check both system and Nix paths
-      SYSTEMCTL=""
-      if command -v /usr/bin/systemctl &> /dev/null; then
-        SYSTEMCTL="/usr/bin/systemctl"
-      elif command -v systemctl &> /dev/null; then
-        SYSTEMCTL="systemctl"
-      else
-        echo "Warning: systemctl not found, skipping podman.socket setup"
-        exit 0
-      fi
+  # Create systemd socket and service for Podman API
+  # This works on all systems, whether Podman is from Nix or system packages
+  systemd.user.sockets.podman = {
+    Unit = {
+      Description = "Podman API Socket";
+      Documentation = "man:podman-system-service(1)";
+    };
+    Socket = {
+      ListenStream = "%t/podman/podman.sock";
+      SocketMode = "0660";
+    };
+    Install = {
+      WantedBy = [ "sockets.target" ];
+    };
+  };
 
-      # Enable the podman.socket if available
-      if $SYSTEMCTL --user list-unit-files podman.socket &> /dev/null; then
-        if ! $SYSTEMCTL --user is-enabled podman.socket >/dev/null 2>&1; then
-          $DRY_RUN_CMD $SYSTEMCTL --user enable podman.socket
-        fi
-
-        # Start the socket if it's not active
-        if ! $SYSTEMCTL --user is-active podman.socket >/dev/null 2>&1; then
-          $DRY_RUN_CMD $SYSTEMCTL --user start podman.socket
-        fi
-      else
-        echo "Warning: podman.socket unit not found, skipping"
-      fi
-    '';
+  systemd.user.services.podman = {
+    Unit = {
+      Description = "Podman API Service";
+      Documentation = "man:podman-system-service(1)";
+      Requires = "podman.socket";
+      After = "podman.socket";
+    };
+    Service = {
+      Type = "exec";
+      KillMode = "process";
+      Environment = "LOGGING=--log-level=info";
+      ExecStart = "${pkgs.podman}/bin/podman $LOGGING system service";
+      Restart = "on-failure";
+    };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
   };
 }

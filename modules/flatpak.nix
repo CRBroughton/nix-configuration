@@ -6,7 +6,6 @@
   services.flatpak.packages = [
     "com.mattjakeman.ExtensionManager"
     "io.github.equicord.equibop"
-    "app.zen_browser.zen"
     "com.google.Chrome"
     "com.bitwarden.desktop"
     "com.transmissionbt.Transmission"
@@ -17,5 +16,6 @@
     "com.github.neithern.g4music"
     "io.gitlab.news_flash.NewsFlash"
     "io.github.flattool.Warehouse"
+    "com.github.tchx84.Flatseal"
   ];
 }

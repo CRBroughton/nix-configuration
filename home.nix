@@ -22,6 +22,7 @@
     ./modules/ssh.nix
     ./modules/git.nix
     ./modules/posting.nix
+    ./modules/zen-browser.nix
   ];
 
   # Home Manager needs a bit of information about you and the

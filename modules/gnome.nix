@@ -28,7 +28,7 @@
     # Set favorite apps in GNOME dock
     "org/gnome/shell" = {
       favorite-apps = [
-        "app.zen_browser.zen.desktop"
+        "zen-twilight.desktop"
         "org.gnome.Nautilus.desktop"
         "io.github.equicord.equibop.desktop"
         "com.bitwarden.desktop.desktop"

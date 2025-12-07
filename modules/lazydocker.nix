@@ -41,4 +41,19 @@
             }
     }
   '';
+
+  # Enable Podman socket for lazydocker compatibility
+  systemd.user.services.podman-socket-enable = {
+    Unit = {
+      Description = "Enable Podman socket for Docker API compatibility";
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.systemd}/bin/systemctl --user enable --now podman.socket";
+      RemainAfterExit = true;
+    };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+  };
 }

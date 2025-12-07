@@ -111,6 +111,13 @@ search-add QUERY:
     read -p "Enter the exact package name to add (or press Enter to cancel): " PACKAGE
     if [ -n "$PACKAGE" ]; then
         just add "$PACKAGE"
+        echo ""
+        read -p "Install now? (Y/n): " INSTALL
+        if [[ -z "$INSTALL" || "$INSTALL" =~ ^[Yy]$ ]]; then
+            just switch
+        else
+            echo "Package added. Run 'just switch' to install it."
+        fi
     else
         echo "Cancelled."
     fi

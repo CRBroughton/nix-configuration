@@ -21,7 +21,7 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install --determin
 
 ```bash
 cd ~/code
-git clone <repository-url> nix-configuration
+git clone git@github.com:CRBroughton/nix-configuration.git nix-configuration
 cd nix-configuration
 ```
 

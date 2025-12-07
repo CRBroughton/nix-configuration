@@ -3,9 +3,6 @@
 {
   home.packages = with pkgs; [
     # Shell and CLI utilities
-    fish
-    starship
-    zoxide
     bat
     eza
     navi

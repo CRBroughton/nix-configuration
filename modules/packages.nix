@@ -39,6 +39,7 @@
     # DevOps and automation
     ansible
     go-task
+    just
 
     # Data tools
     jq

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -10,7 +15,8 @@ let
   latestLTSVersion = "24.11.1";
 
   # Function to create a Node.js derivation for a specific version
-  buildNode = { version, sha256 }:
+  buildNode =
+    { version, sha256 }:
     pkgs.stdenv.mkDerivation {
       pname = "nodejs";
       inherit version;
@@ -63,19 +69,18 @@ let
     };
   };
 
-  selectedVersion = if cfg.version == "latest"
-    then latestLTSVersion
-    else cfg.version;
+  selectedVersion = if cfg.version == "latest" then latestLTSVersion else cfg.version;
 
-  versionConfig = nodeVersions.${selectedVersion} or (throw ''
-    Node.js version ${selectedVersion} is not defined.
-    Available versions: ${concatStringsSep ", " (attrNames nodeVersions)}
+  versionConfig =
+    nodeVersions.${selectedVersion} or (throw ''
+      Node.js version ${selectedVersion} is not defined.
+      Available versions: ${concatStringsSep ", " (attrNames nodeVersions)}
 
-    To add a new version, get its hash by running:
-      nix-prefetch-url https://nodejs.org/dist/v${selectedVersion}/node-v${selectedVersion}-linux-x64.tar.gz
+      To add a new version, get its hash by running:
+        nix-prefetch-url https://nodejs.org/dist/v${selectedVersion}/node-v${selectedVersion}-linux-x64.tar.gz
 
-    Then add it to nodeVersions in modules/node.nix
-  '');
+      Then add it to nodeVersions in modules/node.nix
+    '');
 
   nodePackage = buildNode versionConfig;
 in

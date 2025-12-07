@@ -1,4 +1,9 @@
-{ pkgs, lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
 {
   # GNOME extensions are installed via the 'install-gnome-extensions' command
@@ -8,7 +13,7 @@
   #   - Caffeine (v58)
 
   # Refresh GNOME app cache after home-manager switch
-  home.activation.refreshGnomeApps = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.refreshGnomeApps = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if command -v update-desktop-database &> /dev/null; then
       ${pkgs.desktop-file-utils}/bin/update-desktop-database ~/.local/share/applications 2>/dev/null || true
     fi

@@ -15,7 +15,15 @@
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
   };
 
-  outputs = { nixpkgs, home-manager, nix-flatpak, ghostty-wrapped, nix-vscode-extensions, ... }:
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      nix-flatpak,
+      ghostty-wrapped,
+      nix-vscode-extensions,
+      ...
+    }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -24,7 +32,8 @@
           nix-vscode-extensions.overlays.default
         ];
       };
-    in {
+    in
+    {
       homeConfigurations."craig" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 

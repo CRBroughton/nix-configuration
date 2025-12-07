@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   # XKB custom keyboard layouts
@@ -110,16 +115,40 @@
     "org/gnome/desktop/input-sources" = {
       sources = [
         # Default layouts
-        (lib.hm.gvariant.mkTuple [ "xkb" "gb" ])
-        (lib.hm.gvariant.mkTuple [ "xkb" "us" ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "gb"
+        ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "us"
+        ])
 
         # Custom layouts
-        (lib.hm.gvariant.mkTuple [ "xkb" "colemak_dh_ansi" ])
-        (lib.hm.gvariant.mkTuple [ "xkb" "colemak_dh_iso" ])
-        (lib.hm.gvariant.mkTuple [ "xkb" "canary" ])
-        (lib.hm.gvariant.mkTuple [ "xkb" "shavian" ])
-        (lib.hm.gvariant.mkTuple [ "xkb" "gallium_v2" ])
-        (lib.hm.gvariant.mkTuple [ "xkb" "graphite" ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "colemak_dh_ansi"
+        ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "colemak_dh_iso"
+        ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "canary"
+        ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "shavian"
+        ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "gallium_v2"
+        ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "graphite"
+        ])
       ];
       xkb-options = [ "terminate:ctrl_alt_bksp" ];
     };

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -10,7 +15,8 @@ let
   latestStableVersion = "1.25.5";
 
   # Function to create a Go derivation for a specific version
-  buildGo = { version, sha256 }:
+  buildGo =
+    { version, sha256 }:
     pkgs.stdenv.mkDerivation {
       pname = "go";
       inherit version;
@@ -67,19 +73,18 @@ let
     };
   };
 
-  selectedVersion = if cfg.version == "latest"
-    then latestStableVersion
-    else cfg.version;
+  selectedVersion = if cfg.version == "latest" then latestStableVersion else cfg.version;
 
-  versionConfig = goVersions.${selectedVersion} or (throw ''
-    Go version ${selectedVersion} is not defined.
-    Available versions: ${concatStringsSep ", " (attrNames goVersions)}
+  versionConfig =
+    goVersions.${selectedVersion} or (throw ''
+      Go version ${selectedVersion} is not defined.
+      Available versions: ${concatStringsSep ", " (attrNames goVersions)}
 
-    To add a new version, get its hash by running:
-      nix-prefetch-url https://go.dev/dl/go${selectedVersion}.linux-amd64.tar.gz
+      To add a new version, get its hash by running:
+        nix-prefetch-url https://go.dev/dl/go${selectedVersion}.linux-amd64.tar.gz
 
-    Then add it to goVersions in modules/go.nix
-  '');
+      Then add it to goVersions in modules/go.nix
+    '');
 
   goPackage = buildGo versionConfig;
 in

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -11,11 +16,18 @@ let
   latestDevVersion = "0.16.0-dev";
 
   # Function to create a Zig derivation for a specific version
-  buildZig = { version, sha256, url ? null }:
+  buildZig =
+    {
+      version,
+      sha256,
+      url ? null,
+    }:
     let
-      downloadUrl = if url != null
-        then url
-        else "https://ziglang.org/download/${version}/zig-x86_64-linux-${version}.tar.xz";
+      downloadUrl =
+        if url != null then
+          url
+        else
+          "https://ziglang.org/download/${version}/zig-x86_64-linux-${version}.tar.xz";
     in
     pkgs.stdenv.mkDerivation {
       pname = "zig";
@@ -81,21 +93,24 @@ let
     };
   };
 
-  selectedVersion = if cfg.version == "latest"
-    then latestStableVersion
-    else if cfg.version == "dev"
-    then latestDevVersion
-    else cfg.version;
+  selectedVersion =
+    if cfg.version == "latest" then
+      latestStableVersion
+    else if cfg.version == "dev" then
+      latestDevVersion
+    else
+      cfg.version;
 
-  versionConfig = zigVersions.${selectedVersion} or (throw ''
-    Zig version ${selectedVersion} is not defined.
-    Available versions: ${concatStringsSep ", " (attrNames zigVersions)}
+  versionConfig =
+    zigVersions.${selectedVersion} or (throw ''
+      Zig version ${selectedVersion} is not defined.
+      Available versions: ${concatStringsSep ", " (attrNames zigVersions)}
 
-    To add a new version, get its hash by running:
-      nix-prefetch-url https://ziglang.org/download/${selectedVersion}/zig-linux-x86_64-${selectedVersion}.tar.xz
+      To add a new version, get its hash by running:
+        nix-prefetch-url https://ziglang.org/download/${selectedVersion}/zig-linux-x86_64-${selectedVersion}.tar.xz
 
-    Then add it to zigVersions in modules/zig.nix
-  '');
+      Then add it to zigVersions in modules/zig.nix
+    '');
 
   zigPackage = buildZig versionConfig;
 in
@@ -122,7 +137,7 @@ in
     home.packages = [
       zigPackage
       pkgs.zls
-     ];
+    ];
 
     # Zig doesn't require special environment variables like Go
     # The binary is self-contained

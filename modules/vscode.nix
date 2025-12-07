@@ -12,8 +12,16 @@
     genericName = "Text Editor";
     exec = "code --enable-features=WaylandWindowDecorations --ozone-platform=wayland %F";
     terminal = false;
-    categories = [ "Utility" "TextEditor" "Development" "IDE" ];
-    mimeType = [ "text/plain" "inode/directory" ];
+    categories = [
+      "Utility"
+      "TextEditor"
+      "Development"
+      "IDE"
+    ];
+    mimeType = [
+      "text/plain"
+      "inode/directory"
+    ];
     startupNotify = true;
     icon = "vscode";
   };

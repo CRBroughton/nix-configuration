@@ -42,38 +42,35 @@ install-gnome-extensions
 
 ## Usage
 
-### Updating the configuration
+This configuration uses [Just](https://github.com/casey/just) as a command runner for common tasks. The `just` command is configured to automatically use this repository's justfile from anywhere.
 
-After making changes to any `.nix` files, apply them with:
+### Getting Started with Just
 
+View all available commands:
 ```bash
-home-manager switch --flake .#craig
+just
 ```
 
-### Updating all packages
+All commands support **tab completion** in Fish shell - just type `just` and press TAB to see available commands.
+
+### Quick Examples
 
 ```bash
-nix flake update
-home-manager switch --flake .#craig
+# Apply configuration changes
+just switch
+
+# Search and add a package
+just search firefox
+just add firefox
+
+# Update everything
+just update-all
+
+# Clean up old generations
+just clean
 ```
 
-### Removing unused packages
-
-To clean up old generations and free up disk space:
-
-```bash
-# Remove old home-manager generations (keeps last 7 days)
-home-manager expire-generations "-7 days"
-
-# Collect garbage and remove unused packages
-nix-collect-garbage --delete-old
-
-# Or be more aggressive (remove everything not currently in use, including all previous generations)
-nix-collect-garbage -d
-
-# Optimize the Nix store (deduplicate files)
-nix-store --optimise
-```
+**Note:** Packages added via `just add` are automatically placed in a dedicated section at the bottom of `modules/packages.nix`. I mostly use this when testing out new packages.
 
 ## Troubleshooting
 

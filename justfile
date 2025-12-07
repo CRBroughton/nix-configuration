@@ -13,7 +13,7 @@ switch-verbose:
 # Update all flake inputs (nixpkgs, home-manager, etc.)
 update:
     nix flake update
-    @echo "Run 'nix-just switch' to apply updates"
+    @echo "Run 'just switch' to apply updates"
 
 # Update and switch in one command
 update-all: update switch
@@ -123,7 +123,7 @@ dry-run:
 format:
     #!/usr/bin/env bash
     if ! command -v nixfmt &> /dev/null; then
-        echo "Error: nixfmt not found. Run 'nix-just switch' first to install it."
+        echo "Error: nixfmt not found. Run 'just switch' first to install it."
         exit 1
     fi
     find . -name '*.nix' -type f -exec nixfmt {} +

@@ -13,8 +13,9 @@
       set -gx CGO_ENABLED 1
     '';
     functions = {
-      nix-just = {
+      just = {
         description = "Run just commands from nix-configuration directory with autocomplete";
+        wraps = "just";
         body = ''
           set -l nix_config_dir "$HOME/nix-configuration"
 
@@ -28,24 +29,24 @@
             return 1
           end
 
-          just --justfile "$nix_config_dir/justfile" --working-directory "$nix_config_dir" $argv
+          command just --justfile "$nix_config_dir/justfile" --working-directory "$nix_config_dir" $argv
         '';
       };
     };
   };
 
-  # Add Fish completion for nix-just that wraps just's completion
-  home.file.".config/fish/completions/nix-just.fish".text = ''
-    # Completions for nix-just - wraps just completions
-    function __nix_just_complete
+  # Add Fish completion for just that wraps the justfile
+  home.file.".config/fish/completions/just.fish".text = ''
+    # Completions for just - wraps nix-configuration justfile completions
+    function __just_complete
       set -l nix_config_dir "$HOME/nix-configuration"
       if test -f "$nix_config_dir/justfile"
-        just --justfile "$nix_config_dir/justfile" --summary 2>/dev/null | string split ' '
+        command just --justfile "$nix_config_dir/justfile" --summary 2>/dev/null | string split ' '
       end
     end
 
-    # Complete nix-just with recipe names
-    complete -c nix-just -f -a "(__nix_just_complete)"
+    # Complete just with recipe names
+    complete -c just -f -a "(__just_complete)"
   '';
 
   # Starship prompt

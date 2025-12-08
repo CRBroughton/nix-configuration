@@ -14,9 +14,16 @@
     '';
     functions = {
       just = {
-        description = "Run just commands from nix-configuration directory with autocomplete";
+        description = "Run just - uses local justfile if present, otherwise nix-configuration justfile";
         wraps = "just";
         body = ''
+          # Check for local justfile first
+          if test -f justfile; or test -f Justfile
+            command just $argv
+            return
+          end
+
+          # Fall back to nix-configuration justfile
           set -l nix_config_dir "$HOME/nix-configuration"
 
           if not test -d "$nix_config_dir"
@@ -35,10 +42,17 @@
     };
   };
 
-  # Add Fish completion for just that wraps the justfile
+  # Add Fish completion for just - uses local or nix-configuration justfile
   home.file.".config/fish/completions/just.fish".text = ''
-    # Completions for just - wraps nix-configuration justfile completions
+    # Completions for just - local justfile takes precedence
     function __just_complete
+      # Check for local justfile first
+      if test -f justfile; or test -f Justfile
+        command just --summary 2>/dev/null | string split ' '
+        return
+      end
+
+      # Fall back to nix-configuration justfile
       set -l nix_config_dir "$HOME/nix-configuration"
       if test -f "$nix_config_dir/justfile"
         command just --justfile "$nix_config_dir/justfile" --summary 2>/dev/null | string split ' '

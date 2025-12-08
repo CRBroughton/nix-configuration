@@ -6,11 +6,27 @@
 }:
 
 {
-  # GNOME extensions are installed via the 'install-gnome-extensions' command
-  # Run 'install-gnome-extensions' after home-manager switch to install:
-  #   - Tiling Shell (v61)
-  #   - Blur my Shell (v70)
-  #   - Caffeine (v58)
+  home.packages = with pkgs.gnomeExtensions; [
+    tiling-shell
+    blur-my-shell
+    caffeine
+    compiz-windows-effect
+    appindicator
+  ];
+
+  # Link GNOME extensions so GNOME Shell can find them
+  home.activation.linkGnomeExtensions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    EXTENSIONS_DIR="${config.home.homeDirectory}/.local/share/gnome-shell/extensions"
+    mkdir -p "$EXTENSIONS_DIR"
+
+    # Link each extension from Nix profile to local directory
+    for ext in ${config.home.profileDirectory}/share/gnome-shell/extensions/*; do
+      if [ -d "$ext" ]; then
+        ext_name=$(basename "$ext")
+        $DRY_RUN_CMD ln -sfn "$ext" "$EXTENSIONS_DIR/$ext_name"
+      fi
+    done
+  '';
 
   # Refresh GNOME app cache after home-manager switch
   home.activation.refreshGnomeApps = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -27,6 +43,7 @@
     };
     # Set favorite apps in GNOME dock
     "org/gnome/shell" = {
+      disable-user-extensions = false;
       favorite-apps = [
         "zen-twilight.desktop"
         "org.gnome.Nautilus.desktop"
@@ -39,10 +56,13 @@
         "com.heroicgameslauncher.hgl.desktop"
         "md.obsidian.Obsidian.desktop"
       ];
+      # Enable all installed extensions
       enabled-extensions = [
         "tilingshell@ferrarodomenico.com"
         "blur-my-shell@aunetx"
         "caffeine@patapon.info"
+        "compiz-windows-effect@hermes83.github.com"
+        "appindicatorsupport@rgcjonas.gmail.com"
       ];
     };
   };

@@ -30,15 +30,6 @@ cd nix-configuration
 nix run home-manager/master -- switch --flake .#craig -b backup
 ```
 
-### 4. Install Gnome Extensions
-
-Installs the specified Gnome Extensions in `gnome-extensions-installer.nix` (requires a restart)
-
-```bash
-install-gnome-extensions
-```
-
-
 ## Usage
 
 This configuration uses [Just](https://github.com/casey/just) as a command runner for common tasks. The `just` command is configured to automatically use this repository's justfile from anywhere.

@@ -18,10 +18,6 @@ update:
 # Update and switch in one command
 update-all: update switch
 
-# Install GNOME extensions
-install-extensions:
-    install-gnome-extensions
-
 # Clean old generations (keeps last 7 days)
 clean:
     home-manager expire-generations "-7 days"

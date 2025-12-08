@@ -186,3 +186,23 @@ rollback:
 # Remove a specific generation
 remove-generation GEN:
     home-manager remove-generations {{GEN}}
+
+# Show Nix configuration report
+report:
+    #!/usr/bin/env bash
+    echo "=== Nix Configuration Report ==="
+    echo ""
+    echo "Current Generation:"
+    home-manager generations | head -1
+    echo ""
+    echo "Installed Packages:"
+    nix-store -q --references ~/.nix-profile | wc -l
+    echo ""
+    echo "Nix Store Disk Usage:"
+    du -sh /nix/store
+    echo ""
+    echo "Home Manager Generations:"
+    home-manager generations | wc -l
+    echo ""
+    echo "Recent Generations:"
+    home-manager generations | head -5

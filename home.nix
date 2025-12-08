@@ -56,4 +56,31 @@
     enable = true;
     # version = "18.18.0";  # Uncomment to use a specific version
   };
+
+  # Automatic garbage collection via systemd timer
+  systemd.user.timers.nix-gc = {
+    Unit = {
+      Description = "Automatic Nix Garbage Collection";
+    };
+    Timer = {
+      OnCalendar = "weekly";
+      Persistent = true;
+    };
+    Install = {
+      WantedBy = [ "timers.target" ];
+    };
+  };
+
+  systemd.user.services.nix-gc = {
+    Unit = {
+      Description = "Nix Garbage Collection";
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.writeShellScript "nix-gc" ''
+        ${pkgs.home-manager}/bin/home-manager expire-generations "-30 days"
+        ${pkgs.nix}/bin/nix-collect-garbage --delete-old
+      ''}";
+    };
+  };
 }

@@ -169,6 +169,10 @@ clean-flatpak:
 pre-commit: format check
     @echo "All checks passed! Ready to commit."
 
+# Update CachyOS system packages
+update-cachyos:
+    sudo pacman -Syu
+
 # Full system update (Nix + Flatpak)
 full-update: update-all update-flatpak
     @echo "System fully updated!"

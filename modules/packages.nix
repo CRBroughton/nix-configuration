@@ -53,6 +53,7 @@
     # File transfer and backup
     croc
     restic
+    pika-backup
 
     # GPG/YubiKey tools
     kdePackages.kleopatra

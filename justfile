@@ -31,12 +31,12 @@ clean:
 clean-all:
     nix-collect-garbage -d
 
-# Optimize Nix store (deduplicate files to save space)
-optimize:
+# Optimise Nix store (deduplicate files to save space)
+optimise:
     nix-store --optimise
 
-# Full maintenance: clean and optimize
-maintenance: clean optimize
+# Full maintenance: clean and optimise
+maintenance: clean optimise
 
 # List all home-manager generations
 generations:

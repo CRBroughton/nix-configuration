@@ -16,6 +16,7 @@
     ./modules/go.nix
     ./modules/zig.nix
     ./modules/node.nix
+    ./modules/lua.nix
     ./modules/keyboard.nix
     ./modules/lazydocker.nix
     ./modules/ssh.nix
@@ -55,6 +56,18 @@
   programs.node-installer = {
     enable = true;
     # version = "18.18.0";  # Uncomment to use a specific version
+  };
+
+  programs.lua = {
+    enable = true;
+    extraPackages = [
+      "cjson"
+      "luafilesystem"
+      "luasocket"
+      "luasec"
+      "luassert"
+      "busted"
+    ];
   };
 
   # Automatic garbage collection via systemd timer

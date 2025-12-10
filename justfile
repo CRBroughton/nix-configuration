@@ -210,3 +210,7 @@ report:
     echo ""
     echo "Recent Generations:"
     home-manager generations | head -5
+
+# Initialize Lua project with .luarc.json
+init-lua:
+    lua scripts/init-lua.lua

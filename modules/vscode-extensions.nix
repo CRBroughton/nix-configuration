@@ -15,6 +15,9 @@
       catppuccin.catppuccin-vsc-icons
       vscode-icons-team.vscode-icons
 
+      # Languages - Lua
+      sumneko.lua
+
       # Languages - PHP
       bmewburn.vscode-intelephense-client
       emeraldwalk.runonsave

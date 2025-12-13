@@ -11,6 +11,8 @@
     };
     shellInit = ''
       set -gx CGO_ENABLED 1
+      # Add pnpm global bin to PATH
+      set -gx PATH "$HOME/.local/share/pnpm" $PATH
     '';
     functions = {
       just = {

@@ -17,12 +17,14 @@
     "io.gitlab.news_flash.NewsFlash"
     "io.github.flattool.Warehouse"
     "com.github.tchx84.Flatseal"
+    "app.zen_browser.zen"
+    "org.virt_manager.virt-manager"
   ];
 
   # Fix D-Bus activation for flatpak apps on non-NixOS systems
   # The D-Bus service files point to /run/current-system/sw/bin/flatpak
   # but we need to use the flatpak from our user profile
-  home.activation.fixFlatpakDbusServices = config.lib.dag.entryAfter ["writeBoundary"] ''
+  home.activation.fixFlatpakDbusServices = config.lib.dag.entryAfter [ "writeBoundary" ] ''
     FLATPAK_BIN="${config.home.profileDirectory}/bin/flatpak"
     DBUS_SERVICES_DIR="${config.home.homeDirectory}/.local/share/dbus-1/services"
 

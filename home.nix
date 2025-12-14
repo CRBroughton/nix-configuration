@@ -16,7 +16,6 @@
     ./modules/go.nix
     ./modules/zig.nix
     ./modules/node.nix
-    ./modules/lua.nix
     ./modules/keyboard.nix
     ./modules/lazydocker.nix
     ./modules/ssh.nix
@@ -58,17 +57,8 @@
     # version = "18.18.0";  # Uncomment to use a specific version
   };
 
-  programs.lua = {
-    enable = true;
-    extraPackages = [
-      "cjson"
-      "luafilesystem"
-      "luasocket"
-      "luasec"
-      "luassert"
-      "busted"
-    ];
-  };
+  programs.lua.enable = true;
+  programs.love2d.enable = true;
 
   # Automatic garbage collection via systemd timer
   systemd.user.timers.nix-gc = {

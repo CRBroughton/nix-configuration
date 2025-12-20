@@ -471,11 +471,11 @@
       },
       "locked": {
         "dir": "zen-flatpak-config",
-        "lastModified": 1766223828,
-        "narHash": "sha256-hprcNMcix6818NdvFCrhoOdDaOKnSGCjg6QJeo9acvY=",
+        "lastModified": 1766258951,
+        "narHash": "sha256-lkDN0r+xdjnQJMaWZk6+DDCRCV6FTNFAI+6PLceC2Ec=",
         "owner": "crbroughton",
         "repo": "nix-flakes",
-        "rev": "3f12aba4893e2dcadd45cba820407775f15c9052",
+        "rev": "391787f58aa49a693ec208370a48b2f164070635",
         "type": "github"
       },
       "original": {

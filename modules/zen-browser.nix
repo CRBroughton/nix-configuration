@@ -12,17 +12,50 @@
       web-clipper-obsidian
     ];
 
-    pinsForce = true;
-    pins = {
-      "GitHub" = {
+    pins = [
+      {
+        name = "GitHub";
         url = "https://github.com/crbroughton";
         isEssential = true;
-      };
-      "Monkeytype" = {
+      }
+      {
+        name = "Monkeytype";
         url = "https://monkeytype.com";
         isEssential = true;
-        };
-    };
+      }
+      {
+        name = "Frontend";
+        isGroup = true;
+        children = [
+          {
+            title = "Javascript Docs";
+            url = "https://javascript.info";
+          }
+          {
+            title = "MDN";
+            url = "https://developer.mozilla.org";
+          }
+        ];
+      }
+      {
+        name = "Nix";
+        isGroup = true;
+        children = [
+          {
+            title = "Nix Packages";
+            url = "https://search.nixos.org/packages";
+          }
+          {
+            title = "Nix Dev Documentation";
+            url = "https://nix.dev/index.html";
+          }
+          {
+            title = "Nix Pills";
+            url = "https://nixos.org/guides/nix-pills/";
+          }
+        ];
+      }
+    ];
 
     settings = {
       # Privacy settings

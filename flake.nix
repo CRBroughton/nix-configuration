@@ -14,9 +14,9 @@
 
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
 
-    # Zen Browser
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
+    # Zen Browser Flatpak Configuration
+    zen-flatpak-config = {
+      url = "github:crbroughton/nix-flakes?dir=zen-flatpak-config";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -43,7 +43,7 @@
       nix-flatpak,
       ghostty-wrapped,
       nix-vscode-extensions,
-      zen-browser,
+      zen-flatpak-config,
       firefox-addons,
       lua-dev,
       love2d,
@@ -67,7 +67,7 @@
           ghostty-wrapped.homeManagerModules.default
           lua-dev.homeManagerModules.default
           love2d.homeManagerModules.default
-          zen-browser.homeModules.twilight
+          zen-flatpak-config.homeManagerModules.default
           {
             _module.args = {
               inherit firefox-addons;

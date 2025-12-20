@@ -45,7 +45,7 @@
     "org/gnome/shell" = {
       disable-user-extensions = false;
       favorite-apps = [
-        "zen-twilight.desktop"
+        "app.zen_browser.zen.desktop"
         "org.gnome.Nautilus.desktop"
         "io.github.equicord.equibop.desktop"
         "com.bitwarden.desktop.desktop"

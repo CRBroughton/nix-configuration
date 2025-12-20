@@ -2,11 +2,12 @@
 
 {
   programs.vscode = {
-    mutableExtensionsDir = false;
+    mutableExtensionsDir = true;
 
     profiles.default.extensions = with pkgs.vscode-marketplace; [
       anweber.vscode-httpyac
-
+      betterthantomorrow.calva
+      nimsaem.nimvscode
       # Themes
       boydmeyer.pop-dark
       antfu.theme-vitesse
@@ -30,7 +31,7 @@
       mariusalchimavicius.json-to-ts
 
       # Languages - Vue
-      vue.volar
+      # vue.volar - Installed manually via VSCode marketplace due to Nix read-only filesystem issue
       craigrbroughton.modern-vue-snippets
 
       # Languages - Go

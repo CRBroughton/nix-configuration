@@ -1,0 +1,57 @@
+# SearXNG Configuration
+# This is an example configuration file
+# Copy this to ~/.config/searxng/settings.yml and customize
+
+use_default_settings: true
+
+server:
+  # Secret key for secure sessions - CHANGE THIS!
+  secret_key: "ultrasecretkey"  # Please generate a random key
+
+  # Disable rate limiting for local use
+  limiter: false
+
+  # Enable image proxy for privacy
+  image_proxy: true
+
+  # Bind address (0.0.0.0 allows external access)
+  bind_address: "0.0.0.0"
+
+  # Port inside container
+  port: 8080
+
+ui:
+  # Use hashed static files for caching
+  static_use_hash: true
+
+  # Default theme
+  default_theme: simple
+
+  # Show advanced settings
+  advanced_search: true
+
+search:
+  # Safe search: 0=None, 1=Moderate, 2=Strict
+  safe_search: 0
+
+  # Autocomplete backend (empty = disabled)
+  autocomplete: ""
+
+  # Default language (empty = auto-detect)
+  default_lang: ""
+
+  # Number of results per page
+  max_page: 0
+
+# Enabled engines (uncomment to customize)
+# engines:
+#   - name: google
+#     disabled: false
+#   - name: duckduckgo
+#     disabled: false
+#   - name: wikipedia
+#     disabled: false
+
+# Redis for caching (optional)
+# redis:
+#   url: "redis://localhost:6379/0"

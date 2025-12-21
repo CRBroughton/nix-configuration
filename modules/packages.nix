@@ -6,6 +6,7 @@
     bat
     eza
     navi
+    tor-browser
 
     # Text editors
     micro

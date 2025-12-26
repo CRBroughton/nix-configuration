@@ -15,9 +15,6 @@
     # Fresh editor
     fresh-editor.url = "path:./fresh-flake";
 
-    # Zed editor with Vulkan dependencies
-    zed-wrapped.url = "path:./zed-flake";
-
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
 
     # Zen Browser Flatpak Configuration
@@ -49,7 +46,6 @@
       nix-flatpak,
       ghostty-wrapped,
       fresh-editor,
-      zed-wrapped,
       nix-vscode-extensions,
       zen-flatpak-config,
       firefox-addons,
@@ -74,7 +70,6 @@
           nix-flatpak.homeManagerModules.nix-flatpak
           ghostty-wrapped.homeManagerModules.default
           fresh-editor.homeManagerModules.default
-          zed-wrapped.homeManagerModules.default
           lua-dev.homeManagerModules.default
           love2d.homeManagerModules.default
           zen-flatpak-config.homeManagerModules.default

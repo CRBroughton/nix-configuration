@@ -18,7 +18,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
 
         fresh-editor = pkgs.appimageTools.wrapType2 {
-          name = "fresh-editor";
+          pname = "fresh-editor";
           version = "0.1.64";
 
           src = pkgs.fetchurl {

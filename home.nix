@@ -10,6 +10,7 @@
     ./modules/vscode-settings.nix
     ./modules/ghostty.nix
     ./modules/fresh.nix
+    ./modules/zed.nix
     ./modules/flatpak.nix
     ./modules/gnome.nix
     ./modules/create-laravel-api.nix

@@ -24,6 +24,10 @@
         isEssential = true;
       }
       {
+        name = "SearXNG";
+        url = "http://localhost:8888";
+      }
+      {
         name = "Frontend";
         isGroup = true;
         children = [
@@ -34,6 +38,24 @@
           {
             title = "MDN";
             url = "https://developer.mozilla.org";
+          }
+        ];
+      }
+      {
+        name = "Go";
+        isGroup = true;
+        children = [
+          {
+            title = "Go By Example";
+            url = "https://gobyexample.com";
+          }
+          {
+            title = "Effective Go";
+            url = "https://go.dev/doc/effective_go";
+          }
+          {
+            title = "Awesome Go";
+            url = "https://github.com/avelino/awesome-go";
           }
         ];
       }
@@ -51,7 +73,35 @@
           }
           {
             title = "Nix Pills";
-            url = "https://nixos.org/guides/nix-pills/";
+            url = "https://nixos.org/guides/nix-pills";
+          }
+        ];
+      }
+      {
+        name = "Programming";
+        isGroup = true;
+        children = [
+          {
+            title = "Devdocs";
+            url = "https://devdocs.io";
+          }
+          {
+            title = "Exercism";
+            url = "https://exercism.org";
+          }
+          {
+            title = "Raylib";
+            url = "https://www.raylib.com";
+          }
+        ];
+      }
+      {
+        name = "Selfhosting";
+        isGroup = true;
+        children = [
+          {
+            title = "Github - Awesome Selfhosted";
+            url = "https://github.com/awesome-selfhosted/awesome-selfhosted";
           }
         ];
       }

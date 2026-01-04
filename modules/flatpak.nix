@@ -19,6 +19,7 @@
     "com.github.tchx84.Flatseal"
     "app.zen_browser.zen"
     "org.virt_manager.virt-manager"
+    "com.github.johnfactotum.Foliate"
   ];
 
   # Fix D-Bus activation for flatpak apps on non-NixOS systems

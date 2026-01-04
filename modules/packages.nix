@@ -16,8 +16,9 @@
 
     # Container and orchestration tools
     podman
+    podman-compose
     lazydocker
-
+    exercism
     # Version control
     lazygit
     jujutsu

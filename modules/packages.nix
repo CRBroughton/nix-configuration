@@ -71,7 +71,7 @@
     # Package management
     flatpak
     nix-search-cli
-    nixfmt-rfc-style
+    nixfmt
 
     # Gaming
     lutris

@@ -79,7 +79,7 @@
     # Terminal
     # ghostty - using ghostty-wrapped module instead
     warp
-
+    picard
     # __DYNAMIC_CLI_PACKAGES__ - Packages added via 'nix-just add' command
     # DO NOT REMOVE THIS MARKER - Used by automation scripts
   ];

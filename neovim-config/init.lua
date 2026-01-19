@@ -1,1 +1,1 @@
-vim.wo.number = true;
+require 'options'

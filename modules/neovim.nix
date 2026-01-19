@@ -13,4 +13,8 @@
     source = ../neovim-config/lua;
     recursive = true;
   };
+
+  home.file.".config/nvim/.luarc.json" = {
+    source = ../neovim-config/.luarc.json;
+  };
 }

@@ -13,6 +13,8 @@
       # Font
       font-family = "FiraCode Nerd Font Mono";
       font-size = 14;
+      font-feature = "-calt";
+      font-style = "SemiBold";
 
       # Colors
       background = "#171717";

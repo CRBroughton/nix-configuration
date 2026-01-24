@@ -12,9 +12,6 @@
     # Ghostty with nixGL wrapper
     ghostty-wrapped.url = "path:./ghostty-flake";
 
-    # Fresh editor
-    fresh-editor.url = "path:./fresh-flake";
-
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
 
     # Zen Browser Flatpak Configuration
@@ -45,7 +42,6 @@
       home-manager,
       nix-flatpak,
       ghostty-wrapped,
-      fresh-editor,
       nix-vscode-extensions,
       zen-flatpak-config,
       firefox-addons,
@@ -69,7 +65,6 @@
         modules = [
           nix-flatpak.homeManagerModules.nix-flatpak
           ghostty-wrapped.homeManagerModules.default
-          fresh-editor.homeManagerModules.default
           lua-dev.homeManagerModules.default
           love2d.homeManagerModules.default
           zen-flatpak-config.homeManagerModules.default

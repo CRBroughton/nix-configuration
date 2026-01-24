@@ -9,7 +9,6 @@
     ./modules/vscode-extensions.nix
     ./modules/vscode-settings.nix
     ./modules/ghostty.nix
-    ./modules/fresh.nix
     ./modules/zed.nix
     ./modules/neovim.nix
     ./modules/flatpak.nix

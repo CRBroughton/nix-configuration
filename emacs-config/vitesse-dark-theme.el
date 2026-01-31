@@ -98,18 +98,14 @@
    `(eshell-ls-executable ((,class (:foreground ,keyword))))
    `(eshell-ls-symlink ((,class (:foreground ,type))))
 
-   ;; Centaur tabs
-   `(centaur-tabs-default ((,class (:background ,bg :foreground ,fg-dim))))
-   `(centaur-tabs-selected ((,class (:background ,bg-soft :foreground ,fg :bold t))))
-   `(centaur-tabs-unselected ((,class (:background ,bg :foreground ,fg-dim))))
-   `(centaur-tabs-selected-modified ((,class (:background ,bg-soft :foreground ,warning :bold t))))
-   `(centaur-tabs-unselected-modified ((,class (:background ,bg :foreground ,warning))))
-   `(centaur-tabs-active-bar-face ((,class (:background ,keyword))))
-   `(centaur-tabs-modified-marker-selected ((,class (:foreground ,warning))))
-   `(centaur-tabs-modified-marker-unselected ((,class (:foreground ,warning))))
+   ;; Tab line (per-window tabs)
+   `(tab-line ((,class (:background ,bg :foreground ,fg-dim))))
+   `(tab-line-tab ((,class (:background ,bg :foreground ,fg-dim :box nil))))
+   `(tab-line-tab-current ((,class (:background ,bg-soft :foreground ,fg :bold t :box nil))))
+   `(tab-line-tab-inactive ((,class (:background ,bg :foreground ,fg-dim :box nil))))
+   `(tab-line-highlight ((,class (:background ,bg-highlight))))
 
-   ;; Tab bar/line background (the empty space)
-   `(tab-line ((,class (:background ,bg))))
+   ;; Header line
    `(header-line ((,class (:background ,bg :foreground ,fg-dim))))
    ))
 

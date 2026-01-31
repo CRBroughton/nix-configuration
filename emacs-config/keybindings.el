@@ -1,7 +1,38 @@
 ;;; keybindings.el --- Custom keybindings and functions -*- lexical-binding: t; -*-
 
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+;; ESC: quit prompts in minibuffer, close window+buffer for terminal, close buffer otherwise
+(defun smart-escape ()
+  "Close buffer/tab smartly based on context:
+- Minibuffer: escape/quit
+- Terminal: kill buffer and close window if not last
+- Buffer in multiple windows: remove from this window's tabs only
+- Only one tab left and multiple windows: close the window
+- Buffer in single window: kill the buffer"
+  (interactive)
+  (cond
+   ((minibufferp) (keyboard-escape-quit))
+   ((derived-mode-p 'eshell-mode 'term-mode)
+    (kill-buffer (current-buffer))
+    (when (> (count-windows) 1)
+      (delete-window)))
+   ;; Buffer displayed in multiple windows - remove from this window only
+   ((> (length (get-buffer-window-list (current-buffer) nil t)) 1)
+    (let ((buf (current-buffer))
+          (win (selected-window)))
+      ;; Switch to previous buffer
+      (switch-to-prev-buffer)
+      ;; Remove from this window's buffer lists so it won't show in tabs
+      (set-window-prev-buffers win
+        (assq-delete-all buf (window-prev-buffers win)))
+      (set-window-next-buffers win
+        (delq buf (window-next-buffers win)))))
+   ;; Only one tab in this window and multiple windows exist - close window
+   ((and (> (count-windows) 1)
+         (<= (length (funcall tab-line-tabs-function)) 1))
+    (delete-window))
+   ;; Buffer only in this window - kill it
+   (t (kill-buffer (current-buffer)))))
+(global-set-key (kbd "<escape>") 'smart-escape)
 
 ;; Save with C-s (like VS Code)
 (global-set-key (kbd "C-s") 'save-buffer)
@@ -11,8 +42,13 @@
 (cua-mode t)
 (global-set-key (kbd "C-z") 'undo)
 
-;; Quick window switching
-(global-set-key (kbd "M-o") 'other-window)
+;; Split window right and switch to it (like VS Code Ctrl+\)
+(defun split-window-right-and-switch ()
+  "Split window right and move cursor to new window."
+  (interactive)
+  (split-window-right)
+  (other-window 1))
+(global-set-key (kbd "C-\\") 'split-window-right-and-switch)
 
 ;; Reload config (like VS Code reload window)
 (defun reload-config ()

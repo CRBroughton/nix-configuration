@@ -79,20 +79,16 @@
   :config
   (setq which-key-idle-delay 0))
 
-;; centaur-tabs: VS Code-like buffer tabs at the top
-(use-package centaur-tabs
-  :demand
-  :config
-  (centaur-tabs-mode t)
-  (setq centaur-tabs-style "bar"
-        centaur-tabs-height 32
-        centaur-tabs-set-icons t
-        centaur-tabs-set-bar 'under
-        centaur-tabs-set-modified-marker t
-        centaur-tabs-modified-marker "*")
-  :bind
-  (("C-<prior>" . centaur-tabs-backward)   ; Ctrl+PageUp
-   ("C-<next>" . centaur-tabs-forward)))   ; Ctrl+PageDown
+;; Built-in tab-line-mode: per-window buffer tabs
+(global-tab-line-mode 1)
+(setq tab-line-new-button-show nil    ; Hide new tab button
+      tab-line-close-button-show nil) ; Hide close button on tabs
+;; Ctrl+PageUp/Down: switch tabs
+(global-set-key (kbd "C-<prior>") 'tab-line-switch-to-prev-tab)
+(global-set-key (kbd "C-<next>") 'tab-line-switch-to-next-tab)
+;; Alt+PageUp/Down: switch windows/splits
+(global-set-key (kbd "M-<prior>") 'other-window)
+(global-set-key (kbd "M-<next>") (lambda () (interactive) (other-window -1)))
 
 (provide 'packages)
 ;;; packages.el ends here

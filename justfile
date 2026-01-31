@@ -62,40 +62,83 @@ backup:
 search PACKAGE:
     nix-search {{PACKAGE}}
 
-# Add a package to modules/packages.nix
+# Add a package to a packages file
 add PACKAGE:
     #!/usr/bin/env bash
     set -e
-    PACKAGES_FILE="modules/packages.nix"
 
-    # Check if package already exists
-    if grep -q "^\s*{{PACKAGE}}\s*$" "$PACKAGES_FILE"; then
-        echo "Package '{{PACKAGE}}' already exists in $PACKAGES_FILE"
+    # Package files with friendly names
+    declare -A FILES=(
+        ["1"]="modules/packages/cli.nix:CLI & Utilities"
+        ["2"]="modules/packages/programming.nix:Programming"
+        ["3"]="modules/packages/gaming.nix:Gaming"
+        ["4"]="modules/packages/audio.nix:Audio"
+        ["5"]="modules/packages/yubikey.nix:YubiKey"
+        ["6"]="modules/packages/package-management.nix:Package Management"
+    )
+
+    echo "Select a category for '{{PACKAGE}}':"
+    echo ""
+    for key in $(echo "${!FILES[@]}" | tr ' ' '\n' | sort -n); do
+        IFS=':' read -r path name <<< "${FILES[$key]}"
+        echo "  $key) $name"
+    done
+    echo ""
+    read -p "Choice [1-6]: " choice
+
+    if [[ -z "${FILES[$choice]}" ]]; then
+        echo "Invalid selection"
         exit 1
     fi
 
-    # Insert after the __DYNAMIC_CLI_PACKAGES__ marker
-    sed -i '/# __DYNAMIC_CLI_PACKAGES__/a\    {{PACKAGE}}' "$PACKAGES_FILE"
+    IFS=':' read -r PACKAGES_FILE category <<< "${FILES[$choice]}"
 
-    echo "✓ Added '{{PACKAGE}}' to $PACKAGES_FILE (dynamic packages section)"
+    # Check if package already exists in any packages file
+    for key in "${!FILES[@]}"; do
+        IFS=':' read -r path _ <<< "${FILES[$key]}"
+        if grep -q "^\s*{{PACKAGE}}\s*$" "$path"; then
+            echo "Package '{{PACKAGE}}' already exists in $path"
+            exit 1
+        fi
+    done
+
+    # Insert before the closing ]; of the array
+    sed -i '/^  \];$/i\    {{PACKAGE}}' "$PACKAGES_FILE"
+
+    echo "✓ Added '{{PACKAGE}}' to $category ($PACKAGES_FILE)"
     echo "Run 'just switch' to install the package"
 
-# Remove a package from modules/packages.nix
+# Remove a package from packages files
 remove PACKAGE:
     #!/usr/bin/env bash
     set -e
-    PACKAGES_FILE="modules/packages.nix"
 
-    # Check if package exists
-    if ! grep -q "^\s*{{PACKAGE}}\s*$" "$PACKAGES_FILE"; then
-        echo "Package '{{PACKAGE}}' not found in $PACKAGES_FILE"
+    PACKAGE_FILES=(
+        "modules/packages/cli.nix"
+        "modules/packages/programming.nix"
+        "modules/packages/gaming.nix"
+        "modules/packages/audio.nix"
+        "modules/packages/yubikey.nix"
+        "modules/packages/package-management.nix"
+    )
+
+    FOUND=""
+    for file in "${PACKAGE_FILES[@]}"; do
+        if grep -q "^\s*{{PACKAGE}}\s*$" "$file"; then
+            FOUND="$file"
+            break
+        fi
+    done
+
+    if [[ -z "$FOUND" ]]; then
+        echo "Package '{{PACKAGE}}' not found in any packages file"
         exit 1
     fi
 
     # Remove the package line
-    sed -i "/^\s*{{PACKAGE}}\s*$/d" "$PACKAGES_FILE"
+    sed -i "/^\s*{{PACKAGE}}\s*$/d" "$FOUND"
 
-    echo "✓ Removed '{{PACKAGE}}' from $PACKAGES_FILE"
+    echo "✓ Removed '{{PACKAGE}}' from $FOUND"
     echo "Run 'just switch' to uninstall the package"
 
 # Search and add a package interactively

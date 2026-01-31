@@ -2,7 +2,12 @@
 
 {
   imports = [
-    ./modules/packages.nix
+    ./modules/packages/cli.nix
+    ./modules/packages/programming.nix
+    ./modules/packages/yubikey.nix
+    ./modules/packages/audio.nix
+    ./modules/packages/package-management.nix
+    ./modules/packages/gaming.nix
     ./modules/fonts.nix
     ./modules/shell.nix
     ./modules/vscode.nix

@@ -72,6 +72,7 @@ in
     };
     Service = {
       Type = "oneshot";
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 10";
       ExecStart = "${pkgs.networkmanager}/bin/nmcli connection up belgium";
       RemainAfterExit = true;
     };

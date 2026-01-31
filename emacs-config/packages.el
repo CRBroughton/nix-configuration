@@ -100,7 +100,13 @@
 
 ;; magit: Git interface for Emacs
 (use-package magit
-  :bind (("C-x g" . magit-status)))
+  :bind (("C-x g" . magit-status))
+  :config
+  (define-key magit-status-mode-map (kbd "p") 'magit-pull)
+  (define-key magit-status-mode-map (kbd "P") 'magit-push)
+  (define-key magit-status-mode-map (kbd "l") 'magit-log-current)
+  (define-key magit-status-mode-map (kbd "S") 'magit-branch-checkout)
+  (define-key magit-status-mode-map (kbd "d") 'magit-diff-unstaged))
 
 ;; Conventional commit helper with emojis
 (defvar conventional-commit-types

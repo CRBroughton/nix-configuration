@@ -49,11 +49,24 @@
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
          ("C-x b" . counsel-ibuffer)
-         ("C-p" . counsel-find-file)  ; Open file (like VS Code)
          :map minibuffer-local-map
          ("C-r" . 'counsel-minibuffer-history))
   :config
   (setq ivy-initial-inputs-alist nil))
+
+;; projectile: Project management - finds files across entire project
+(use-package projectile
+  :diminish projectile-mode
+  :config
+  (projectile-mode +1)
+  (setq projectile-completion-system 'ivy))
+
+;; counsel-projectile: Ivy integration for projectile
+(use-package counsel-projectile
+  :after (counsel projectile)
+  :config
+  (counsel-projectile-mode +1)
+  :bind (("C-p" . counsel-projectile-find-file)))  ; Fuzzy find file in project
 
 ;; ivy-rich: Adds extra information to ivy buffers (file sizes, docstrings, etc)
 (use-package ivy-rich
@@ -78,6 +91,12 @@
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0))
+
+;; olivetti: Focus mode - centers text with fixed width
+(use-package olivetti
+  :config
+  (setq olivetti-body-width 200)  ; Character width for centered content
+  :bind (("C-M-z" . olivetti-mode)))  ; Toggle focus mode
 
 ;; Built-in tab-line-mode: per-window buffer tabs
 (global-tab-line-mode 1)

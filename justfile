@@ -257,3 +257,7 @@ report:
 # Initialize Lua project with .luarc.json
 init-lua:
     lua scripts/init-lua.lua
+
+# Launch Emacs (detached from terminal)
+emacs:
+    emacs & disown

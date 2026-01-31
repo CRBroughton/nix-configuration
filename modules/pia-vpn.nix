@@ -62,4 +62,21 @@ in
   home.activation.downloadPiaConfigs = config.lib.dag.entryAfter ["writeBoundary"] ''
     $DRY_RUN_CMD ${downloadPiaConfigs}
   '';
+
+  # Auto-connect VPN on login
+  systemd.user.services.pia-vpn-autoconnect = {
+    Unit = {
+      Description = "Auto-connect PIA VPN";
+      After = [ "network-online.target" ];
+      Wants = [ "network-online.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.networkmanager}/bin/nmcli connection up belgium";
+      RemainAfterExit = true;
+    };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+  };
 }

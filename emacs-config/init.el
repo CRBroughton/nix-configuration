@@ -1,7 +1,7 @@
 ;;; init.el --- Main Emacs configuration entry point -*- lexical-binding: t; -*-
 
-;; Add config directory to load path
-(add-to-list 'load-path "~/.emacs.d/")
+;; Add lisp directory to load path
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 
 ;; Load configuration modules
 (require 'ui)          ; UI and appearance settings

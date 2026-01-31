@@ -16,6 +16,7 @@
     ./modules/ghostty.nix
     ./modules/zed.nix
     ./modules/neovim.nix
+    ./modules/emacs.nix
     ./modules/flatpak.nix
     ./modules/gnome.nix
     ./modules/create-laravel-api.nix

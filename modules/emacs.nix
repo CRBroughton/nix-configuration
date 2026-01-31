@@ -5,7 +5,7 @@
     emacs
   ];
 
-  home.file.".config/emacs" = {
+  home.file.".emacs.d" = {
     source = ../emacs-config;
     recursive = true;
   };

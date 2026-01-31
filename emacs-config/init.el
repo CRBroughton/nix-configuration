@@ -7,10 +7,28 @@
 
 
 (set-face-attribute 'default nil :font "FiraCode Nerd Font" :height 150)
-(load-theme 'wombat)
+;; Load custom Vitesse Dark theme
+(add-to-list 'custom-theme-load-path "~/.emacs.d/")
+(load-theme 'vitesse-dark t)
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+;; Save with C-s (like VS Code)
+(global-set-key (kbd "C-s") 'save-buffer)
+
+;; Standard copy/paste/undo (like VS Code)
+;; cua-mode: C-c copies only when text is selected, otherwise works as prefix
+(cua-mode t)
+(global-set-key (kbd "C-z") 'undo)
+
+;; Reload config (like VS Code reload window)
+(defun reload-config ()
+  "Reload the Emacs configuration."
+  (interactive)
+  (load-file user-init-file)
+  (message "Config reloaded!"))
+(global-set-key (kbd "<f5>") 'reload-config)
 
 ;; Quick window switching
 (global-set-key (kbd "M-o") 'other-window)
@@ -49,6 +67,16 @@
 
 (require 'use-package)
 (setq use-package-always-ensure t)
+
+;; Show relative line numbers everywhere
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode 1)
+
+;; Disable line numbers in terminal buffers
+(dolist (mode '(eshell-mode-hook term-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+
 
 ;; command-log-mode: Displays a buffer showing all commands you execute in
 ;; real-time. Useful for learning keybindings and creating tutorials/demos.
@@ -96,3 +124,4 @@
   :ensure t
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
+

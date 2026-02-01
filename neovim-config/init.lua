@@ -50,4 +50,5 @@ require('lazy').setup({
   require 'plugins.colorizer',
   require 'plugins.persistence',
   require 'plugins.claude',
+  require 'plugins.vimbegood',
 })

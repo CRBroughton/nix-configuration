@@ -49,4 +49,5 @@ require('lazy').setup({
   require 'plugins.autotag',
   require 'plugins.colorizer',
   require 'plugins.persistence',
+  require 'plugins.claude',
 })

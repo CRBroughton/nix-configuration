@@ -40,5 +40,6 @@
 
     # Code analysis
     tokei
+    claude-code
   ];
 }

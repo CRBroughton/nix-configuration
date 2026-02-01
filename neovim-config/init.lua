@@ -1,5 +1,6 @@
 require 'core.keymaps'
 require 'core.options'
+require 'core.autocmds'
 
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -15,6 +16,28 @@ local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
 require('lazy').setup({
-require 'plugins.neotree';
-require 'plugins.colourtheme';
+  -- Existing plugins
+  require 'plugins.colourtheme',
+  require 'plugins.neotree',
+
+  -- Navigation & Search (ivy/counsel equivalent)
+  require 'plugins.telescope',
+
+  -- Completion (company equivalent)
+  require 'plugins.completion',
+
+  -- UI
+  require 'plugins.lualine',
+  require 'plugins.bufferline',
+  require 'plugins.which-key',
+  require 'plugins.rainbow-delimiters',
+  require 'plugins.zen-mode',
+
+  -- Git (magit equivalent)
+  require 'plugins.neogit',
+  require 'plugins.conventional-commit',
+
+  -- Language support
+  require 'plugins.treesitter',
+  require 'plugins.lsp',
 })

@@ -109,5 +109,61 @@
 (global-set-key (kbd "M-<prior>") 'other-window)
 (global-set-key (kbd "M-<next>") (lambda () (interactive) (other-window -1)))
 
+;;; --- AUTOCOMPLETION ---
+
+;; Company: Modular text completion framework
+;; This handles the popup menu for code completion (Intellisense)
+(use-package company
+  :hook (prog-mode . company-mode)
+  :bind (:map company-active-map
+              ("<tab>" . company-complete-selection))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
+
+;;; --- VUE & WEB DEVELOPMENT ---
+
+;; Web-mode: Major mode for editing web templates (HTML, Vue, JSX)
+(use-package web-mode
+  :mode ("\\.vue\\'" . vue-mode) ; Associate .vue files with our custom vue-mode
+  :config
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  
+  ;; Define a specific mode for Vue so we can hook LSP only to Vue, not all HTML
+  (define-derived-mode vue-mode web-mode "Vue"
+    "A major mode derived from web-mode, for Vue.js editing."))
+
+;; Eglot: The Emacs LSP Client
+(use-package eglot
+  :ensure t
+  :hook (vue-mode . eglot-ensure) ;; Automatically start LSP in vue-mode
+  :config
+  ;; 1. Helper function to find the global TypeScript path (TSDK)
+  ;; This is critical for Volar (Vue LS) to handle types correctly.
+  (defun my/vue-eglot-init-options ()
+    (let ((tsdk-path (expand-file-name
+                      "lib"
+                      (shell-command-to-string "npm list --global --parseable typescript | head -n1 | tr -d \"\n\""))))
+      `(:typescript (:tsdk ,tsdk-path
+                     :languageFeatures (:completion
+                                        (:defaultTagNameCase "both"
+                                         :defaultAttrNameCase "kebabCase"
+                                         :getDocumentNameCasesRequest nil
+                                         :getDocumentSelectionRequest nil)
+                                        :diagnostics
+                                        (:getDocumentVersionRequest nil))
+                     :documentFeatures (:documentFormatting
+                                        (:defaultPrintWidth 100
+                                         :getDocumentPrintWidthRequest nil)
+                                        :documentSymbol t
+                                        :documentColor t)))))
+
+  ;; 2. Register the Vue Language Server with the correct options
+  (add-to-list 'eglot-server-programs
+               `(vue-mode . ("vue-language-server" "--stdio" 
+                             :initializationOptions ,(my/vue-eglot-init-options)))))
+
 (provide 'packages)
 ;;; packages.el ends here

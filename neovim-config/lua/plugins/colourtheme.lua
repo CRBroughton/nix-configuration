@@ -1,5 +1,6 @@
+-- vitesse.nvim: Dark color scheme inspired by Vitesse theme
 return {
-"2nthony/vitesse.nvim",
+  '2nthony/vitesse.nvim',
 dependencies = {
     "tjdevries/colorbuddy.nvim"
 },

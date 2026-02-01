@@ -1,3 +1,4 @@
+-- gitsigns.nvim: Git signs in the gutter, inline blame, and hunk navigation/staging
 return {
   'lewis6991/gitsigns.nvim',
   event = { 'BufReadPre', 'BufNewFile' },

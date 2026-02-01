@@ -1,3 +1,4 @@
+-- lsp_lines.nvim: Shows LSP diagnostics as virtual lines below the code (like Error Lens)
 return {
   'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
   event = 'LspAttach',

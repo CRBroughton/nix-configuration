@@ -11,6 +11,7 @@ return {
         typescriptreact = { 'eslint_d' },
         vue = { 'eslint_d' },
         json = { 'eslint_d' },
+        go = { 'goimports' },
       },
       format_on_save = {
         timeout_ms = 3000,

@@ -10,13 +10,14 @@ return {
 
     -- Auto-install LSP servers
     require('mason-lspconfig').setup({
-      ensure_installed = { 'lua_ls', 'ts_ls', 'vue_ls', 'eslint', 'tailwindcss', 'unocss' },
+      ensure_installed = { 'lua_ls', 'ts_ls', 'vue_ls', 'eslint', 'tailwindcss', 'unocss', 'gopls' },
     })
 
     -- Auto-install formatters/linters (non-LSP tools)
     require('mason-tool-installer').setup({
       ensure_installed = {
         'eslint_d', -- Fast ESLint daemon for formatting
+        'goimports', -- Go imports organizer and formatter
       },
     })
 
@@ -88,8 +89,22 @@ return {
       filetypes = { 'html', 'css', 'scss', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue' },
     })
 
+    -- Go
+    vim.lsp.config('gopls', {
+      capabilities = capabilities,
+      settings = {
+        gopls = {
+          analyses = {
+            unusedparams = true,
+          },
+          staticcheck = true,
+          gofumpt = true,
+        },
+      },
+    })
+
     -- Enable the configured servers
-    vim.lsp.enable({ 'lua_ls', 'ts_ls', 'vue_ls', 'eslint', 'tailwindcss', 'unocss' })
+    vim.lsp.enable({ 'lua_ls', 'ts_ls', 'vue_ls', 'eslint', 'tailwindcss', 'unocss', 'gopls' })
 
     -- LSP keymaps (matching Emacs M-. and M-,)
     vim.api.nvim_create_autocmd('LspAttach', {

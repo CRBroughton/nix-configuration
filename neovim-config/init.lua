@@ -46,4 +46,6 @@ require('lazy').setup({
   require 'plugins.gitsigns',
   require 'plugins.autopairs',
   require 'plugins.lsp-lines',
+  require 'plugins.autotag',
+  require 'plugins.colorizer',
 })

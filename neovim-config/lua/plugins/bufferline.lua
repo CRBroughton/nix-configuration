@@ -12,8 +12,8 @@ return {
       },
     })
 
-    -- Tab navigation (Emacs C-PageUp/Down)
-    vim.keymap.set('n', '<C-PageUp>', '<Cmd>BufferLineCyclePrev<CR>', { silent = true, desc = 'Previous tab' })
-    vim.keymap.set('n', '<C-PageDown>', '<Cmd>BufferLineCycleNext<CR>', { silent = true, desc = 'Next tab' })
+    -- Buffer navigation
+    vim.keymap.set('n', '<C-Left>', '<Cmd>BufferLineCyclePrev<CR>', { silent = true, desc = 'Previous buffer' })
+    vim.keymap.set('n', '<C-Right>', '<Cmd>BufferLineCycleNext<CR>', { silent = true, desc = 'Next buffer' })
   end,
 }

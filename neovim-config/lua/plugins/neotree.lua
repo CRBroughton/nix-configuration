@@ -41,19 +41,6 @@ return {
       },
     })
 
-    -- Open neo-tree on startup
-    vim.api.nvim_create_autocmd('VimEnter', {
-      callback = function()
-        if vim.fn.argc() == 0 then
-          -- No file specified, open neo-tree
-          vim.cmd('Neotree show')
-        else
-          -- File specified, still show neo-tree but don't focus it
-          vim.cmd('Neotree show reveal=false')
-        end
-      end,
-    })
-
     -- Toggle with C-b (like VSCode)
     vim.keymap.set('n', '<C-b>', '<Cmd>Neotree toggle<CR>', { desc = 'Toggle file explorer' })
   end,

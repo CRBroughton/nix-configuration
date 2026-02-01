@@ -4,7 +4,7 @@ return {
   version = '*',
   config = function()
     require('no-neck-pain').setup({
-      width = 200, -- Match olivetti-body-width
+      width = 100, -- Match olivetti-body-width
     })
 
     -- C-M-z toggle (Alt is A in Neovim)

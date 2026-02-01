@@ -48,4 +48,5 @@ require('lazy').setup({
   require 'plugins.lsp-lines',
   require 'plugins.autotag',
   require 'plugins.colorizer',
+  require 'plugins.persistence',
 })

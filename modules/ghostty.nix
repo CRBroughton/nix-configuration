@@ -13,7 +13,7 @@
       # Font
       font-family = "FiraCode Nerd Font Mono";
       font-size = 14;
-      font-feature = "-calt";
+      font-feature = [ "calt" "liga" ];
       font-style = "SemiBold";
 
       # Colors

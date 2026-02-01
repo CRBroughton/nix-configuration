@@ -41,4 +41,9 @@ require('lazy').setup({
   require 'plugins.treesitter',
   require 'plugins.lsp',
   require 'plugins.formatting',
+
+  -- Editor enhancements
+  require 'plugins.gitsigns',
+  require 'plugins.autopairs',
+  require 'plugins.lsp-lines',
 })

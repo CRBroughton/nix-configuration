@@ -3,11 +3,21 @@ return {
   dependencies = {
     'williamboman/mason.nvim',
     'williamboman/mason-lspconfig.nvim',
+    'WhoIsSethDaniel/mason-tool-installer.nvim',
   },
   config = function()
     require('mason').setup()
+
+    -- Auto-install LSP servers
     require('mason-lspconfig').setup({
-      ensure_installed = { 'lua_ls', 'ts_ls', 'vue_ls' },
+      ensure_installed = { 'lua_ls', 'ts_ls', 'vue_ls', 'eslint', 'tailwindcss', 'unocss' },
+    })
+
+    -- Auto-install formatters/linters (non-LSP tools)
+    require('mason-tool-installer').setup({
+      ensure_installed = {
+        'eslint_d', -- Fast ESLint daemon for formatting
+      },
     })
 
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -46,7 +56,6 @@ return {
     -- Vue Language Server (handles CSS/HTML in .vue files)
     vim.lsp.config('vue_ls', {
       capabilities = capabilities,
-      -- Handler to forward TypeScript requests to ts_ls
       handlers = {
         ['tsserver/request'] = function(_, result, ctx)
           local clients = vim.lsp.get_clients({ name = 'ts_ls' })
@@ -59,8 +68,28 @@ return {
       },
     })
 
+    -- ESLint
+    vim.lsp.config('eslint', {
+      capabilities = capabilities,
+      settings = {
+        workingDirectories = { mode = 'auto' },
+      },
+    })
+
+    -- Tailwind CSS
+    vim.lsp.config('tailwindcss', {
+      capabilities = capabilities,
+      filetypes = { 'html', 'css', 'scss', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue' },
+    })
+
+    -- UnoCSS
+    vim.lsp.config('unocss', {
+      capabilities = capabilities,
+      filetypes = { 'html', 'css', 'scss', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue' },
+    })
+
     -- Enable the configured servers
-    vim.lsp.enable({ 'lua_ls', 'ts_ls', 'vue_ls' })
+    vim.lsp.enable({ 'lua_ls', 'ts_ls', 'vue_ls', 'eslint', 'tailwindcss', 'unocss' })
 
     -- LSP keymaps (matching Emacs M-. and M-,)
     vim.api.nvim_create_autocmd('LspAttach', {

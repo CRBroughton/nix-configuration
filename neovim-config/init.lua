@@ -40,4 +40,5 @@ require('lazy').setup({
   -- Language support
   require 'plugins.treesitter',
   require 'plugins.lsp',
+  require 'plugins.formatting',
 })

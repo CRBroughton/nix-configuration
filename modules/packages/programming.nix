@@ -32,6 +32,9 @@
     go-task
     just
 
+    # Nix tools
+    nil # Nix LSP
+
     # Data tools
     jq
     jnv

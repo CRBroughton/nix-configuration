@@ -10,7 +10,7 @@ return {
 
     -- Auto-install LSP servers
     require('mason-lspconfig').setup({
-      ensure_installed = { 'lua_ls', 'ts_ls', 'vue_ls', 'eslint', 'tailwindcss', 'unocss', 'gopls', 'nil_ls' },
+      ensure_installed = { 'lua_ls', 'ts_ls', 'vue_ls', 'eslint', 'tailwindcss', 'unocss', 'gopls' },
     })
 
     -- Auto-install formatters/linters (non-LSP tools)

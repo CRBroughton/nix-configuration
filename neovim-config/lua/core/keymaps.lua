@@ -65,10 +65,20 @@ local function smart_escape()
 end
 
 vim.keymap.set('n', '<Esc>', smart_escape, { desc = 'Smart escape' })
+-- In terminal mode, Esc exits to normal mode (then Esc again to close)
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- ============================================================================
 -- TERMINAL (C-t)
 -- ============================================================================
+
+-- Auto-enter insert mode when switching to a terminal buffer
+vim.api.nvim_create_autocmd('BufEnter', {
+  pattern = 'term://*',
+  callback = function()
+    vim.cmd('startinsert')
+  end,
+})
 
 local function open_terminal_below()
   vim.cmd('below split | resize 15 | terminal')
@@ -76,3 +86,16 @@ local function open_terminal_below()
 end
 
 vim.keymap.set('n', '<C-t>', open_terminal_below, { desc = 'Open terminal below' })
+
+-- ============================================================================
+-- TERMINAL APPS (open as buffers for easy switching)
+-- ============================================================================
+
+local function open_term_buffer(cmd)
+  vim.cmd('enew')
+  vim.fn.termopen(cmd)
+  vim.cmd('startinsert')
+end
+
+vim.keymap.set('n', '<C-x>lg', function() open_term_buffer('lazygit') end, { desc = 'Open Lazygit' })
+vim.keymap.set('n', '<C-x>ld', function() open_term_buffer('lazydocker') end, { desc = 'Open Lazydocker' })

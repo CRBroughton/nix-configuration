@@ -13,8 +13,12 @@ return {
       },
     })
 
-    -- Buffer navigation
+    -- Buffer navigation (normal mode)
     vim.keymap.set('n', '<C-Left>', '<Cmd>BufferLineCyclePrev<CR>', { silent = true, desc = 'Previous buffer' })
     vim.keymap.set('n', '<C-Right>', '<Cmd>BufferLineCycleNext<CR>', { silent = true, desc = 'Next buffer' })
+
+    -- Buffer navigation (terminal mode - exit terminal first)
+    vim.keymap.set('t', '<C-Left>', '<C-\\><C-n><Cmd>BufferLineCyclePrev<CR>', { silent = true, desc = 'Previous buffer' })
+    vim.keymap.set('t', '<C-Right>', '<C-\\><C-n><Cmd>BufferLineCycleNext<CR>', { silent = true, desc = 'Next buffer' })
   end,
 }

@@ -42,6 +42,9 @@ return {
       { '<C-x>g', desc = 'Neogit status' },
       { '<C-x>c', desc = 'Conventional commit' },
       { '<C-x>?', desc = 'Show all keymaps' },
+      { '<C-x>l', group = 'Lazy apps' },
+      { '<C-x>lg', desc = 'Lazygit' },
+      { '<C-x>ld', desc = 'Lazydocker' },
 
       -- Leader prefix groups
       { '<leader>h', group = 'Git hunks' },
@@ -59,6 +62,7 @@ return {
 
       { '<leader>t', group = 'Toggle' },
       { '<leader>tl', desc = 'Toggle inline diagnostics' },
+      { '<leader>tb', desc = 'Toggle bottom bars' },
 
       -- Navigation hints
       { ']c', desc = 'Next git hunk' },

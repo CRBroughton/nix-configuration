@@ -10,7 +10,7 @@ return {
 
     -- Auto-install LSP servers
     require('mason-lspconfig').setup({
-      ensure_installed = { 'lua_ls', 'ts_ls', 'vue_ls', 'eslint', 'tailwindcss', 'unocss', 'gopls' },
+      ensure_installed = { 'lua_ls', 'ts_ls', 'vue_ls', 'eslint', 'tailwindcss', 'unocss', 'gopls', 'nil_ls' },
     })
 
     -- Auto-install formatters/linters (non-LSP tools)
@@ -103,8 +103,20 @@ return {
       },
     })
 
+    -- Nix
+    vim.lsp.config('nil_ls', {
+      capabilities = capabilities,
+      settings = {
+        ['nil'] = {
+          formatting = {
+            command = { 'nixfmt' },
+          },
+        },
+      },
+    })
+
     -- Enable the configured servers
-    vim.lsp.enable({ 'lua_ls', 'ts_ls', 'vue_ls', 'eslint', 'tailwindcss', 'unocss', 'gopls' })
+    vim.lsp.enable({ 'lua_ls', 'ts_ls', 'vue_ls', 'eslint', 'tailwindcss', 'unocss', 'gopls', 'nil_ls' })
 
     -- LSP keymaps (matching Emacs M-. and M-,)
     vim.api.nvim_create_autocmd('LspAttach', {

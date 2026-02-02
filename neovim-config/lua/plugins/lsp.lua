@@ -1,3 +1,4 @@
+-- nvim-lspconfig: LSP configuration for code intelligence (completions, diagnostics, go-to-definition)
 return {
   'neovim/nvim-lspconfig',
   dependencies = {

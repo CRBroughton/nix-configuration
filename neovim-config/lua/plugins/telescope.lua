@@ -1,3 +1,4 @@
+-- telescope.nvim: Fuzzy finder for files, buffers, commands, and more
 return {
   'nvim-telescope/telescope.nvim',
   branch = 'master', -- Use master branch for Neovim 0.11+ treesitter compatibility (PR #3566)

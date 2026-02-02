@@ -1,3 +1,4 @@
+-- persistence.nvim: Automatically saves and restores sessions per directory
 return {
   'folke/persistence.nvim',
   lazy = false, -- Load immediately

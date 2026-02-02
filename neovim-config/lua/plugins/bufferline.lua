@@ -1,3 +1,4 @@
+-- bufferline.nvim: Tab-like buffer line at the top showing open buffers
 return {
   'akinsho/bufferline.nvim',
   version = '*',

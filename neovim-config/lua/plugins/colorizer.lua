@@ -1,3 +1,4 @@
+-- nvim-colorizer: Displays color codes (hex, rgb, hsl) with their actual colors inline
 return {
   'norcalli/nvim-colorizer.lua',
   event = { 'BufReadPre', 'BufNewFile' },

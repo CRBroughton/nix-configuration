@@ -1,3 +1,4 @@
+-- nvim-cmp: Autocompletion engine with LSP, buffer, path, and snippet sources
 return {
   'hrsh7th/nvim-cmp',
   event = 'InsertEnter',

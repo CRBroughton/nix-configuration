@@ -1,4 +1,4 @@
--- Using no-neck-pain.nvim as it's closer to Emacs olivetti behavior
+-- no-neck-pain.nvim: Centers the buffer for distraction-free writing/coding
 return {
   'shortcuts/no-neck-pain.nvim',
   version = '*',

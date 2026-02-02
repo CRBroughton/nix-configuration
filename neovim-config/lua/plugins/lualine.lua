@@ -1,3 +1,4 @@
+-- lualine.nvim: Fast statusline showing mode, git branch, diagnostics, and file info
 return {
   'nvim-lualine/lualine.nvim',
   dependencies = { 'nvim-tree/nvim-web-devicons' },

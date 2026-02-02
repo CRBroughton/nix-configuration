@@ -1,3 +1,4 @@
+-- neogit: Git interface for staging, committing, pushing, pulling, branching, and viewing logs
 return {
   'NeogitOrg/neogit',
   dependencies = {

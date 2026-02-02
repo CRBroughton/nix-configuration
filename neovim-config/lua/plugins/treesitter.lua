@@ -1,3 +1,4 @@
+-- nvim-treesitter: Syntax highlighting and code understanding via tree-sitter parsers
 return {
   'nvim-treesitter/nvim-treesitter',
   build = ':TSUpdate',

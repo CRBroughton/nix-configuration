@@ -1,3 +1,4 @@
+-- conform.nvim: Format-on-save with support for multiple formatters per filetype
 return {
   'stevearc/conform.nvim',
   event = { 'BufWritePre' },

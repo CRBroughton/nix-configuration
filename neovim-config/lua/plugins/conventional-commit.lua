@@ -1,4 +1,4 @@
--- Custom conventional commit helper (matching Emacs conventional-commit.el)
+-- conventional-commit: Interactive conventional commit message builder with emoji support
 return {
   dir = vim.fn.stdpath('config') .. '/lua/plugins',
   name = 'conventional-commit',

@@ -51,4 +51,6 @@ require('lazy').setup({
   require 'plugins.persistence',
   require 'plugins.claude',
   require 'plugins.vimbegood',
+  require 'plugins.lazygit',
+  require 'plugins.lazydocker',
 })

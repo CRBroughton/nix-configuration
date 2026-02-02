@@ -26,7 +26,8 @@ return {
       },
     })
 
-    telescope.load_extension('fzf')
+    -- Load fzf extension (requires compilation - needs gcc and make)
+    pcall(telescope.load_extension, 'fzf')
 
     -- Keymaps (ivy/counsel equivalents)
     local builtin = require('telescope.builtin')

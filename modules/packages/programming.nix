@@ -35,8 +35,11 @@
     # Data tools
     jq
     jnv
-    gcc # needed for protobuf compilation
     protobuf
+
+    # Build tools (needed for protobuf and telescope-fzf-native)
+    gcc
+    gnumake
 
     # Code analysis
     tokei

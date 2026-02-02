@@ -18,5 +18,16 @@ return {
         lualine_z = { 'location' },
       },
     })
+
+    -- Toggle statusline and command line visibility
+    vim.keymap.set('n', '<leader>tb', function()
+      if vim.o.laststatus == 0 then
+        vim.o.laststatus = 3
+        vim.o.cmdheight = 1
+      else
+        vim.o.laststatus = 0
+        vim.o.cmdheight = 0
+      end
+    end, { desc = 'Toggle bottom bars' })
   end,
 }

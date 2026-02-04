@@ -45,7 +45,7 @@ require('lazy').setup({
   -- Editor enhancements
   require 'plugins.gitsigns',
   require 'plugins.autopairs',
-  --require 'plugins.lsp-lines',
+  require 'plugins.lsp-lines',
   --require 'plugins.tiny-diagnostics',
   require 'plugins.autotag',
   require 'plugins.colorizer',
@@ -55,5 +55,6 @@ require('lazy').setup({
   require 'plugins.lazygit',
   require 'plugins.lazydocker',
   require 'plugins.twilight',
-  require 'plugins.error-lens',
+  require 'plugins.trouble',
+  --require 'plugins.error-lens',
 })

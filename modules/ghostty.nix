@@ -13,12 +13,17 @@
       # Font
       font-family = "FiraCode Nerd Font Mono";
       font-size = 14;
-      font-feature = [ "calt" "liga" ];
+      font-feature = [
+        "calt"
+        "liga"
+      ];
       font-style = "SemiBold";
 
       # Colors
       background = "#171717";
       foreground = "#dedacf";
+      background-opacity = 0.75;
+      background-blur-radius = 80;
     };
   };
 }

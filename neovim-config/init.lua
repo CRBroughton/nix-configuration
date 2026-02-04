@@ -46,7 +46,7 @@ require('lazy').setup({
   require 'plugins.gitsigns',
   require 'plugins.autopairs',
   --require 'plugins.lsp-lines',
-  require 'plugins.tiny-diagnostics',
+  --require 'plugins.tiny-diagnostics',
   require 'plugins.autotag',
   require 'plugins.colorizer',
   require 'plugins.persistence',
@@ -55,4 +55,5 @@ require('lazy').setup({
   require 'plugins.lazygit',
   require 'plugins.lazydocker',
   require 'plugins.twilight',
+  require 'plugins.error-lens',
 })

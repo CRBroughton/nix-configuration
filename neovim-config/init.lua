@@ -53,4 +53,5 @@ require('lazy').setup({
   require 'plugins.lazygit',
   require 'plugins.lazydocker',
   require 'plugins.twilight',
+  require 'plugins.flash',
 })

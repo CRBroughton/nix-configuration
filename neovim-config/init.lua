@@ -45,7 +45,8 @@ require('lazy').setup({
   -- Editor enhancements
   require 'plugins.gitsigns',
   require 'plugins.autopairs',
-  require 'plugins.lsp-lines',
+  --require 'plugins.lsp-lines',
+  require 'plugins.tiny-diagnostics',
   require 'plugins.autotag',
   require 'plugins.colorizer',
   require 'plugins.persistence',

@@ -53,4 +53,5 @@ require('lazy').setup({
   require 'plugins.vimbegood',
   require 'plugins.lazygit',
   require 'plugins.lazydocker',
+  require 'plugins.twilight',
 })

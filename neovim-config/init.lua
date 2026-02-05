@@ -17,7 +17,9 @@ rtp:prepend(lazypath)
 
 require('lazy').setup({
   -- Existing plugins
-  require 'plugins.colourtheme',
+  --require 'plugins.colourtheme',
+  require 'plugins.catppuccin',
+
   require 'plugins.neotree',
 
   -- Navigation & Search (ivy/counsel equivalent)

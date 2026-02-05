@@ -20,5 +20,12 @@ return {
 
     -- 3. Finally, load the colorscheme
     vim.cmd.colorscheme('vitesse')
+
+    -- base colour for unknown elements from the LSP
+    vim.api.nvim_set_hl(0, "htmlTag", { fg = "#4d9375" })
+    vim.api.nvim_set_hl(0, "htmlTagN", { fg = "#4d9375" })
+
+    -- When volar knows this is a component, change the colour
+    vim.api.nvim_set_hl(0, "@lsp.type.component.vue", { fg = "#b8a965", bold = true })
   end
 }

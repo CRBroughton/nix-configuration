@@ -31,6 +31,7 @@
     ./modules/posting.nix
     ./modules/zen-browser.nix
     ./modules/pia-vpn.nix
+    ./modules/tailscale.nix
   ];
 
   # Home Manager needs a bit of information about you and the

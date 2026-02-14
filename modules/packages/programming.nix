@@ -47,5 +47,6 @@
     # Code analysis
     tokei
     claude-code
+    tree-sitter
   ];
 }

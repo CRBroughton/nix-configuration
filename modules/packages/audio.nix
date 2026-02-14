@@ -5,5 +5,7 @@
     # Audio
     qpwgraph
     picard
+    element-desktop
+    mumble
   ];
 }

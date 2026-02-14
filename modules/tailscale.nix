@@ -1,15 +1,23 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   home.packages = with pkgs; [
-    tailscale
-    tailscalesd
+    # Don't install tailscale CLI from Nix to avoid version mismatch with system daemon
+    # Use the system-installed tailscale from pacman instead
     tailscale-systray
   ];
 
-  # Start tailscaled as a user service
-  # Note: On non-NixOS systems, tailscaled typically needs root privileges
-  # You may need to install tailscale via your distro's package manager for the system service
+  # Check if tailscale is installed and show install command if not
+  home.activation.checkTailscale = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    if ! systemctl is-active --quiet tailscaled 2>/dev/null; then
+      echo ""
+      echo "⚠️  Tailscale service not found. To install, run:"
+      echo "   curl -fsSL https://tailscale.com/install.sh | sh"
+      echo ""
+    fi
+  '';
+
+  # Start tailscale system tray
   systemd.user.services.tailscale-systray = {
     Unit = {
       Description = "Tailscale System Tray";

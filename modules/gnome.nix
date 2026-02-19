@@ -12,6 +12,7 @@
     caffeine
     compiz-windows-effect
     appindicator
+    paperwm
   ];
 
   # Link GNOME extensions so GNOME Shell can find them
@@ -63,6 +64,7 @@
         "caffeine@patapon.info"
         "compiz-windows-effect@hermes83.github.com"
         "appindicatorsupport@rgcjonas.gmail.com"
+        "paperwm@paperwm.github.com"
       ];
     };
   };

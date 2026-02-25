@@ -1,80 +1,41 @@
 {
-  description = "Home Manager configuration for Craig";
+  description = "NixOS configuration for laptop and gaming PC";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-flatpak.url = "github:gmodena/nix-flatpak";
 
-    # Ghostty with nixGL wrapper
-    ghostty-wrapped.url = "path:./ghostty-flake";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
+    # CachyOS kernel and optimizations
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+
+    # VSCode extensions from marketplace
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
 
-    # Zen Browser Flatpak Configuration
-    zen-flatpak-config = {
-      url = "github:crbroughton/nix-flakes?dir=zen-flatpak-config";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Firefox addons for Zen Browser extensions
-    firefox-addons = {
-      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    lua-dev = {
-      url = "github:crbroughton/nix-flakes?dir=lua";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    love2d = {
-      url = "github:crbroughton/nix-flakes?dir=love2d";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # Declarative flatpak
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
   };
 
-  outputs =
-    {
-      nixpkgs,
-      home-manager,
-      nix-flatpak,
-      ghostty-wrapped,
-      nix-vscode-extensions,
-      zen-flatpak-config,
-      firefox-addons,
-      lua-dev,
-      love2d,
-      ...
-    }:
-    let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [
-          nix-vscode-extensions.overlays.default
-        ];
+  outputs = { self, nixpkgs, home-manager, disko, chaotic, nix-vscode-extensions, nix-flatpak, ... }@inputs:
+  let
+    myLib = import ./lib { inherit inputs; };
+  in {
+    nixosConfigurations = {
+      laptop = myLib.mkHost {
+        hostname = "laptop";
       };
-    in
-    {
-      homeConfigurations."craig" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
 
-        modules = [
-          nix-flatpak.homeManagerModules.nix-flatpak
-          ghostty-wrapped.homeManagerModules.default
-          lua-dev.homeManagerModules.default
-          love2d.homeManagerModules.default
-          zen-flatpak-config.homeManagerModules.default
-          {
-            _module.args = {
-              inherit firefox-addons;
-            };
-          }
-          ./home.nix
-        ];
+      gaming-pc = myLib.mkHost {
+        hostname = "gaming-pc";
       };
     };
+  };
 }

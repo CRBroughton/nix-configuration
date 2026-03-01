@@ -21,6 +21,7 @@
     "org.virt_manager.virt-manager"
     "com.github.johnfactotum.Foliate"
     "it.mijorus.gearlever"
+    "org.gajim.Gajim"
   ];
 
   # Fix D-Bus activation for flatpak apps on non-NixOS systems

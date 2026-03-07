@@ -12,7 +12,7 @@
 
   # Placeholder boot configuration
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
+  boot.initrd.kernelModules = [ "nvme" ];
   boot.kernelModules = [ "kvm-intel" ];  # Change to kvm-amd if AMD CPU
   boot.extraModulePackages = [ ];
 

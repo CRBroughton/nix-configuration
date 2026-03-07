@@ -11,6 +11,7 @@
       favorite-apps = [
         "app.zen_browser.zen.desktop"
         "org.gnome.Nautilus.desktop"
+        "org.gajim.Gajim.desktop"
         "io.github.equicord.equibop.desktop"
         "com.bitwarden.desktop.desktop"
         "code.desktop"

@@ -22,6 +22,18 @@
 
     # Declarative flatpak
     nix-flatpak.url = "github:gmodena/nix-flatpak";
+
+    # Zen Browser Flatpak Configuration
+    zen-flatpak-config = {
+      url = "github:crbroughton/nix-flakes?dir=zen-flatpak-config";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Firefox addons for Zen Browser extensions
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, disko, chaotic, nix-vscode-extensions, nix-flatpak, ... }@inputs:

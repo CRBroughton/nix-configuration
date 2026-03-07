@@ -13,6 +13,7 @@
     ../../modules/home-manager/editors/vscode.nix
     ../../modules/home-manager/editors/neovim.nix
     ../../modules/home-manager/editors/zed.nix
+    ../../modules/home-manager/zen-browser.nix
   ];
 
   home.username = "craig";

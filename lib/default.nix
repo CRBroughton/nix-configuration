@@ -39,6 +39,10 @@ in
           useGlobalPkgs = true;
           useUserPackages = true;
           extraSpecialArgs = { inherit inputs; };
+          sharedModules = [
+            inputs.zen-flatpak-config.homeManagerModules.default
+            { _module.args.firefox-addons = inputs.firefox-addons; }
+          ];
           users = lib.genAttrs users (user: import ../users/${user});
         };
       }

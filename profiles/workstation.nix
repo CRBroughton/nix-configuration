@@ -22,6 +22,7 @@
     curl
     pciutils
     usbutils
+    nix-search-cli
   ];
 
   # User configuration

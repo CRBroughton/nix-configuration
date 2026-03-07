@@ -295,7 +295,7 @@ just vm          # Build and run laptop VM
 just vm-gaming   # Build and run gaming-pc VM
 ```
 
-VM login: user `craig`, password `test` (configured for VM only).
+VM login: user `craig`, password `test` (set via `initialPassword` in the host config for VM testing).
 
 ### Rollback
 
@@ -320,11 +320,11 @@ just maintenance # Clean + optimise
 
 ### Fresh NixOS Install
 
-1. Boot NixOS installer USB
+1. Boot NixOS installer USB (minimal ISO should work, you dont need to actually use the ISO steps)
 2. Connect to network
 3. Clone this repo:
    ```bash
-   nix-shell -p git
+   nix-shell -p git just micro
    git clone https://github.com/CRBroughton/nix-configuration.git
    cd nix-configuration
    ```
@@ -332,11 +332,19 @@ just maintenance # Clean + optimise
    ```bash
    just disko-laptop device="/dev/nvme0n1"
    ```
-5. Install:
+5. Generate hardware config:
+   ```bash
+   nixos-generate-config --root /mnt --show-hardware-config > hosts/laptop/hardware.nix
+   ```
+6. Install:
    ```bash
    just install-laptop
    ```
-6. Reboot and copy your SSH private key to `~/.ssh/id_ed25519`
+7. Reboot, then set your password:
+   ```bash
+   passwd
+   ```
+8. Copy your SSH private key to `~/.ssh/id_ed25519`
 
 ### Existing NixOS System
 

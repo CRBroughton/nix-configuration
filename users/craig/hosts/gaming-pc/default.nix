@@ -2,11 +2,16 @@
 
 {
   imports = [
-    ../common.nix
-    #../vm-testing.nix  # Remove this line for production
+    ../../common.nix
+    #../../vm-testing.nix  # Remove this line for production
     ./hardware.nix
-    ../../disko/gaming-pc.nix
-    ../../profiles/workstation.nix
+    ../../../../disko/gaming-pc.nix
+    # Compose profiles directly
+    ../../../../profiles/graphical.nix
+    ../../../../profiles/gaming.nix
+    ../../../../profiles/development.nix
+    # Personal flatpaks
+    ../../flatpaks.nix
   ];
 
   # Kernel - CachyOS with sched_ext (uncomment for AMD gaming PC)

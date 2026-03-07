@@ -4,6 +4,7 @@
   imports = [
     ../../modules/home-manager/shell.nix
     ../../modules/home-manager/git.nix
+    ./git.nix  # Personal git config (name, email, keys)
     ../../modules/home-manager/terminal.nix
     ../../modules/home-manager/gnome.nix
     ../../modules/home-manager/development.nix

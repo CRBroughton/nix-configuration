@@ -9,13 +9,20 @@ nix-configuration/
 ├── flake.nix                      # Entry point - defines inputs and hosts
 ├── lib/
 │   └── default.nix                # Helper functions (mkHost)
-├── hosts/                         # Machine-specific configurations
-│   ├── laptop/
-│   │   ├── default.nix            # Laptop config (kernel, user, VM settings)
-│   │   └── hardware.nix           # Hardware-specific settings
-│   └── gaming-pc/
-│       ├── default.nix
-│       └── hardware.nix
+├── users/                         # User configs + their machines
+│   └── craig/
+│       ├── default.nix            # Home-manager config
+│       ├── git.nix                # Personal git config (name, email, keys)
+│       ├── flatpaks.nix           # Personal Flatpak apps
+│       ├── common.nix             # System user config (users.users.craig)
+│       ├── vm-testing.nix         # VM testing settings
+│       └── hosts/                 # Craig's machines
+│           ├── laptop/
+│           │   ├── default.nix    # Laptop config
+│           │   └── hardware.nix
+│           └── gaming-pc/
+│               ├── default.nix
+│               └── hardware.nix
 ├── modules/                       # Reusable, self-contained modules
 │   ├── nixos/                     # NixOS system modules
 │   │   ├── desktop/gnome.nix      # GNOME desktop + audio + fonts
@@ -24,13 +31,14 @@ nix-configuration/
 │   │   ├── security.nix           # Polkit, Yubikey support
 │   │   ├── nix.nix                # Nix settings, garbage collection
 │   │   └── services/              # System services
-│   │       ├── flatpak.nix        # Declarative Flatpak packages
+│   │       ├── flatpak/
+│   │       │   └── base.nix       # Base Flatpak apps (everyone)
 │   │       ├── ssh.nix
 │   │       ├── tailscale.nix
 │   │       └── printing.nix
 │   └── home-manager/              # Home Manager modules
 │       ├── shell.nix              # Fish, Starship, Zoxide, CLI tools
-│       ├── git.nix                # Git, Jujutsu, SSH keys
+│       ├── git.nix                # Git config (generic)
 │       ├── terminal.nix           # Ghostty terminal
 │       ├── gnome.nix              # dconf settings, GNOME extensions
 │       ├── development.nix        # Languages and dev tools
@@ -42,17 +50,15 @@ nix-configuration/
 │           ├── neovim.nix
 │           └── zed.nix
 ├── profiles/                      # Composable feature bundles
-│   ├── workstation.nix            # Full desktop + gaming + development
-│   ├── desktop.nix                # GNOME + flatpak + printing
-│   ├── gaming.nix                 # Gaming support
+│   ├── graphical.nix              # GNOME + printing + base flatpaks + services
+│   ├── gaming.nix                 # Gaming support (Steam, gamemode)
 │   ├── development.nix            # Dev tools + containers
 │   └── server.nix                 # Headless (SSH, Tailscale)
-├── users/                         # User-specific Home Manager configs
-│   └── craig/
-│       └── default.nix
 ├── disko/                         # Declarative disk partitioning
 │   ├── laptop.nix
 │   └── gaming-pc.nix
+├── docs/                          # Documentation
+│   └── adding-new-user.md         # Guide for adding new users/machines
 ├── config/                        # External config files
 │   └── neovim/                    # Neovim configuration
 ├── xkb/                           # Custom keyboard layouts
@@ -132,9 +138,12 @@ home.packages = with pkgs; [
 Then run `just switch`.
 
 **Flatpak apps**:
-Edit `modules/nixos/services/flatpak.nix`:
+
+Base flatpaks (everyone gets): `modules/nixos/services/flatpak/base.nix`
+Personal flatpaks: `users/craig/flatpaks.nix`
+
 ```nix
-packages = [
+services.flatpak.packages = [
   "com.spotify.Client"  # Add Flatpak app ID
   ...
 ];
@@ -223,68 +232,28 @@ Find `.desktop` file names in `/run/current-system/sw/share/applications/` or `~
 
 ### Adding a New Machine
 
-1. Create host directory:
+See [docs/adding-new-user.md](docs/adding-new-user.md) for the complete guide.
+
+**Quick summary:**
+
+1. Create the user directory structure:
    ```bash
-   mkdir -p hosts/<hostname>
+   mkdir -p users/<username>/hosts/<hostname>
    ```
 
-2. Generate hardware config (on the target machine):
-   ```bash
-   nixos-generate-config --show-hardware-config > hosts/<hostname>/hardware.nix
-   ```
+2. Create the required files:
+   - `users/<username>/default.nix` - Home-manager config
+   - `users/<username>/common.nix` - System user config
+   - `users/<username>/hosts/<hostname>/default.nix` - Host config
+   - `users/<username>/hosts/<hostname>/hardware.nix` - Hardware config
 
-3. Create `hosts/<hostname>/default.nix`:
+3. Add to `flake.nix`:
    ```nix
-   { config, pkgs, ... }:
-
-   {
-     imports = [
-       ./hardware.nix
-       ../../profiles/workstation.nix  # or server.nix, etc.
-     ];
-
-     boot.loader.systemd-boot.enable = true;
-     boot.loader.efi.canTouchEfiVariables = true;
-     boot.kernelPackages = pkgs.linuxPackages_zen;
-
-     users.users.craig = {
-       isNormalUser = true;
-       extraGroups = [ "wheel" "networkmanager" ];
-       shell = pkgs.fish;
-     };
-
-     system.stateVersion = "25.11";
-   }
+   <hostname> = myLib.mkHost {
+     hostname = "<hostname>";
+     user = "<username>";
+   };
    ```
-
-4. Create `disko/<hostname>.nix` for disk partitioning.
-
-5. Add to `flake.nix`:
-   ```nix
-   <hostname> = myLib.mkHost { hostname = "<hostname>"; };
-   ```
-
-### Adding a New Desktop Environment
-
-1. Create `modules/nixos/desktop/<name>.nix`:
-   ```nix
-   { config, pkgs, ... }:
-
-   {
-     # Desktop environment config
-     programs.<name>.enable = true;
-
-     # Audio (copy from gnome.nix)
-     services.pipewire = { ... };
-
-     # Fonts (copy from gnome.nix)
-     fonts.packages = [ ... ];
-   }
-   ```
-
-2. Create a new profile or modify `profiles/desktop.nix`.
-
-3. Create corresponding home-manager module for user settings.
 
 ### Testing Changes Safely
 
@@ -295,7 +264,7 @@ just vm          # Build and run laptop VM
 just vm-gaming   # Build and run gaming-pc VM
 ```
 
-VM login: user `craig`, password `test` (set via `initialPassword` in the host config for VM testing).
+VM login: user `craig`, password `test` (set via `vm-testing.nix`).
 
 ### Rollback
 
@@ -334,7 +303,7 @@ just maintenance # Clean + optimise
    ```
 5. Generate hardware config:
    ```bash
-   nixos-generate-config --root /mnt --show-hardware-config > hosts/laptop/hardware.nix
+   nixos-generate-config --root /mnt --show-hardware-config > users/craig/hosts/laptop/hardware.nix
    ```
 6. Install:
    ```bash

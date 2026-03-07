@@ -1,3 +1,4 @@
+# Base flatpak configuration - apps everyone should have
 { config, pkgs, ... }:
 
 {
@@ -9,20 +10,10 @@
     packages = [
       "app.zen_browser.zen"
       "com.google.Chrome"
-      "com.brave.Browser"
       "com.bitwarden.desktop"
-      "md.obsidian.Obsidian"
-      "com.heroicgameslauncher.hgl"
-      "io.github.equicord.equibop"
-      "com.transmissionbt.Transmission"
       "com.mattjakeman.ExtensionManager"
-      "io.github.flattool.Warehouse"
       "com.github.tchx84.Flatseal"
-      "it.mijorus.gearlever"
-      "net.runelite.RuneLite"
       "org.gajim.Gajim"
-      "io.gitlab.news_flash.NewsFlash"
-      "com.github.neithern.g4music"
     ];
   };
 }

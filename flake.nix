@@ -43,10 +43,12 @@
     nixosConfigurations = {
       laptop = myLib.mkHost {
         hostname = "laptop";
+        user = "craig";
       };
 
       gaming-pc = myLib.mkHost {
         hostname = "gaming-pc";
+        user = "craig";
       };
     };
   };

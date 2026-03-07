@@ -1,18 +1,23 @@
-# Workstation profile - combines desktop, gaming, and development
-# This is the full setup for laptop and gaming-pc
+# Graphical desktop profile - base GUI environment
 { config, pkgs, ... }:
 
 {
   imports = [
-    ./desktop.nix
-    ./gaming.nix
-    ./development.nix
+    ../modules/nixos/desktop/gnome.nix
+    ../modules/nixos/services/printing.nix
+    ../modules/nixos/services/flatpak/base.nix
     ../modules/nixos/services/ssh.nix
     ../modules/nixos/services/tailscale.nix
     ../modules/nixos/services/vpn.nix
     ../modules/nixos/security.nix
     ../modules/nixos/nix.nix
   ];
+
+  # Firmware updates
+  services.fwupd.enable = true;
+
+  # Networking
+  networking.networkmanager.enable = true;
 
   # Base system packages
   environment.systemPackages = with pkgs; [

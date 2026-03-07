@@ -7,8 +7,8 @@ in
   # Create a NixOS system configuration
   mkHost = {
     hostname,
+    user,                    # Required: the user who owns this host
     system ? "x86_64-linux",
-    users ? [ "craig" ],
     extraModules ? [],
   }:
   inputs.nixpkgs.lib.nixosSystem {
@@ -21,8 +21,8 @@ in
       inputs.home-manager.nixosModules.home-manager
       inputs.nix-flatpak.nixosModules.nix-flatpak
 
-      # Host-specific config
-      ../hosts/${hostname}
+      # Host-specific config (under user directory)
+      ../users/${user}/hosts/${hostname}
 
       # Base configuration
       {
@@ -43,7 +43,7 @@ in
             inputs.zen-flatpak-config.homeManagerModules.default
             { _module.args.firefox-addons = inputs.firefox-addons; }
           ];
-          users = lib.genAttrs users (user: import ../users/${user});
+          users = lib.genAttrs [ user ] (u: import ../users/${u});
         };
       }
     ] ++ extraModules;

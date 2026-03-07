@@ -22,10 +22,12 @@
         "md.obsidian.Obsidian.desktop"
       ];
       enabled-extensions = [
+        "tilingshell@ferrarodomenico.com"
         "blur-my-shell@aunetx"
         "caffeine@patapon.info"
+        "compiz-windows-effect@hermes83.github.com"
         "appindicatorsupport@rgcjonas.gmail.com"
-        "paperwm@paperwm.github.com"
+        #"paperwm@paperwm.github.com"
       ];
     };
     "org/gnome/desktop/input-sources" = {
@@ -43,11 +45,13 @@
   };
 
   # GNOME Extensions
-  home.packages = with pkgs; [
-    gnomeExtensions.blur-my-shell
-    gnomeExtensions.caffeine
-    gnomeExtensions.appindicator
-    gnomeExtensions.paperwm
+  home.packages = with pkgs.gnomeExtensions; [
+    tiling-shell
+    blur-my-shell
+    caffeine
+    compiz-windows-effect
+    appindicator
+    # paperwm // trying this out in the future
   ];
 
   # Custom keyboard layouts

@@ -18,6 +18,11 @@
       "com.mattjakeman.ExtensionManager"
       "io.github.flattool.Warehouse"
       "com.github.tchx84.Flatseal"
+      "it.mijorus.gearlever"
+      "net.runelite.RuneLite"
+      "org.gajim.Gajim"
+      "io.gitlab.news_flash.NewsFlash"
+      "com.github.neithern.g4music"
     ];
   };
 }

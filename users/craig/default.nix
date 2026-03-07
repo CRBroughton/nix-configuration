@@ -14,6 +14,7 @@
     ../../modules/home-manager/editors/neovim.nix
     ../../modules/home-manager/editors/zed.nix
     ../../modules/home-manager/zen-browser.nix
+    ../../modules/home-manager/tailscale.nix
   ];
 
   home.username = "craig";

@@ -3,6 +3,7 @@
 {
   imports = [
     ../common.nix
+    #../vm-testing.nix  # Remove this line for production
     ./hardware.nix
     ../../disko/gaming-pc.nix
     ../../profiles/workstation.nix

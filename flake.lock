@@ -43,6 +43,51 @@
         "type": "github"
       }
     },
+    "firefox-addons": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "dir": "pkgs/firefox-addons",
+        "lastModified": 1772856163,
+        "narHash": "sha256-xD+d1+FVhKJ+oFYMTWOdVSBoXS4yeMyVZyDjMXqWEJE=",
+        "owner": "rycee",
+        "repo": "nur-expressions",
+        "rev": "d358a550c7beac5f04fbc5a786e14af079606689",
+        "type": "gitlab"
+      },
+      "original": {
+        "dir": "pkgs/firefox-addons",
+        "owner": "rycee",
+        "repo": "nur-expressions",
+        "type": "gitlab"
+      }
+    },
+    "firefox-addons_2": {
+      "inputs": {
+        "nixpkgs": [
+          "zen-flatpak-config",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "dir": "pkgs/firefox-addons",
+        "lastModified": 1772856163,
+        "narHash": "sha256-xD+d1+FVhKJ+oFYMTWOdVSBoXS4yeMyVZyDjMXqWEJE=",
+        "owner": "rycee",
+        "repo": "nur-expressions",
+        "rev": "d358a550c7beac5f04fbc5a786e14af079606689",
+        "type": "gitlab"
+      },
+      "original": {
+        "dir": "pkgs/firefox-addons",
+        "owner": "rycee",
+        "repo": "nur-expressions",
+        "type": "gitlab"
+      }
+    },
     "flake-schemas": {
       "locked": {
         "lastModified": 1721999734,
@@ -228,10 +273,12 @@
       "inputs": {
         "chaotic": "chaotic",
         "disko": "disko",
+        "firefox-addons": "firefox-addons",
         "home-manager": "home-manager_2",
         "nix-flatpak": "nix-flatpak",
         "nix-vscode-extensions": "nix-vscode-extensions",
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": "nixpkgs_3",
+        "zen-flatpak-config": "zen-flatpak-config"
       }
     },
     "rust-overlay": {
@@ -252,6 +299,29 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "zen-flatpak-config": {
+      "inputs": {
+        "firefox-addons": "firefox-addons_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "dir": "zen-flatpak-config",
+        "lastModified": 1772875004,
+        "narHash": "sha256-IqFSaEKKMTd+fbdcC/7tf12QgNqhIJUGoWrbHt+VgbU=",
+        "owner": "crbroughton",
+        "repo": "nix-flakes",
+        "rev": "7b9db640d30fb7bb01b2c0d9689bb88a27c4a47a",
+        "type": "github"
+      },
+      "original": {
+        "dir": "zen-flatpak-config",
+        "owner": "crbroughton",
+        "repo": "nix-flakes",
         "type": "github"
       }
     }

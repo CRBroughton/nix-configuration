@@ -2,6 +2,12 @@
 
 let
   inherit (inputs.nixpkgs) lib;
+
+  # Path shortcuts for cleaner imports
+  paths = {
+    modules = ../modules;
+    disko = ../disko;
+  };
 in
 {
   # Create a NixOS system configuration
@@ -13,7 +19,7 @@ in
   }:
   inputs.nixpkgs.lib.nixosSystem {
     inherit system;
-    specialArgs = { inherit inputs hostname; };
+    specialArgs = { inherit inputs hostname user; } // paths;
     modules = [
       # External modules
       inputs.chaotic.nixosModules.default

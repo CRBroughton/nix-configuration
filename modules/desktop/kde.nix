@@ -1,16 +1,17 @@
+# KDE Plasma desktop environment
 { config, pkgs, lib, ... }:
 
 {
   services.xserver.enable = true;
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
+  services.displayManager.sddm.enable = true;
+  services.displayManager.sddm.wayland.enable = true;
+  services.desktopManager.plasma6.enable = true;
   services.xserver.xkb.layout = "gb,us";
 
-  # Exclude some GNOME packages
-  environment.gnome.excludePackages = with pkgs; [
-    gnome-tour
-    gnome-music
-    epiphany
+  # Exclude some KDE packages
+  environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    elisa        # Music player
+    konsole      # Use Ghostty instead
   ];
 
   # Audio (Pipewire)

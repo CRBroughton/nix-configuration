@@ -2,20 +2,15 @@
 
 {
   imports = [
-    ../../modules/home-manager/shell.nix
-    ../../modules/home-manager/git.nix
+    ../../modules/shell.nix
+    ../../modules/git.nix
     ./git.nix  # Personal git config (name, email, keys)
-    ../../modules/home-manager/terminal.nix
-    ../../modules/home-manager/gnome.nix
-    ../../modules/home-manager/development.nix
-    ../../modules/home-manager/gaming.nix
-    ../../modules/home-manager/media.nix
-    ../../modules/home-manager/security.nix
-    ../../modules/home-manager/editors/vscode.nix
-    ../../modules/home-manager/editors/neovim.nix
-    ../../modules/home-manager/editors/zed.nix
-    ../../modules/home-manager/zen-browser.nix
-    ../../modules/home-manager/tailscale.nix
+    ../../modules/terminal.nix
+    ../../modules/media.nix
+    ../../modules/editors/vscode.nix
+    ../../modules/editors/neovim.nix
+    ../../modules/editors/zed.nix
+    ../../modules/zen-browser.nix
   ];
 
   home.username = "craig";

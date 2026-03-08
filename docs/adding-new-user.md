@@ -35,15 +35,19 @@ Create `users/mom/default.nix`:
 
 {
   imports = [
-    # Only import what they need
-    ../../modules/home-manager/gnome.nix
+    # Only import home-only modules here
+    # Combined modules (gnome, gaming, etc.) are imported in the host config
+    ../../modules/shell.nix
+    ../../modules/terminal.nix
+    ../../modules/media.nix
+    ../../modules/zen-browser.nix
   ];
 
   home.username = "mom";
   home.homeDirectory = "/home/mom";
   home.stateVersion = "24.11";
 
-  # Packages for this user
+  # Additional packages for this user
   home.packages = with pkgs; [
     libreoffice
     vlc
@@ -78,25 +82,42 @@ Create `users/mom/common.nix`:
 Create `users/mom/hosts/moms-pc/default.nix`:
 
 ```nix
-{ config, pkgs, ... }:
+{ config, pkgs, modules, disko, ... }:
 
 {
   imports = [
     ../../common.nix                         # users/mom/common.nix
-    ../../vm-testing.nix                     # Remove for production
+    #../../vm-testing.nix                    # Uncomment for VM testing
     ./hardware.nix
-    # ../../../../disko/moms-pc.nix          # Uncomment for real hardware
-    ../../../../profiles/graphical.nix
-    ../../../../profiles/gaming.nix
-    # No development.nix - mom doesn't need dev tools
-    # No personal flatpaks
+    # (disko + "/moms-pc.nix")               # Uncomment for real hardware
+
+    # Desktop environment (combined modules include both system and user config)
+    (modules + "/desktop/gnome.nix")
+    (modules + "/services/printing.nix")
+    (modules + "/services/flatpak/base.nix")
+    (modules + "/services/ssh.nix")
+    (modules + "/tailscale.nix")
+    (modules + "/security.nix")
+    (modules + "/nix.nix")
+
+    # Optional: gaming support
+    # (modules + "/gaming.nix")
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
+  services.fwupd.enable = true;
+  networking.networkmanager.enable = true;
+  programs.fish.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    git vim wget curl
+  ];
 
   system.stateVersion = "25.11";
 }
 ```
+
+**Note:** The `modules` and `disko` variables are path shortcuts provided by `lib/default.nix` via specialArgs.
 
 ## Step 5: Create Hardware Configuration
 
@@ -233,46 +254,55 @@ Once the VM works, update for real hardware:
    sudo nixos-rebuild switch --flake .#moms-pc
    ```
 
-## Available Home-Manager Modules
+## Available Modules
 
-Pick and choose which modules to import based on user needs:
+Modules are organized by domain. **Combined modules** set both NixOS and home-manager options.
+
+### Combined Modules (import in host config)
+
+| Module | Description | Good for |
+|--------|-------------|----------|
+| `desktop/gnome.nix` | GDM + GNOME + theme + extensions | Desktop users |
+| `desktop/kde.nix` | KDE Plasma desktop | KDE users |
+| `gaming.nix` | Steam + gamemode + Lutris | Gamers |
+| `development.nix` | Podman + libvirt + languages + tools | Developers |
+| `security.nix` | Polkit + Yubikey + GPG tools | Security-conscious users |
+| `tailscale.nix` | Tailscale service + systray | Remote access |
+
+### Home-Only Modules (import in user's default.nix)
 
 | Module | Description | Good for |
 |--------|-------------|----------|
 | `shell.nix` | Fish shell, Starship prompt, CLI tools | Power users |
 | `git.nix` | Git configuration (generic) | Developers |
 | `terminal.nix` | Ghostty terminal | Power users |
-| `gnome.nix` | GNOME extensions, settings | Everyone using GNOME |
-| `development.nix` | Dev tools, languages | Developers |
-| `gaming.nix` | Lutris, game tools | Gamers |
 | `media.nix` | Music, audio apps | Everyone |
-| `security.nix` | GPG, YubiKey | Security-conscious users |
 | `editors/vscode.nix` | VS Code + extensions | Developers |
 | `editors/neovim.nix` | Neovim config | Vim users |
 | `editors/zed.nix` | Zed editor | Developers |
-| `zen-browser.nix` | Zen Browser addons | Everyone |
-| `tailscale.nix` | Tailscale VPN | Remote access users |
+| `zen-browser.nix` | Zen Browser + addons | Everyone |
 
-## Available Profiles
+### System-Only Modules (import in host config)
 
-| Profile | Description |
-|---------|-------------|
-| `graphical.nix` | GNOME desktop, printing, base flatpaks, SSH, Tailscale |
-| `gaming.nix` | Steam, gamemode, gamescope |
-| `development.nix` | Podman, libvirtd, virt-manager |
-| `server.nix` | Headless server (no GUI) |
+| Module | Description |
+|--------|-------------|
+| `nix.nix` | Nix settings, garbage collection |
+| `services/ssh.nix` | SSH server |
+| `services/printing.nix` | CUPS printing |
+| `services/vpn.nix` | VPN support |
+| `services/flatpak/base.nix` | Base Flatpak apps |
 
 ## Quick Reference
 
 **Directory structure for a new user:**
 ```
 users/mom/
-├── default.nix      # Home-manager: packages, dotfiles
+├── default.nix      # Home-manager: home-only modules, packages
 ├── common.nix       # NixOS: users.users.mom, boot loader
 ├── vm-testing.nix   # VM testing settings (optional)
 └── hosts/
     └── moms-pc/
-        ├── default.nix   # Imports: common.nix, profiles, disko
+        ├── default.nix   # Imports: common.nix, combined modules, disko
         └── hardware.nix  # VM hardware or generated by nixos-generate-config
 ```
 
@@ -282,6 +312,17 @@ moms-pc = myLib.mkHost {
   hostname = "moms-pc";
   user = "mom";
 };
+```
+
+**Host config uses path shortcuts:**
+```nix
+{ config, pkgs, modules, disko, ... }:
+{
+  imports = [
+    (modules + "/desktop/gnome.nix")
+    (disko + "/moms-pc.nix")
+  ];
+}
 ```
 
 ## Troubleshooting

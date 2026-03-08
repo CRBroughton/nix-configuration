@@ -203,3 +203,98 @@ disk-usage:
 # Rollback to previous generation
 rollback:
     sudo nixos-rebuild switch --rollback
+
+#═══════════════════════════════════════════════════════════════════════════════
+# Server / Containers (run on nixos-server)
+#═══════════════════════════════════════════════════════════════════════════════
+
+# Start all podman services
+up:
+    #!/usr/bin/env bash
+    cd /etc/nixos/services
+    for compose in */compose.yaml; do
+      echo "Starting $(dirname $compose)..."
+      podman-compose -f "$compose" up -d
+    done
+
+# Stop all podman services
+down:
+    #!/usr/bin/env bash
+    cd /etc/nixos/services
+    for compose in */compose.yaml; do
+      echo "Stopping $(dirname $compose)..."
+      podman-compose -f "$compose" down
+    done
+
+# Restart all podman services
+restart: down up
+
+# Start a specific service (e.g., just start adguard)
+start service:
+    cd /etc/nixos/services/{{service}} && podman-compose up -d
+
+# Stop a specific service
+stop service:
+    cd /etc/nixos/services/{{service}} && podman-compose down
+
+# View logs for a service
+logs service:
+    cd /etc/nixos/services/{{service}} && podman-compose logs -f
+
+# Pull latest images for all services
+pull:
+    #!/usr/bin/env bash
+    cd /etc/nixos/services
+    for compose in */compose.yaml; do
+      echo "Pulling $(dirname $compose)..."
+      podman-compose -f "$compose" pull
+    done
+
+# Add The Lounge user
+thelounge-adduser username:
+    podman exec -it thelounge thelounge add {{username}}
+
+# Generate IRC operator password
+irc-genpasswd:
+    podman exec -it ergo /ircd-bin/ergo genpasswd
+
+# Add XMPP user (e.g., just xmpp-adduser craig)
+xmpp-adduser username:
+    podman exec -it prosody prosodyctl adduser {{username}}@xmpp.tail538465.ts.net
+
+# Generate XMPP Tailscale certificate
+xmpp-gencert:
+    podman exec tailscale-xmpp tailscale cert --cert-file /certs/xmpp.tail538465.ts.net.crt --key-file /certs/xmpp.tail538465.ts.net.key xmpp.tail538465.ts.net
+    @echo "Certificate generated. Restart Prosody: podman restart prosody"
+
+# Trust /etc/nixos git repo for root (fixes ownership errors)
+fix-git-ownership:
+    sudo git config --global --add safe.directory /etc/nixos
+
+#═══════════════════════════════════════════════════════════════════════════════
+# Raspberry Pi
+#═══════════════════════════════════════════════════════════════════════════════
+
+# Build Pi SD card image
+build-pi:
+    nix build .#images.pi-monitor
+    @echo "Image built: result/sd-image/"
+    @ls -lh result/sd-image/
+
+# Flash Pi to SD card (e.g., just flash-pi /dev/sdb)
+flash-pi device:
+    #!/usr/bin/env bash
+    set -e
+    img=$(find result/sd-image -name "*.img.zst" | head -1)
+    echo "Flashing $img to {{device}}..."
+    zstd -dc "$img" | sudo dd of={{device}} bs=4M status=progress conv=fsync
+    sync
+    echo "Done! Remove SD card and boot your Pi."
+
+# Deploy to Pi (from another machine)
+deploy-pi:
+    nixos-rebuild switch --flake .#pi-monitor --target-host craig@pi-monitor --build-host localhost
+
+# Deploy to server (from another machine)
+deploy-server:
+    nixos-rebuild switch --flake .#nixos-server --target-host craig@nixos-server

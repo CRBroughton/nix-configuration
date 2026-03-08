@@ -527,3 +527,67 @@ nix search nixpkgs <name>
 ```
 
 Or browse https://search.nixos.org/packages
+
+### Server: Podman socket not available after reboot
+
+If `lazydocker` shows "exit status 1" or containers can't connect to the socket:
+```bash
+systemctl --user enable --now podman.socket
+```
+
+### Server: XMPP/Prosody certificate errors
+
+If Prosody logs show "Failed to load private key" or certificate errors:
+```bash
+# Check permissions on cert files
+ls -la /etc/nixos/services/xmpp/certs/
+
+# Fix permissions if needed
+chmod 644 /etc/nixos/services/xmpp/certs/*.key
+sudo chown craig:users /etc/nixos/services/xmpp/certs/*
+
+# Or regenerate certs via Tailscale
+just xmpp-gencert
+podman restart prosody
+```
+
+### Server: Service missing data after migration
+
+Some services store data in non-standard directories. Check the compose.yaml for volume mounts and ensure all data directories were copied from the old config.
+
+### Server: Container permission denied on data files
+
+Rootless podman remaps UIDs - container processes see different UIDs than the host. If a container can't write to its data directory, use `podman unshare` to fix ownership using the container's UIDs directly:
+
+```bash
+# 1. Find the container's UID/GID
+podman exec <container> id
+# Example output: uid=100(prosody) gid=102(prosody)
+
+# 2. Fix ownership using podman unshare (translates UIDs automatically)
+cd /etc/nixos/services/<service>
+podman unshare chown -R <uid>:<gid> data/
+
+# 3. Restart
+podman-compose down && podman-compose up -d
+```
+
+**Examples:**
+
+```bash
+# Prosody (uid=100, gid=102)
+cd /etc/nixos/services/xmpp
+podman unshare chown -R 100:102 data/
+
+# Mumble (uid=10000, gid=10000)
+cd /etc/nixos/services/mumble
+podman unshare chown -R 10000:10000 data/
+```
+
+`podman unshare` runs the command in podman's user namespace, so you use container UIDs and it automatically translates to the correct host UIDs.
+
+Or use the justfile shortcut:
+```bash
+just fix-perms xmpp 100 102
+just fix-perms mumble 10000 10000
+```

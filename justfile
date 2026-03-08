@@ -267,6 +267,11 @@ xmpp-gencert:
     podman exec tailscale-xmpp tailscale cert --cert-file /certs/xmpp.tail538465.ts.net.crt --key-file /certs/xmpp.tail538465.ts.net.key xmpp.tail538465.ts.net
     @echo "Certificate generated. Restart Prosody: podman restart prosody"
 
+# Fix container data permissions (e.g., just fix-perms xmpp 100 102)
+fix-perms service uid gid:
+    cd /etc/nixos/services/{{service}} && podman unshare chown -R {{uid}}:{{gid}} data/
+    @echo "Fixed permissions for {{service}} (uid={{uid}}, gid={{gid}})"
+
 # Trust /etc/nixos git repo for root (fixes ownership errors)
 fix-git-ownership:
     sudo git config --global --add safe.directory /etc/nixos

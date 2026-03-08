@@ -381,6 +381,25 @@ just vm-gaming   # Build and run gaming-pc VM
 
 VM login: user `craig`, password `test` (set via `vm-testing.nix`).
 
+### Migrating from nix-home-server
+
+If you're migrating from the old `nix-home-server` repo, use the migration script:
+
+```bash
+# On the server:
+curl -O https://raw.githubusercontent.com/CRBroughton/nix-configuration/nixos-migration/scripts/migrate-server.sh
+chmod +x migrate-server.sh
+sudo ./migrate-server.sh
+```
+
+Or manually copy and run `scripts/migrate-server.sh`. The script will:
+1. Stop all containers
+2. Backup your data
+3. Clone this repo
+4. Copy your service data (volumes, configs, .env files)
+5. Switch to the new configuration
+6. Restart all containers
+
 ### Managing the Home Server
 
 **Deploy to server (from another machine):**

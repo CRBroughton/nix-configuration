@@ -1,0 +1,46 @@
+services:
+  tailscale-nostr:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-nostr
+    hostname: nostr
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  nostr-relay:
+    image: scsibug/nostr-rs-relay:latest
+    container_name: nostr-relay
+    restart: unless-stopped
+    network_mode: service:tailscale-nostr
+    depends_on:
+      - tailscale-nostr
+    volumes:
+      - ./data:/usr/src/app/db:Z
+      - ./config.toml:/usr/src/app/config.toml:ro,Z
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '1.0'
+        reservations:
+          memory: 64M
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 8080 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "journald"
+      options:
+        tag: "nostr-relay"

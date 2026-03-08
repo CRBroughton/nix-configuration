@@ -1,0 +1,50 @@
+# AdGuard Home - DNS + Ad Blocking
+# Run with: podman compose up -d
+
+services:
+  tailscale-adguard:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-adguard
+    hostname: adguard
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  adguard:
+    image: adguard/adguardhome:latest
+    container_name: adguard
+    restart: unless-stopped
+    network_mode: service:tailscale-adguard
+    depends_on:
+      - tailscale-adguard
+
+    volumes:
+      - ./data:/opt/adguardhome/work:Z
+      - ./config:/opt/adguardhome/conf:Z
+
+    # Security
+    security_opt:
+      - no-new-privileges:true
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '1.0'
+        reservations:
+          memory: 64M
+
+    # Logging
+    logging:
+      driver: "journald"
+      options:
+        tag: "adguard"

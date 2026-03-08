@@ -296,6 +296,19 @@ Modules are organized by domain. **Combined modules** set both NixOS and home-ma
 | `services/vpn.nix` | VPN support |
 | `services/flatpak/base.nix` | Base Flatpak apps |
 
+### Server Modules (for headless servers)
+
+| Module | Description |
+|--------|-------------|
+| `server/podman.nix` | Rootless Podman for container hosting |
+| `server/tailscale.nix` | Tailscale (headless, no systray) |
+| `server/ssh.nix` | Hardened SSH (no root, no password) |
+| `server/restic.nix` | Backups to Backblaze B2 |
+| `server/auto-upgrade.nix` | Git pull + rebuild for /etc/nixos servers |
+| `server/container-auto-update.nix` | Daily podman-compose pull/update |
+
+**Note:** For servers, use `mkServer` instead of `mkHost` in flake.nix, which uses a minimal home-manager config without desktop apps.
+
 ## Quick Reference
 
 **Directory structure for a new user:**

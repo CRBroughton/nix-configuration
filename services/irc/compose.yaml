@@ -1,0 +1,70 @@
+# Ergo IRC Server - Podman Compose Configuration
+# Run with: podman compose up -d
+
+services:
+  tailscale-irc:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-irc
+    hostname: irc
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  ergo:
+    image: ghcr.io/ergochat/ergo:stable
+    container_name: ergo
+    restart: unless-stopped
+    network_mode: service:tailscale-irc
+    depends_on:
+      - tailscale-irc
+
+    volumes:
+      # Configuration
+      - ./config/ircd.yaml:/ircd/ircd.yaml:ro,Z
+      - ./config/motd.txt:/config/motd.txt:ro,Z
+      # TLS certificates
+      - ./certs:/certs:ro,Z
+      # Persistent data (accounts, channel registrations, history)
+      - ./data:/ircd/data:Z
+
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+
+    # Read-only root filesystem where possible
+    read_only: true
+
+    # Temporary filesystem for runtime needs
+    tmpfs:
+      - /tmp:mode=1777,size=10M
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '1.0'
+        reservations:
+          memory: 64M
+
+    # Health check
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 6697 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    # Logging
+    logging:
+      driver: "journald"
+      options:
+        tag: "ergo-irc"

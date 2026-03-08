@@ -1,0 +1,40 @@
+================================================================================
+                     Welcome to LocalIRC
+================================================================================
+
+This is a private IRC server. New to IRC? Here's what you need to know:
+
+GETTING STARTED
+  Your account was created by an admin. Log in using SASL authentication
+  in your IRC client with the credentials you were given.
+
+  Once connected:
+  1. Join a channel: /join #general
+  2. Send a message - just type and press Enter!
+
+STAY CONNECTED (even when offline)
+  Enable always-on mode to receive messages while you're away:
+     /msg NickServ SET ALWAYS-ON true
+
+  When you reconnect, you'll see any messages you missed!
+
+COMMON COMMANDS
+  /join #channel      Join a chat room
+  /part #channel      Leave a chat room
+  /msg nick message   Send a private message
+  /me action          Show an action (e.g., /me waves)
+  /nick newnick       Change your display name
+  /quit               Disconnect
+
+WHAT YOU'LL SEE
+  After connecting, you may see "User mode is +Z" - this just means
+  your connection is encrypted (secure). Nothing to worry about!
+
+  Usernames with @ are channel operators (moderators).
+  Usernames with + have voice (can speak in moderated channels).
+
+NEED HELP?
+  /msg NickServ HELP    Account help
+  /msg ChanServ HELP    Channel help
+
+================================================================================

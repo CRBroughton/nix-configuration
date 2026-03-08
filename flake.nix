@@ -1,5 +1,5 @@
 {
-  description = "NixOS configuration for laptop and gaming PC";
+  description = "NixOS configuration for laptop, gaming PC, and home server";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -50,6 +50,19 @@
         hostname = "gaming-pc";
         user = "craig";
       };
+
+      nixos-server = myLib.mkServer {
+        hostname = "nixos-server";
+        user = "craig";
+      };
+
+      pi-monitor = myLib.mkPi {
+        hostname = "pi-monitor";
+        user = "craig";
+      };
     };
+
+    # Build SD card images with: nix build .#images.pi-monitor
+    images.pi-monitor = self.nixosConfigurations.pi-monitor.config.system.build.sdImage;
   };
 }

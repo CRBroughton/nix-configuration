@@ -8,7 +8,7 @@ NixOS configuration for my machines: laptop, gaming PC, and more.
 nix-configuration/
 ├── flake.nix                      # Entry point - defines inputs and hosts
 ├── lib/
-│   └── default.nix                # Helper functions (mkHost), path shortcuts
+│   └── default.nix                # Helper functions (mkHost, mkServer, mkPi)
 ├── users/                         # User configs + their machines
 │   └── craig/
 │       ├── default.nix            # Home-manager config (shell, editors, etc.)
@@ -21,9 +21,15 @@ nix-configuration/
 │           ├── laptop/
 │           │   ├── default.nix    # Laptop config (imports modules directly)
 │           │   └── hardware.nix
-│           └── gaming-pc/
-│               ├── default.nix
-│               └── hardware.nix
+│           ├── gaming-pc/
+│           │   ├── default.nix
+│           │   └── hardware.nix
+│           ├── nixos-server/      # Home server
+│           │   ├── default.nix
+│           │   ├── hardware.nix
+│           │   └── home.nix       # Minimal server home-manager
+│           └── pi-monitor/        # Raspberry Pi monitoring
+│               └── default.nix
 ├── modules/                       # Domain-based modules
 │   ├── gaming.nix                 # Steam + gamemode + Lutris (combined)
 │   ├── security.nix               # Polkit + Yubikey (combined)
@@ -43,10 +49,33 @@ nix-configuration/
 │   │   ├── ssh.nix
 │   │   ├── vpn.nix
 │   │   └── flatpak/base.nix       # Base Flatpak apps
-│   └── editors/
-│       ├── vscode.nix
-│       ├── neovim.nix
-│       └── zed.nix
+│   ├── editors/
+│   │   ├── vscode.nix
+│   │   ├── neovim.nix
+│   │   └── zed.nix
+│   └── server/                    # Server-specific modules
+│       ├── podman.nix             # Rootless Podman for servers
+│       ├── tailscale.nix          # Tailscale (headless, no systray)
+│       ├── ssh.nix                # Hardened SSH config
+│       ├── restic.nix             # Backups to Backblaze B2
+│       ├── auto-upgrade.nix       # Git pull + rebuild for servers
+│       └── container-auto-update.nix  # Daily podman-compose updates
+├── services/                      # Podman compose services (for server)
+│   ├── adguard/                   # DNS ad blocker
+│   ├── calibre/                   # Ebook manager
+│   ├── copyparty/                 # File sharing
+│   ├── freshrss/                  # RSS reader
+│   ├── glance/                    # Dashboard
+│   ├── irc/                       # Ergo IRC server
+│   ├── linkding/                  # Bookmark manager
+│   ├── mealie/                    # Recipe manager
+│   ├── mumble/                    # Voice server
+│   ├── nostr/                     # Nostr relay
+│   ├── openwebui/                 # LLM chat interface (Ollama)
+│   ├── restic-exporter/           # Backup stats exporter
+│   ├── searxng/                   # Privacy search engine
+│   ├── thelounge/                 # Web IRC client
+│   └── xmpp/                      # Prosody XMPP server
 ├── disko/                         # Declarative disk partitioning
 │   ├── laptop.nix
 │   └── gaming-pc.nix
@@ -94,7 +123,28 @@ nix-configuration/
 | Security | Polkit, Yubikey support, GPG tools |
 | Extras | fwupd |
 
-Both hosts share the same user config (craig) with identical home-manager modules.
+### nixos-server (Home Server)
+
+| Category | Details |
+|----------|---------|
+| Type | Headless server (no desktop) |
+| Shell | Fish + Starship |
+| Containers | Rootless Podman with compose |
+| Services | AdGuard, Calibre, FreshRSS, Mealie, Mumble, IRC (Ergo), XMPP (Prosody), Open WebUI + Ollama, SearXNG, Linkding, Glance dashboard |
+| Networking | Tailscale (all services exposed via Tailscale Funnel) |
+| Backups | Restic to Backblaze B2 (daily at 02:00) |
+| Auto-update | Git pull + rebuild (daily at 04:00), container updates (daily at 05:00) |
+
+### pi-monitor (Raspberry Pi 3 B+)
+
+| Category | Details |
+|----------|---------|
+| Type | Monitoring node |
+| Services | Uptime Kuma (monitors other services) |
+| Networking | Tailscale |
+| Build | SD card image (`nix build .#images.pi-monitor`) |
+
+Both desktop hosts (laptop, gaming-pc) share the same user config (craig) with identical home-manager modules. The server uses a minimal home-manager config without desktop apps.
 
 ## Quick Reference
 
@@ -330,6 +380,49 @@ just vm-gaming   # Build and run gaming-pc VM
 ```
 
 VM login: user `craig`, password `test` (set via `vm-testing.nix`).
+
+### Managing the Home Server
+
+**Deploy to server (from another machine):**
+```bash
+nixos-rebuild switch --flake .#nixos-server --target-host craig@nixos-server
+```
+
+**Starting/stopping services:**
+```bash
+# SSH into server, then:
+cd /etc/nixos/services/<service-name>
+podman-compose up -d    # Start
+podman-compose down     # Stop
+podman-compose logs -f  # View logs
+```
+
+**Managing containers:**
+```bash
+lazydocker              # Interactive container management
+podman ps               # List running containers
+```
+
+**Check backup status:**
+```bash
+sudo systemctl status restic-backups-b2
+sudo journalctl -u restic-backups-b2 -f  # View logs
+```
+
+### Building the Pi SD Card Image
+
+```bash
+nix build .#images.pi-monitor
+# Image will be in result/sd-image/*.img.zst
+# Flash to SD card with:
+zstd -d result/sd-image/*.img.zst -o pi.img
+sudo dd if=pi.img of=/dev/sdX bs=4M status=progress
+```
+
+**Deploy updates to running Pi:**
+```bash
+nixos-rebuild switch --flake .#pi-monitor --target-host craig@pi-monitor
+```
 
 ### Rollback
 

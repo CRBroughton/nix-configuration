@@ -1,0 +1,32 @@
+# Glance - Dashboard
+# Run with: podman compose up -d
+
+services:
+  tailscale-glance:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-glance
+    hostname: glance
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  glance:
+    image: glanceapp/glance
+    container_name: glance
+    restart: unless-stopped
+    network_mode: service:tailscale-glance
+    depends_on:
+      - tailscale-glance
+    volumes:
+      - ./config:/app/config
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:Z

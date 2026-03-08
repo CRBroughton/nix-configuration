@@ -7,7 +7,7 @@
     enable = true;
 
     # Pull from GitHub - change to your repo URL
-    flake = "github:CRBroughton/nix-configuration#${hostname}";
+    flake = "github:CRBroughton/nix-configuration/nixos-migration#${hostname}";
 
     # Refresh flake inputs (like running `nix flake update` first)
     flags = [ "--refresh" ];

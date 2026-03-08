@@ -13,6 +13,7 @@ nix-configuration/
 │   └── craig/
 │       ├── default.nix            # Home-manager config (shell, editors, etc.)
 │       ├── git.nix                # Personal git config (name, email, keys)
+│       ├── gnome.nix              # Personal GNOME settings (theme, dock, extensions)
 │       ├── flatpaks.nix           # Personal Flatpak apps
 │       ├── common.nix             # System user config (users.users.craig)
 │       ├── vm-testing.nix         # VM testing settings
@@ -35,8 +36,8 @@ nix-configuration/
 │   ├── media.nix                  # Audio/communication apps
 │   ├── zen-browser.nix            # Zen Browser + addons
 │   ├── desktop/
-│   │   ├── gnome.nix              # GDM + GNOME + theme + extensions (combined)
-│   │   └── kde.nix                # KDE Plasma desktop
+│   │   ├── gnome.nix              # GDM + GNOME + Pipewire (base system)
+│   │   └── kde.nix                # SDDM + KDE Plasma + Pipewire (base system)
 │   ├── services/
 │   │   ├── ssh.nix
 │   │   ├── vpn.nix
@@ -193,7 +194,7 @@ Find extension IDs on the VS Code marketplace (format: `publisher.extension-name
 
 ### Changing GNOME Settings
 
-Edit `modules/desktop/gnome.nix` (in the home-manager section):
+Edit your personal GNOME config (e.g., `users/craig/gnome.nix`):
 
 ```nix
 dconf.settings = {
@@ -209,7 +210,7 @@ To find dconf paths, use `dconf watch /` and change settings in GNOME Settings.
 
 ### Adding GNOME Extensions
 
-In `modules/desktop/gnome.nix`, add to the home-manager section:
+In your personal GNOME config (e.g., `users/craig/gnome.nix`):
 
 1. Add the extension package:
    ```nix
@@ -227,7 +228,7 @@ In `modules/desktop/gnome.nix`, add to the home-manager section:
 
 ### Modifying the Dock (Favorite Apps)
 
-Edit `modules/desktop/gnome.nix` (in the dconf.settings):
+Edit your personal GNOME config (e.g., `users/craig/gnome.nix`):
 
 ```nix
 favorite-apps = [

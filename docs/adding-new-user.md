@@ -257,12 +257,17 @@ Once the VM works, update for real hardware:
 
 Modules are organized by domain. **Combined modules** set both NixOS and home-manager options.
 
+### Desktop Modules (import in host config)
+
+| Module | Description | Good for |
+|--------|-------------|----------|
+| `desktop/gnome.nix` | GDM + GNOME + Pipewire (base system) | Desktop users |
+| `desktop/kde.nix` | SDDM + KDE Plasma + Pipewire (base system) | KDE users |
+
 ### Combined Modules (import in host config)
 
 | Module | Description | Good for |
 |--------|-------------|----------|
-| `desktop/gnome.nix` | GDM + GNOME + theme + extensions | Desktop users |
-| `desktop/kde.nix` | KDE Plasma desktop | KDE users |
 | `gaming.nix` | Steam + gamemode + Lutris | Gamers |
 | `development.nix` | Podman + libvirt + languages + tools | Developers |
 | `security.nix` | Polkit + Yubikey + GPG tools | Security-conscious users |

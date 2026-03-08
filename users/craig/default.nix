@@ -4,7 +4,8 @@
   imports = [
     ../../modules/shell.nix
     ../../modules/git.nix
-    ./git.nix  # Personal git config (name, email, keys)
+    ./git.nix   # Personal git config (name, email, keys)
+    ./gnome.nix # Personal GNOME settings (theme, dock, extensions)
     ../../modules/terminal.nix
     ../../modules/media.nix
     ../../modules/editors/vscode.nix

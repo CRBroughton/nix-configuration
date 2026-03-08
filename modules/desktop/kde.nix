@@ -24,11 +24,8 @@
     pulse.enable = true;
   };
 
-  # Fonts
+  # Base fonts (emoji support)
   fonts.packages = with pkgs; [
-    nerd-fonts.fira-code
-    nerd-fonts.jetbrains-mono
-    inter
     noto-fonts
     noto-fonts-color-emoji
   ];

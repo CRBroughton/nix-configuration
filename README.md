@@ -39,7 +39,6 @@ nix-configuration/
 │   │   └── kde.nix                # KDE Plasma desktop
 │   ├── services/
 │   │   ├── ssh.nix
-│   │   ├── printing.nix
 │   │   ├── vpn.nix
 │   │   └── flatpak/base.nix       # Base Flatpak apps
 │   └── editors/
@@ -73,7 +72,7 @@ nix-configuration/
 | Terminal | Ghostty |
 | Gaming | Steam, Gamemode, Gamescope, Lutris |
 | Development | Podman, libvirt, virt-manager, Go, Zig, Node.js, Rust, PHP |
-| Services | SSH, Tailscale, VPN, CUPS printing |
+| Services | SSH, Tailscale, VPN |
 | Security | Polkit, Yubikey support, GPG tools |
 | Extras | Power profiles daemon, fwupd |
 
@@ -89,7 +88,7 @@ nix-configuration/
 | Terminal | Ghostty |
 | Gaming | Steam, Gamemode, Gamescope, Lutris |
 | Development | Podman, libvirt, virt-manager, Go, Zig, Node.js, Rust, PHP |
-| Services | SSH, Tailscale, VPN, CUPS printing |
+| Services | SSH, Tailscale, VPN |
 | Security | Polkit, Yubikey support, GPG tools |
 | Extras | fwupd |
 

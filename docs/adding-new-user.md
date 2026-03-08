@@ -93,7 +93,6 @@ Create `users/mom/hosts/moms-pc/default.nix`:
 
     # Desktop environment (combined modules include both system and user config)
     (modules + "/desktop/gnome.nix")
-    (modules + "/services/printing.nix")
     (modules + "/services/flatpak/base.nix")
     (modules + "/services/ssh.nix")
     (modules + "/tailscale.nix")
@@ -288,7 +287,6 @@ Modules are organized by domain. **Combined modules** set both NixOS and home-ma
 |--------|-------------|
 | `nix.nix` | Nix settings, garbage collection |
 | `services/ssh.nix` | SSH server |
-| `services/printing.nix` | CUPS printing |
 | `services/vpn.nix` | VPN support |
 | `services/flatpak/base.nix` | Base Flatpak apps |
 

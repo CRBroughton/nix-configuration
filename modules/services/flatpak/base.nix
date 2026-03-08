@@ -9,7 +9,6 @@
     ];
     packages = [
       "app.zen_browser.zen"
-      "com.google.Chrome"
       "com.bitwarden.desktop"
       "com.mattjakeman.ExtensionManager"
       "com.github.tchx84.Flatseal"

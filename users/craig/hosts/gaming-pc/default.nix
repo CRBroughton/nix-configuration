@@ -9,7 +9,6 @@
 
     # Desktop
     (modules + "/desktop/gnome.nix")
-    (modules + "/services/printing.nix")
     (modules + "/services/flatpak/base.nix")
     (modules + "/services/ssh.nix")
     (modules + "/tailscale.nix")

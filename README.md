@@ -30,6 +30,7 @@ nix-configuration/
 │   ├── development.nix            # Podman + libvirt + dev tools (combined)
 │   ├── tailscale.nix              # Tailscale service + systray (combined)
 │   ├── nix.nix                    # Nix settings, garbage collection
+│   ├── auto-upgrade.nix           # Auto-pull from GitHub and rebuild daily
 │   ├── shell.nix                  # Fish, Starship, Zoxide, CLI tools
 │   ├── terminal.nix               # Ghostty terminal
 │   ├── git.nix                    # Git config (generic)
@@ -75,7 +76,7 @@ nix-configuration/
 | Development | Podman, libvirt, virt-manager, Go, Zig, Node.js, Rust, PHP |
 | Services | SSH, Tailscale, VPN |
 | Security | Polkit, Yubikey support, GPG tools |
-| Extras | Power profiles daemon, fwupd |
+| Extras | Power profiles daemon, fwupd, auto-upgrade |
 
 ### gaming-pc
 
@@ -239,6 +240,24 @@ favorite-apps = [
 ```
 
 Find `.desktop` file names in `/run/current-system/sw/share/applications/` or `~/.local/share/flatpak/exports/share/applications/`.
+
+### Enabling Auto-Upgrade
+
+For machines that should automatically stay up-to-date (great for family members), add the auto-upgrade module:
+
+```nix
+(modules + "/auto-upgrade.nix")
+```
+
+This will:
+- Pull the latest config from GitHub daily
+- Rebuild the system automatically
+- Run as a systemd timer (check status: `systemctl status nixos-upgrade`)
+
+Edit `modules/auto-upgrade.nix` to customize:
+- `dates` - when to check ("daily", "weekly", or cron syntax like "04:00")
+- `allowReboot` - auto-reboot after kernel updates
+- `rebootWindow` - only reboot during specific hours
 
 ### Creating a New Module
 

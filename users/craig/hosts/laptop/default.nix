@@ -17,6 +17,7 @@
     (modules + "/nix.nix")
     (modules + "/gaming.nix")
     (modules + "/development.nix")
+    (modules + "/auto-upgrade.nix")
 
     # Personal
     ../../flatpaks.nix

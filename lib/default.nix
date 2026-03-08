@@ -69,6 +69,7 @@ in
       # External modules (server doesn't need chaotic/flatpak)
       inputs.disko.nixosModules.disko
       inputs.home-manager.nixosModules.home-manager
+      inputs.arion.nixosModules.arion
 
       # Host-specific config (under user directory)
       ../users/${user}/hosts/${hostname}

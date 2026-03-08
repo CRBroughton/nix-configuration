@@ -2,10 +2,10 @@
 { config, pkgs, ... }:
 
 {
-  # Enable podman
+  # Enable podman (used for existing services, arion uses docker)
   virtualisation.podman = {
     enable = true;
-    dockerCompat = true;  # Create docker alias
+    dockerCompat = false;  # Disabled - arion uses real docker
     defaultNetwork.settings.dns_enabled = true;
   };
 

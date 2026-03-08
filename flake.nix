@@ -40,6 +40,12 @@
       url = "github:CRBroughton/nix-flakes?dir=podman-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Arion - Docker/Podman compose in Nix
+    arion = {
+      url = "github:hercules-ci/arion";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, disko, chaotic, nix-vscode-extensions, nix-flatpak, ... }@inputs:

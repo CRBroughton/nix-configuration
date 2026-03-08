@@ -14,6 +14,10 @@
     (modules + "/server/auto-upgrade.nix")
     (modules + "/server/container-auto-update.nix")
     (modules + "/nix.nix")
+
+    # Arion (declarative containers)
+    (modules + "/server/arion.nix")
+    (modules + "/server/services/freshrss.nix")
   ];
 
   # Boot loader

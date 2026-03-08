@@ -291,6 +291,7 @@ Modules are organized by domain. **Combined modules** set both NixOS and home-ma
 | Module | Description |
 |--------|-------------|
 | `nix.nix` | Nix settings, garbage collection |
+| `auto-upgrade.nix` | Auto-pull from GitHub and rebuild daily |
 | `services/ssh.nix` | SSH server |
 | `services/vpn.nix` | VPN support |
 | `services/flatpak/base.nix` | Base Flatpak apps |

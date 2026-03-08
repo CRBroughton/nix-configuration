@@ -18,15 +18,15 @@
     registries = [ "docker.io" "ghcr.io" "quay.io" ];
   };
 
-  # Ensure podman socket restarts on boot
-  systemd.user.services.podman-socket-restart = {
+  # Ensure podman socket is enabled and started on boot
+  systemd.user.services.podman-socket-enable = {
     Unit = {
-      Description = "Restart podman socket on boot";
+      Description = "Enable and start podman socket on boot";
       After = [ "default.target" ];
     };
     Service = {
       Type = "oneshot";
-      ExecStart = "${pkgs.systemd}/bin/systemctl --user restart podman.socket";
+      ExecStart = "${pkgs.systemd}/bin/systemctl --user enable --now podman.socket";
       RemainAfterExit = true;
     };
     Install.WantedBy = [ "default.target" ];

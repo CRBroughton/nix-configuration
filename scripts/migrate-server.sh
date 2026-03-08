@@ -83,7 +83,8 @@ if [[ -d "$NEW_NIXOS" ]]; then
 fi
 git clone --branch "$REPO_BRANCH" "$REPO_URL" "$NEW_NIXOS"
 
-# Step 4: Copy data directories from old services to new
+# Step 4: Copy ALL data directories/files from old services to new
+# (copies everything except compose.yaml and serve.json which are in git)
 log "Copying service data..."
 cd "$OLD_NIXOS/services"
 for service in */; do
@@ -92,13 +93,29 @@ for service in */; do
     # Create service dir in new repo if it doesn't exist
     mkdir -p "$NEW_NIXOS/services/$service_name"
 
-    # Copy data directories (these contain actual data, not tracked by git)
-    for datadir in data config tailscale certs .env; do
-        src="$OLD_NIXOS/services/$service_name/$datadir"
-        dst="$NEW_NIXOS/services/$service_name/"
-        if [[ -e "$src" ]]; then
-            log "  Copying $service_name/$datadir..."
-            cp -a "$src" "$dst"
+    # Copy everything except compose.yaml and serve.json (which are tracked in git)
+    for item in "$OLD_NIXOS/services/$service_name"/*; do
+        basename=$(basename "$item")
+        # Skip files that are tracked in git
+        if [[ "$basename" == "compose.yaml" ]] || [[ "$basename" == "serve.json" ]]; then
+            continue
+        fi
+        if [[ -e "$item" ]]; then
+            log "  Copying $service_name/$basename..."
+            cp -a "$item" "$NEW_NIXOS/services/$service_name/"
+        fi
+    done
+
+    # Also copy hidden files like .env
+    for item in "$OLD_NIXOS/services/$service_name"/.*; do
+        basename=$(basename "$item")
+        # Skip . and ..
+        if [[ "$basename" == "." ]] || [[ "$basename" == ".." ]]; then
+            continue
+        fi
+        if [[ -e "$item" ]]; then
+            log "  Copying $service_name/$basename..."
+            cp -a "$item" "$NEW_NIXOS/services/$service_name/"
         fi
     done
 done

@@ -34,6 +34,12 @@
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Podman user socket/service for rootless containers
+    podman-flake = {
+      url = "github:CRBroughton/nix-flakes?dir=podman-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, disko, chaotic, nix-vscode-extensions, nix-flatpak, ... }@inputs:

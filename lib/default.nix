@@ -85,6 +85,9 @@ in
           useGlobalPkgs = true;
           useUserPackages = true;
           extraSpecialArgs = { inherit inputs; };
+          sharedModules = [
+            inputs.podman-flake.homeManagerModules.default
+          ];
           # Use host-specific home.nix for servers
           users = lib.genAttrs [ user ] (u: import ../users/${u}/hosts/${hostname}/home.nix);
         };

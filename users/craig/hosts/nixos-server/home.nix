@@ -21,24 +21,9 @@
     default = [{ type = "insecureAcceptAnything"; }];
   };
 
-  # Podman socket for tools like lazydocker
-  systemd.user.services.podman-socket-restart = {
-    Unit = {
-      Description = "Restart podman socket on boot";
-      After = [ "default.target" ];
-    };
-    Service = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.systemd}/bin/systemctl --user restart podman.socket";
-      RemainAfterExit = true;
-    };
-    Install.WantedBy = [ "default.target" ];
-  };
-
-  systemd.user.services.podman = {
-    Service = {
-      Environment = "PATH=/run/wrappers/bin:/run/current-system/sw/bin";
-    };
+  # Enable podman socket for tools like lazydocker
+  systemd.user.sockets.podman = {
+    Install.WantedBy = [ "sockets.target" ];
   };
 
   # Docker compatibility

@@ -298,8 +298,8 @@ flash-pi device:
 
 # Deploy to Pi (from another machine)
 deploy-pi:
-    nixos-rebuild switch --flake .#pi-monitor --target-host craig@pi-monitor --build-host localhost
+    nixos-rebuild switch --flake .#pi-monitor --target-host craig@pi-monitor --build-host localhost --use-remote-sudo
 
 # Deploy to server (from another machine)
 deploy-server:
-    nixos-rebuild switch --flake .#nixos-server --target-host craig@nixos-server
+    nixos-rebuild switch --flake .#nixos-server --target-host craig@nixos-server --use-remote-sudo

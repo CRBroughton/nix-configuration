@@ -76,6 +76,8 @@ inputs:
 # Format all Nix files
 format:
     find . -name '*.nix' -type f -exec nixfmt {} +
+    statix fix
+    deadnix --edit .
     @echo "Formatted all Nix files"
 
 #═══════════════════════════════════════════════════════════════════════════════

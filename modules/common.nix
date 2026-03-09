@@ -12,5 +12,8 @@
     vim
     wget
     curl
+    nil
+    statix
+    deadnix
   ];
 }

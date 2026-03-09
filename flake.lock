@@ -45,23 +45,6 @@
         "type": "github"
       }
     },
-    "dev": {
-      "inputs": {
-        "flake-utils": "flake-utils",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "path": "./dev",
-        "type": "path"
-      },
-      "original": {
-        "path": "./dev",
-        "type": "path"
-      },
-      "parent": []
-    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -292,6 +275,29 @@
         "type": "github"
       }
     },
+    "nix-format": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "dir": "nix-format",
+        "lastModified": 1773087752,
+        "narHash": "sha256-RzC4gAmHBdQLy4k2YSMOy6YkehPaESPfvINEb91vXpc=",
+        "owner": "crbroughton",
+        "repo": "nix-flakes",
+        "rev": "48cb1d42b09d5e01a9bdf009831ce30b2634be92",
+        "type": "github"
+      },
+      "original": {
+        "dir": "nix-format",
+        "owner": "crbroughton",
+        "repo": "nix-flakes",
+        "type": "github"
+      }
+    },
     "nix-github-actions": {
       "inputs": {
         "nixpkgs": [
@@ -408,11 +414,11 @@
       "inputs": {
         "arion": "arion",
         "chaotic": "chaotic",
-        "dev": "dev",
         "disko": "disko",
         "firefox-addons": "firefox-addons",
         "home-manager": "home-manager_2",
         "nix-flatpak": "nix-flatpak",
+        "nix-format": "nix-format",
         "nix-vscode-extensions": "nix-vscode-extensions",
         "nixpkgs": "nixpkgs_3",
         "podman-flake": "podman-flake",

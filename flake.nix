@@ -48,8 +48,8 @@
     };
 
     # Dev tooling (nixfmt, statix, deadnix, etc.)
-    dev = {
-      url = "path:./dev";
+    nix-format = {
+      url = "github:crbroughton/nix-flakes?dir=nix-format";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -88,8 +88,8 @@
       # Build SD card images with: nix build .#images.pi-monitor
       images.pi-monitor = self.nixosConfigurations.pi-monitor.config.system.build.sdImage;
 
-      # Re-export dev tooling
-      inherit (inputs.dev) devShells;
-      inherit (inputs.dev) apps;
+      # Re-export dev tooling from nix-format flake
+      inherit (inputs.nix-format) devShells;
+      inherit (inputs.nix-format) apps;
     };
 }

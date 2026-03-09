@@ -36,7 +36,7 @@
   security.sudo.wheelNeedsPassword = false;
 
   environment.systemPackages = with pkgs; [
-    git vim wget curl pciutils usbutils nix-search-cli
+    pciutils usbutils
   ];
 
   system.stateVersion = "25.11";

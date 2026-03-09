@@ -81,15 +81,10 @@
 
   # System packages
   environment.systemPackages = with pkgs; [
-    vim
-    wget
-    curl
     openssh
     openssl
     lazygit
-    just
     btop
-    micro
   ];
 
   system.stateVersion = "25.11";

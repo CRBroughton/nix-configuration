@@ -43,9 +43,7 @@
     fd
     jq
     jnv
-    just
     tokei
     croc
-    restic
   ];
 }

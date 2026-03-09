@@ -5,5 +5,12 @@
   environment.systemPackages = with pkgs; [
     nixfmt
     nix-search-cli
+    nixd
+    just
+    restic
+    micro
+    vim
+    wget
+    curl
   ];
 }

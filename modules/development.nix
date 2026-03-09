@@ -30,7 +30,6 @@
       rustup
       php
       php84Packages.composer
-      nil  # Nix LSP
 
       # Development tools
       lazydocker
@@ -43,9 +42,6 @@
       hurl
       grpcurl
       claude-code
-
-      # Other editors
-      micro
     ];
   };
 }

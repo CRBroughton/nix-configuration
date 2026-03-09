@@ -53,10 +53,7 @@
 
   # Minimal packages (Pi 3 has limited space/RAM)
   environment.systemPackages = with pkgs; [
-    vim
-    git
     btop
-    curl
   ];
 
   # Use OCI containers (lighter than full podman daemon)

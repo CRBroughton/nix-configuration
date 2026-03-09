@@ -13,8 +13,13 @@
       }
     }
   },
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
+  "editor.formatOnSave": false,
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.nix$",
+        "cmd": "nix-format"
+      }
+    ]
   }
 }

@@ -1,5 +1,7 @@
 {
-    "recommendations": [
-        "jnoortheen.nix-ide"
-    ]
+  "recommendations": [
+    "jnoortheen.nix-ide",
+    "emeraldwalk.runonsave",
+    "mkhl.direnv"
+  ]
 }

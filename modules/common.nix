@@ -15,5 +15,6 @@
     nil
     statix
     deadnix
+    direnv
   ];
 }

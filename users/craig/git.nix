@@ -1,5 +1,5 @@
 # Craig's personal git configuration
-{ ... }:
+_:
 
 {
   programs.git = {

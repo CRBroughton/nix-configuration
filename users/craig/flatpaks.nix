@@ -1,5 +1,5 @@
 # Craig's personal flatpak apps
-{ ... }:
+_:
 
 {
   services.flatpak.packages = [

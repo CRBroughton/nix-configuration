@@ -46,6 +46,12 @@
       url = "github:hercules-ci/arion";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Dev tooling (nixfmt, statix, deadnix, etc.)
+    dev = {
+      url = "path:./dev";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -81,5 +87,9 @@
 
       # Build SD card images with: nix build .#images.pi-monitor
       images.pi-monitor = self.nixosConfigurations.pi-monitor.config.system.build.sdImage;
+
+      # Re-export dev tooling
+      inherit (inputs.dev) devShells;
+      inherit (inputs.dev) apps;
     };
 }

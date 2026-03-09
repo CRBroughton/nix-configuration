@@ -1,5 +1,5 @@
 # Base flatpak configuration - apps everyone should have
-{ ... }:
+_:
 
 {
   services.flatpak = {

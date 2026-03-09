@@ -27,6 +27,9 @@ in
       inputs.home-manager.nixosModules.home-manager
       inputs.nix-flatpak.nixosModules.nix-flatpak
 
+      # Shared modules
+      ../modules/common.nix
+
       # Host-specific config (under user directory)
       ../users/${user}/hosts/${hostname}
 
@@ -71,6 +74,9 @@ in
       inputs.home-manager.nixosModules.home-manager
       inputs.arion.nixosModules.arion
 
+      # Shared modules
+      ../modules/common.nix
+
       # Host-specific config (under user directory)
       ../users/${user}/hosts/${hostname}
 
@@ -106,6 +112,9 @@ in
     system = "aarch64-linux";
     specialArgs = { inherit inputs hostname user; } // paths;
     modules = [
+      # Shared modules
+      ../modules/common.nix
+
       # Host-specific config (under user directory)
       ../users/${user}/hosts/${hostname}
 

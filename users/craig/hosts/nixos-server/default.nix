@@ -81,7 +81,6 @@
 
   # System packages
   environment.systemPackages = with pkgs; [
-    git
     vim
     wget
     curl
@@ -89,7 +88,6 @@
     openssl
     lazygit
     just
-    nixfmt-classic
     btop
     micro
   ];

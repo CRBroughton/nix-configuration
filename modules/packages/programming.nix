@@ -48,5 +48,6 @@
     tokei
     claude-code
     tree-sitter
+    nixd
   ];
 }

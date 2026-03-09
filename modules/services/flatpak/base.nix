@@ -1,11 +1,14 @@
 # Base flatpak configuration - apps everyone should have
-{ config, pkgs, ... }:
+{ ... }:
 
 {
   services.flatpak = {
     enable = true;
     remotes = [
-      { name = "flathub"; location = "https://dl.flathub.org/repo/flathub.flatpakrepo"; }
+      {
+        name = "flathub";
+        location = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+      }
     ];
     packages = [
       "app.zen_browser.zen"

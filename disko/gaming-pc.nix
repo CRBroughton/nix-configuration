@@ -5,7 +5,7 @@
     disk = {
       main = {
         type = "disk";
-        device = "/dev/nvme0n1";  # Adjust for your gaming PC's drive
+        device = "/dev/nvme0n1"; # Adjust for your gaming PC's drive
         content = {
           type = "gpt";
           partitions = {

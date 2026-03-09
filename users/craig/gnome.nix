@@ -1,5 +1,9 @@
 # Personal GNOME settings - theme, dock, extensions, keyboard layouts
-{ config, pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   dconf.settings = {
@@ -33,14 +37,38 @@
     };
     "org/gnome/desktop/input-sources" = {
       sources = [
-        (lib.hm.gvariant.mkTuple [ "xkb" "gb" ])
-        (lib.hm.gvariant.mkTuple [ "xkb" "us" ])
-        (lib.hm.gvariant.mkTuple [ "xkb" "colemak_dh_ansi" ])
-        (lib.hm.gvariant.mkTuple [ "xkb" "colemak_dh_iso" ])
-        (lib.hm.gvariant.mkTuple [ "xkb" "shavian" ])
-        (lib.hm.gvariant.mkTuple [ "xkb" "gallium_v2" ])
-        (lib.hm.gvariant.mkTuple [ "xkb" "graphite" ])
-        (lib.hm.gvariant.mkTuple [ "xkb" "canary" ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "gb"
+        ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "us"
+        ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "colemak_dh_ansi"
+        ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "colemak_dh_iso"
+        ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "shavian"
+        ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "gallium_v2"
+        ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "graphite"
+        ])
+        (lib.hm.gvariant.mkTuple [
+          "xkb"
+          "canary"
+        ])
       ];
     };
   };

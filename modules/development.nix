@@ -1,5 +1,9 @@
 # Development - Virtualisation, containers, languages, and tools
-{ config, pkgs, user, ... }:
+{
+  pkgs,
+  user,
+  ...
+}:
 
 {
   # ============================================

@@ -1,6 +1,9 @@
 # Auto-upgrade - automatically pull latest config and rebuild
 # Great for machines you want to stay up-to-date without manual intervention
-{ config, lib, hostname, ... }:
+{
+  hostname,
+  ...
+}:
 
 {
   system.autoUpgrade = {

@@ -1,5 +1,5 @@
 # Craig's personal git configuration
-{ config, pkgs, ... }:
+{ ... }:
 
 {
   programs.git = {

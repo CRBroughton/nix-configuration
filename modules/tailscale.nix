@@ -1,5 +1,9 @@
 # Tailscale - VPN service and system tray
-{ config, pkgs, user, ... }:
+{
+  pkgs,
+  user,
+  ...
+}:
 
 {
   # ============================================

@@ -1,5 +1,9 @@
 # Security - Polkit, Yubikey support and tools
-{ config, pkgs, user, ... }:
+{
+  pkgs,
+  user,
+  ...
+}:
 
 {
   # ============================================

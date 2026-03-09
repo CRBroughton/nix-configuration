@@ -1,5 +1,8 @@
 # FreshRSS - RSS feed reader with Tailscale sidecar
-{ config, pkgs, lib, ... }:
+{
+  lib,
+  ...
+}:
 
 let
   arionLib = import ../../../lib/arion.nix { inherit lib; };

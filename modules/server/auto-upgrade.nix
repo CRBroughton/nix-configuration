@@ -1,12 +1,15 @@
 # Server Auto-Upgrade - Git pull then rebuild (for /etc/nixos servers)
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Automatic system updates from local /etc/nixos
   system.autoUpgrade = {
     enable = true;
     flake = "/etc/nixos";
-    flags = [ "--update-input" "nixpkgs" ];
+    flags = [
+      "--update-input"
+      "nixpkgs"
+    ];
     dates = "04:00";
     allowReboot = false;
   };

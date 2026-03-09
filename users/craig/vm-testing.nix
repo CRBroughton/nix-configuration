@@ -1,7 +1,7 @@
 # VM testing settings
 # Import this in host configs for local VM testing
 # Remove this import when deploying to real hardware
-{ ... }:
+_:
 
 {
   # Auto-login for convenience during VM testing

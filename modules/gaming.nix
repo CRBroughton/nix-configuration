@@ -1,5 +1,9 @@
 # Gaming - Steam, Gamemode, Lutris, graphics support
-{ config, pkgs, user, ... }:
+{
+  pkgs,
+  user,
+  ...
+}:
 
 {
   # ============================================

@@ -1,11 +1,17 @@
-{ config, ... }:
+{ ... }:
 
 {
   nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
     auto-optimise-store = true;
     # Allow these users to push unsigned paths (for remote deployment)
-    trusted-users = [ "root" "@wheel" ];
+    trusted-users = [
+      "root"
+      "@wheel"
+    ];
   };
 
   # Garbage collection

@@ -3,7 +3,12 @@
 #   nixos-generate-config --show-hardware-config
 # on the actual gaming PC hardware
 
-{ config, lib, pkgs, modulesPath, ... }:
+{
+  config,
+  lib,
+  modulesPath,
+  ...
+}:
 
 {
   imports = [
@@ -11,9 +16,16 @@
   ];
 
   # Placeholder boot configuration
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
+  boot.initrd.availableKernelModules = [
+    "xhci_pci"
+    "ahci"
+    "nvme"
+    "usbhid"
+    "usb_storage"
+    "sd_mod"
+  ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-amd" ];  # Change to kvm-intel if Intel CPU
+  boot.kernelModules = [ "kvm-amd" ]; # Change to kvm-intel if Intel CPU
   boot.extraModulePackages = [ ];
 
   # Networking

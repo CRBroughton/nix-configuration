@@ -1,11 +1,14 @@
 # Home-manager config for nixos-server (minimal, headless)
-{ config, pkgs, lib, inputs, ... }:
+{
+  pkgs,
+  ...
+}:
 
 {
   imports = [
     ../../../../modules/shell.nix
     ../../../../modules/git.nix
-    ../../git.nix   # Personal git config
+    ../../git.nix # Personal git config
   ];
 
   home.username = "craig";
@@ -15,7 +18,11 @@
   # Podman with user socket for lazydocker/glance (via podman-flake)
   programs.podman-config = {
     enable = true;
-    registries = [ "docker.io" "ghcr.io" "quay.io" ];
+    registries = [
+      "docker.io"
+      "ghcr.io"
+      "quay.io"
+    ];
   };
 
   # Ensure podman socket is enabled and started on boot

@@ -5,7 +5,7 @@
     disk = {
       main = {
         type = "disk";
-        device = "/dev/nvme0n1";  # Adjust for your laptop's drive
+        device = "/dev/nvme0n1"; # Adjust for your laptop's drive
         content = {
           type = "gpt";
           partitions = {

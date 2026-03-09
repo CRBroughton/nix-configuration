@@ -1,6 +1,6 @@
 # Restic - Backup to Backblaze B2
 # Requires /etc/restic-env-password and /etc/restic-env files
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   environment.systemPackages = [ pkgs.restic ];

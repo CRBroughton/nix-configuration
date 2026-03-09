@@ -1,5 +1,8 @@
 # KDE Plasma desktop environment
-{ config, pkgs, lib, ... }:
+{
+  pkgs,
+  ...
+}:
 
 {
   services.xserver.enable = true;
@@ -10,8 +13,8 @@
 
   # Exclude some KDE packages
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
-    elisa        # Music player
-    konsole      # Use Ghostty instead
+    elisa # Music player
+    konsole # Use Ghostty instead
   ];
 
   # Audio (Pipewire)

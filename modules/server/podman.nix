@@ -1,11 +1,11 @@
 # Podman - Rootless container runtime for servers
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Enable podman (used for existing services, arion uses docker)
   virtualisation.podman = {
     enable = true;
-    dockerCompat = false;  # Disabled - arion uses real docker
+    dockerCompat = false; # Disabled - arion uses real docker
     defaultNetwork.settings.dns_enabled = true;
   };
 

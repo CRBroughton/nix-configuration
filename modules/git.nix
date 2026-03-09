@@ -1,5 +1,5 @@
 # Generic git configuration - enables git and common tools
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   programs.git = {

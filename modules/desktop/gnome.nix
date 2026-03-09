@@ -1,5 +1,8 @@
 # GNOME Desktop - Base system setup (GDM, GNOME, Pipewire, fonts)
-{ config, pkgs, lib, ... }:
+{
+  pkgs,
+  ...
+}:
 
 {
   services.xserver.enable = true;

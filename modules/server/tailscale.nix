@@ -1,5 +1,5 @@
 # Tailscale - VPN service for servers (headless, no systray)
-{ config, ... }:
+{ ... }:
 
 {
   services.tailscale.enable = true;

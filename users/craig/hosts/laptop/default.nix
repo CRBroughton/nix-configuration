@@ -1,4 +1,9 @@
-{ config, pkgs, modules, disko, ... }:
+{
+  pkgs,
+  modules,
+  disko,
+  ...
+}:
 
 {
   imports = [
@@ -30,7 +35,8 @@
   security.sudo.wheelNeedsPassword = false;
 
   environment.systemPackages = with pkgs; [
-    pciutils usbutils
+    pciutils
+    usbutils
   ];
 
   # Laptop power management

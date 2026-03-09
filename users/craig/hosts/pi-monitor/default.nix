@@ -1,5 +1,9 @@
 # Pi Monitor - Raspberry Pi 3 B+ running Uptime Kuma
-{ config, pkgs, lib, modulesPath, modules, ... }:
+{
+  pkgs,
+  modulesPath,
+  ...
+}:
 
 {
   imports = [
@@ -14,17 +18,25 @@
 
   # Nix settings
   nix.settings = {
-    max-jobs = 2;  # Pi 3 memory constraints (1GB RAM)
-    experimental-features = [ "nix-command" "flakes" ];
-    trusted-users = [ "root" "craig" ];
-    require-sigs = false;  # Allow unsigned builds from server
+    max-jobs = 2; # Pi 3 memory constraints (1GB RAM)
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+    trusted-users = [
+      "root"
+      "craig"
+    ];
+    require-sigs = false; # Allow unsigned builds from server
   };
 
   # Swap helps on 1GB Pi
-  swapDevices = [{
-    device = "/swapfile";
-    size = 1024;  # 1GB swap
-  }];
+  swapDevices = [
+    {
+      device = "/swapfile";
+      size = 1024; # 1GB swap
+    }
+  ];
 
   networking.hostName = "pi-monitor";
   networking.networkmanager.enable = true;
@@ -41,7 +53,10 @@
   # User configuration
   users.users.craig = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+    ];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrDtLXrygEh0uessk5PifLw+t6SDKJz08w6u9iQxMpo crbroughton@posteo.uk"
     ];
@@ -65,14 +80,17 @@
         "uptime-kuma:/app/data"
       ];
       autoStart = true;
-      extraOptions = [ "--network=host" ];  # Use host network for Tailscale access
+      extraOptions = [ "--network=host" ]; # Use host network for Tailscale access
     };
   };
 
   # Firewall
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 3001 ];  # SSH + Uptime Kuma
+    allowedTCPPorts = [
+      22
+      3001
+    ]; # SSH + Uptime Kuma
     trustedInterfaces = [ "tailscale0" ];
   };
 

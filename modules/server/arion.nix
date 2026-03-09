@@ -1,5 +1,7 @@
 # Arion - Declarative Docker/Podman compose via Nix
-{ config, pkgs, lib, ... }:
+{
+  ...
+}:
 
 {
   # Use Docker as the backend (simpler than rootless podman for arion)

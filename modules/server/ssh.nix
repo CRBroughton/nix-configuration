@@ -1,5 +1,5 @@
 # SSH - Hardened server configuration
-{ config, ... }:
+{ ... }:
 
 {
   services.openssh = {

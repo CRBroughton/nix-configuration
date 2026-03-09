@@ -1,11 +1,18 @@
 # Container Auto-Update - Daily podman-compose pull and update
-{ config, pkgs, user, ... }:
+{
+  pkgs,
+  user,
+  ...
+}:
 
 {
   # Auto-update containers (Watchtower alternative)
   systemd.services."podman-auto-update" = {
     description = "Pull and update podman containers";
-    path = [ pkgs.podman-compose pkgs.podman ];
+    path = [
+      pkgs.podman-compose
+      pkgs.podman
+    ];
     serviceConfig = {
       Type = "oneshot";
       User = user;

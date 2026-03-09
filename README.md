@@ -8,7 +8,8 @@ NixOS configuration for my machines: laptop, gaming PC, and more.
 nix-configuration/
 ├── flake.nix                      # Entry point - defines inputs and hosts
 ├── lib/
-│   └── default.nix                # Helper functions (mkHost, mkServer, mkPi)
+│   ├── default.nix                # Helper functions (mkHost, mkServer, mkPi)
+│   └── arion.nix                  # Arion helpers (mkTailscaleService)
 ├── users/                         # User configs + their machines
 │   └── craig/
 │       ├── default.nix            # Home-manager config (shell, editors, etc.)
@@ -31,6 +32,7 @@ nix-configuration/
 │           └── pi-monitor/        # Raspberry Pi monitoring
 │               └── default.nix
 ├── modules/                       # Domain-based modules
+│   ├── common.nix                 # Packages for ALL systems (git, nixfmt, etc.)
 │   ├── gaming.nix                 # Steam + gamemode + Lutris (combined)
 │   ├── security.nix               # Polkit + Yubikey (combined)
 │   ├── development.nix            # Podman + libvirt + dev tools (combined)
@@ -59,7 +61,10 @@ nix-configuration/
 │       ├── ssh.nix                # Hardened SSH config
 │       ├── restic.nix             # Backups to Backblaze B2
 │       ├── auto-upgrade.nix       # Git pull + rebuild for servers
-│       └── container-auto-update.nix  # Daily podman-compose updates
+│       ├── container-auto-update.nix  # Daily podman-compose updates
+│       ├── arion.nix              # Docker + Arion base config
+│       └── services/              # Arion service definitions
+│           └── freshrss.nix       # FreshRSS + Tailscale sidecar
 ├── services/                      # Podman compose services (for server)
 │   ├── adguard/                   # DNS ad blocker
 │   ├── calibre/                   # Ebook manager
@@ -191,7 +196,17 @@ just update-all
 
 ### Adding Packages
 
-**System packages** (available to all users):
+**Global packages** (all systems - laptop, server, Pi):
+Add to `modules/common.nix`:
+```nix
+environment.systemPackages = with pkgs; [
+  git
+  nixfmt
+  your-package  # Add here
+];
+```
+
+**System packages** (specific host):
 Add to `environment.systemPackages` in host config or a module.
 
 **User packages** (home-manager):

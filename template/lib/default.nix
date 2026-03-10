@@ -2,6 +2,10 @@
 
 let
   inherit (inputs.nixpkgs) lib;
+
+  paths = {
+    modules = ../modules;
+  };
 in
 {
   mkHost =
@@ -13,7 +17,10 @@ in
     }:
     inputs.nixpkgs.lib.nixosSystem {
       inherit system;
-      specialArgs = { inherit inputs hostname user; };
+      specialArgs = {
+        inherit inputs hostname user;
+      }
+      // paths;
       modules = [
         inputs.home-manager.nixosModules.home-manager
 

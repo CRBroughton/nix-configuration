@@ -165,98 +165,50 @@ home.packages = with pkgs; [
 
 ### Adding a desktop environment
 
-#### GNOME
+This template includes a ready-made GNOME module at [`modules/desktop/gnome.nix`](modules/desktop/gnome.nix). It's already wired up in `users/demo/hosts/pc/default.nix` — just uncomment the import:
 
 ```nix
 # users/yourname/hosts/yourhostname/default.nix
-services.xserver.enable = true;
-services.displayManager.gdm.enable = true;
-services.desktopManager.gnome.enable = true;
-services.xserver.xkb.layout = "gb,us";  # Set your keyboard layout
-
-# Remove unwanted GNOME apps
-environment.gnome.excludePackages = with pkgs; [
-  gnome-tour
-  gnome-music
-  epiphany
-];
-
-# Audio (Pipewire)
-services.pulseaudio.enable = false;
-security.rtkit.enable = true;
-services.pipewire = {
-  enable = true;
-  alsa.enable = true;
-  alsa.support32Bit = true;
-  pulse.enable = true;
-};
-
-# Fonts with emoji support
-fonts.packages = with pkgs; [
-  noto-fonts
-  noto-fonts-color-emoji
-];
-```
-
-For a more complete GNOME setup including personal settings (themes, dock, extensions, dconf), see [`modules/desktop/gnome.nix`](https://github.com/crbroughton/nix-configuration/blob/master/modules/desktop/gnome.nix) and [`users/craig/gnome.nix`](https://github.com/crbroughton/nix-configuration/blob/master/users/craig/gnome.nix) in the main repo.
-
-#### KDE Plasma
-
-```nix
-# users/yourname/hosts/yourhostname/default.nix
-services.xserver.enable = true;
-services.displayManager.sddm.enable = true;
-services.displayManager.sddm.wayland.enable = true;
-services.desktopManager.plasma6.enable = true;
-services.xserver.xkb.layout = "gb,us";  # Set your keyboard layout
-
-# Remove unwanted KDE apps
-environment.plasma6.excludePackages = with pkgs.kdePackages; [
-  elisa
-];
-
-# Audio (Pipewire)
-services.pulseaudio.enable = false;
-security.rtkit.enable = true;
-services.pipewire = {
-  enable = true;
-  alsa.enable = true;
-  alsa.support32Bit = true;
-  pulse.enable = true;
-};
-
-# Fonts with emoji support
-fonts.packages = with pkgs; [
-  noto-fonts
-  noto-fonts-color-emoji
-];
-```
-
-For a more complete KDE setup, see [`modules/desktop/kde.nix`](https://github.com/crbroughton/nix-configuration/blob/master/modules/desktop/kde.nix) in the main repo.
-
-#### Tip: extract into a module
-
-Rather than putting all of this in your host config, create a dedicated module:
-
-```nix
-# modules/desktop/gnome.nix
-{ pkgs, ... }:
+{ modules, ... }:
 {
-  services.xserver.enable = true;
-  services.displayManager.gdm.enable = true;
-  # ... rest of config
+  imports = [
+    (modules + "/desktop/gnome.nix")  # uncomment to enable GNOME
+    ./hardware.nix
+    ./vm-testing.nix
+  ];
 }
 ```
 
-Then import it in your host:
+The `modules` path is provided automatically by `mkHost` — any file under `modules/` can be imported this way from any host config.
+
+The included GNOME module sets up GDM, GNOME, Pipewire audio, and a basic keyboard layout. Adjust the keyboard layout in `modules/desktop/gnome.nix` to match yours (`"us"`, `"de"`, etc.).
+
+For personal GNOME settings on top of the base (themes, dock layout, extensions, dconf values), see [`users/craig/gnome.nix`](https://github.com/crbroughton/nix-configuration/blob/master/users/craig/gnome.nix) in the full configuration for an example of how to layer those in home-manager.
+
+### Creating your own reusable modules
+
+The same pattern works for anything you want to share across machines. Rather than duplicating config in every host, extract it into a module:
 
 ```nix
-# users/yourname/hosts/yourhostname/default.nix
+# modules/shell.nix
+{ pkgs, ... }:
+{
+  programs.fish.enable = true;
+  environment.systemPackages = with pkgs; [ eza bat fzf ];
+}
+```
+
+Then import it in any host:
+
+```nix
 imports = [
+  (modules + "/shell.nix")
+  (modules + "/desktop/gnome.nix")
   ./hardware.nix
-  ../../modules/desktop/gnome.nix
 ];
 ```
+
+This is the core of the approach — keep host configs thin, and pull in self-contained modules for each concern. A new machine is then just a hardware config + a list of imports.
 
 ### Adding a custom shell (Fish)
 

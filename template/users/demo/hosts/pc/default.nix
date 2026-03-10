@@ -3,6 +3,7 @@
 
 {
   imports = [
+    # (modules + "/desktop/gnome.nix") # Un-comment me to get an entire desktop! (remember to import modules!)
     ./hardware.nix
     ./vm-testing.nix # Remove this line when deploying to real hardware
   ];

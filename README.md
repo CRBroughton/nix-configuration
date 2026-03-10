@@ -2,6 +2,12 @@
 
 NixOS configuration for my machines: laptop, gaming PC, and more.
 
+## Want to use this as a starting point?
+
+A minimal template based on this configuration is available in the [`template/`](template/) folder. It includes the same user/host structure and `mkHost` helper, but with no desktop environment, no custom shell, and no opinionated defaults — just the bare minimum to build from.
+
+See [`template/README.md`](template/README.md) for setup instructions and guidance on expanding it.
+
 ## Structure
 
 ```

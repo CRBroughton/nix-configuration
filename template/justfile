@@ -1,0 +1,46 @@
+# Default recipe - show available commands
+default:
+    @just --list
+
+# Apply configuration
+switch:
+    sudo nixos-rebuild switch --flake .
+
+# Apply with verbose output
+switch-verbose:
+    sudo nixos-rebuild switch --flake . --show-trace
+
+# Update flake inputs
+update:
+    nix flake update
+
+# Update and apply in one step
+update-all: update switch
+
+# Build and run VM (replace 'hostname' with your hostname)
+vm:
+    nix build .#nixosConfigurations.hostname.config.system.build.vm
+    ./result/bin/run-pc-vm
+
+# Check for errors without building
+check:
+    nix flake check
+
+# Roll back to previous generation
+rollback:
+    sudo nixos-rebuild switch --rollback
+
+# Remove generations older than 30 days
+clean:
+    sudo nix-collect-garbage --delete-older-than 30d
+
+# Remove ALL old generations
+clean-all:
+    sudo nix-collect-garbage -d
+
+# Deduplicate nix store
+optimise:
+    sudo nix-store --optimise
+
+# Clean and optimise
+maintenance: clean optimise

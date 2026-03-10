@@ -3,5 +3,9 @@
 _:
 
 {
-  # Placeholder - replace with output of nixos-generate-config
+  # Placeholder root filesystem - replace with output of nixos-generate-config
+  fileSystems."/" = {
+    device = "/dev/disk/by-label/nixos";
+    fsType = "ext4";
+  };
 }

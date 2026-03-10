@@ -8,6 +8,12 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Dev tooling (nixfmt, statix, deadnix, nil, nix-format script)
+    nix-format = {
+      url = "github:crbroughton/nix-flakes?dir=nix-format";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -23,5 +29,9 @@
           user = "demo";
         };
       };
+
+      # Dev tooling - enter with: nix develop
+      inherit (inputs.nix-format) devShells;
+      inherit (inputs.nix-format) apps;
     };
 }

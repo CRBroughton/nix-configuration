@@ -336,6 +336,26 @@ imports = [
 
 ---
 
+## Dev Shell
+
+The flake includes a dev shell with Nix tooling pre-configured:
+
+```bash
+nix develop
+```
+
+This gives you:
+
+| Tool | Purpose |
+|------|---------|
+| `nixfmt` | Format Nix files |
+| `statix` | Lint for anti-patterns |
+| `deadnix` | Find unused code |
+| `nixd` / `nil` | Nix language servers (for editor integration) |
+| `nix-format` | Format all files in one command |
+
+Run `nix-format` before committing to keep files consistently formatted.
+
 ## Common Commands
 
 | Command | Description |

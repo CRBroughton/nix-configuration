@@ -55,7 +55,19 @@ generations:
 
 # Show diff between current and previous generation
 diff:
-    nvd diff /run/current-system result
+    #!/usr/bin/env bash
+    # 1. List and sort numerically
+    # 2. Grab the last two entries
+    mapfile -t profiles < <(ls -dv /nix/var/nix/profiles/system-*-link | tail -n 2)
+
+    # Check if we actually found two profiles to compare
+    if [ ${#profiles[@]} -lt 2 ]; then
+        echo "Error: Need at least two system generations to compare."
+        exit 1
+    fi
+
+    # Run the actual diff
+    nvd diff "${profiles[0]}" "${profiles[1]}"
 
 #═══════════════════════════════════════════════════════════════════════════════
 # Flake Management

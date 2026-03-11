@@ -9,6 +9,7 @@
       ublock-origin
       bitwarden
       web-clipper-obsidian
+      linkding-extension
     ];
 
     pins = [
@@ -125,6 +126,10 @@
           toolbar_pin = "on";
         };
         "clipper@obsidian.md" = {
+          installation_mode = "force_installed";
+          toolbar_pin = "on";
+        };
+        "{61a05c39-ad45-4086-946f-32adb0a40a9d}" = {
           installation_mode = "force_installed";
           toolbar_pin = "on";
         };

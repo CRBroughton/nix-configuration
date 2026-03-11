@@ -11,5 +11,7 @@
     wget
     curl
     direnv
+    nvd
+    nix-output-monitor
   ];
 }

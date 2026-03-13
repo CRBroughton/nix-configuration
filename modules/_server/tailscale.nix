@@ -1,9 +1,14 @@
 # Tailscale - VPN service for servers (headless, no systray)
-_:
+{ config, lib, ... }:
 
+let cfg = config.server.tailscale; in
 {
-  services.tailscale.enable = true;
+  options.server.tailscale = {
+    enable = lib.mkEnableOption "Tailscale VPN (headless server mode)";
+  };
 
-  # Trust tailscale interface for firewall
-  networking.firewall.trustedInterfaces = [ "tailscale0" ];
+  config = lib.mkIf cfg.enable {
+    services.tailscale.enable = true;
+    networking.firewall.trustedInterfaces = [ "tailscale0" ];
+  };
 }

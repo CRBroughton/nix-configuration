@@ -1,23 +1,27 @@
 # FreshRSS - RSS feed reader with Tailscale sidecar
-{
-  lib,
-  ...
-}:
+{ config, lib, ... }:
 
 let
+  cfg = config.server.services.freshrss;
   arionLib = import ../../../lib/arion.nix { inherit lib; };
   dataDir = "/etc/nixos/services/freshrss";
 in
 {
-  virtualisation.arion.projects.freshrss = arionLib.mkTailscaleService {
-    name = "freshrss";
-    image = "lscr.io/linuxserver/freshrss:latest";
-    environment = {
-      PUID = "1000";
-      PGID = "1000";
+  options.server.services.freshrss = {
+    enable = lib.mkEnableOption "FreshRSS RSS reader (Arion/Docker)";
+  };
+
+  config = lib.mkIf cfg.enable {
+    virtualisation.arion.projects.freshrss = arionLib.mkTailscaleService {
+      name = "freshrss";
+      image = "lscr.io/linuxserver/freshrss:latest";
+      environment = {
+        PUID = "1000";
+        PGID = "1000";
+      };
+      volumes = [
+        "${dataDir}/volume:/config"
+      ];
     };
-    volumes = [
-      "${dataDir}/volume:/config"
-    ];
   };
 }

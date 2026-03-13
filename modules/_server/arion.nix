@@ -1,26 +1,29 @@
 # Arion - Declarative Docker/Podman compose via Nix
-_:
+{ config, lib, ... }:
 
+let cfg = config.server.arion; in
 {
-  # Use Docker as the backend (simpler than rootless podman for arion)
-  virtualisation.docker = {
-    enable = true;
-    autoPrune = {
+  options.server.arion = {
+    enable = lib.mkEnableOption "Arion declarative container management with Docker backend";
+  };
+
+  config = lib.mkIf cfg.enable {
+    virtualisation.docker = {
       enable = true;
-      dates = "weekly";
+      autoPrune = {
+        enable = true;
+        dates = "weekly";
+      };
     };
+
+    users.users.craig.extraGroups = [ "docker" ];
+
+    virtualisation.arion = {
+      backend = "docker";
+    };
+
+    systemd.tmpfiles.rules = [
+      "d /var/lib/arion 0755 root root -"
+    ];
   };
-
-  # Add user to docker group
-  users.users.craig.extraGroups = [ "docker" ];
-
-  # Arion backend configuration
-  virtualisation.arion = {
-    backend = "docker";
-  };
-
-  # Ensure data directories exist
-  systemd.tmpfiles.rules = [
-    "d /var/lib/arion 0755 root root -"
-  ];
 }

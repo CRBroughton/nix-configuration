@@ -6,8 +6,8 @@
 
 {
   imports = [
-    ../../../../modules/shell.nix
-    ../../../../modules/git.nix
+    ../../../../modules/_home/shell.nix
+    ../../../../modules/_home/git.nix
     ../../git.nix # Personal git config
   ];
 

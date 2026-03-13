@@ -1,33 +1,37 @@
 # Podman - Rootless container runtime for servers
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
+let cfg = config.server.podman; in
 {
-  # Enable podman (used for existing services, arion uses docker)
-  virtualisation.podman = {
-    enable = true;
-    dockerCompat = false; # Disabled - arion uses real docker
-    defaultNetwork.settings.dns_enabled = true;
+  options.server.podman = {
+    enable = lib.mkEnableOption "Podman rootless container runtime";
   };
 
-  # UID/GID mapping for rootless containers
-  security.wrappers = {
-    newuidmap = {
-      source = "${pkgs.shadow.out}/bin/newuidmap";
-      setuid = true;
-      owner = "root";
-      group = "root";
+  config = lib.mkIf cfg.enable {
+    virtualisation.podman = {
+      enable = true;
+      dockerCompat = false; # Disabled - arion uses real docker
+      defaultNetwork.settings.dns_enabled = true;
     };
-    newgidmap = {
-      source = "${pkgs.shadow.out}/bin/newgidmap";
-      setuid = true;
-      owner = "root";
-      group = "root";
-    };
-  };
 
-  # Podman packages
-  environment.systemPackages = with pkgs; [
-    podman-compose
-    lazydocker
-  ];
+    security.wrappers = {
+      newuidmap = {
+        source = "${pkgs.shadow.out}/bin/newuidmap";
+        setuid = true;
+        owner = "root";
+        group = "root";
+      };
+      newgidmap = {
+        source = "${pkgs.shadow.out}/bin/newgidmap";
+        setuid = true;
+        owner = "root";
+        group = "root";
+      };
+    };
+
+    environment.systemPackages = with pkgs; [
+      podman-compose
+      lazydocker
+    ];
+  };
 }

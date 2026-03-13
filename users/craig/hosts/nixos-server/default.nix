@@ -1,7 +1,6 @@
 # NixOS Server - Home server running Podman containers
 {
   pkgs,
-  modules,
   ...
 }:
 
@@ -9,19 +8,6 @@
   imports = [
     ../../common.nix
     ./hardware.nix
-
-    # Server modules
-    (modules + "/server/ssh.nix")
-    (modules + "/server/tailscale.nix")
-    (modules + "/server/podman.nix")
-    (modules + "/server/restic.nix")
-    (modules + "/server/auto-upgrade.nix")
-    (modules + "/server/container-auto-update.nix")
-    (modules + "/nix.nix")
-
-    # Arion (declarative containers)
-    (modules + "/server/arion.nix")
-    (modules + "/server/services/freshrss.nix")
   ];
 
   # Boot loader
@@ -100,6 +86,16 @@
     lazygit
     btop
   ];
+
+  # Modules
+  server.ssh.enable = true;
+  server.tailscale.enable = true;
+  server.podman.enable = true;
+  server.restic.enable = true;
+  server.autoUpgrade.enable = true;
+  server.containerAutoUpdate.enable = true;
+  server.arion.enable = true;
+  server.services.freshrss.enable = true;
 
   system.stateVersion = "25.11";
 }

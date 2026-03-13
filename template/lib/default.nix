@@ -3,9 +3,8 @@
 let
   inherit (inputs.nixpkgs) lib;
 
-  paths = {
-    modules = ../modules;
-  };
+  # Auto-imported home-manager modules (available to all users)
+  homeModules = inputs.import-tree ../modules/_home;
 in
 {
   mkHost =
@@ -19,8 +18,7 @@ in
       inherit system;
       specialArgs = {
         inherit inputs hostname user;
-      }
-      // paths;
+      };
       modules = [
         inputs.home-manager.nixosModules.home-manager
 
@@ -36,6 +34,7 @@ in
             useGlobalPkgs = true;
             useUserPackages = true;
             extraSpecialArgs = { inherit inputs; };
+            sharedModules = [ homeModules ];
             users = lib.genAttrs [ user ] (u: import ../users/${u});
           };
         }

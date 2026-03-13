@@ -1,142 +1,117 @@
 # Adding a New User to This NixOS Configuration
 
-This guide explains how to add a new user (e.g., "mom") with their own machine to this NixOS configuration system.
-
 ## Overview
 
-In this configuration, **everything is organized by user**. Each user has their own directory containing:
-- Home-manager configuration
-- System user configuration
-- Their machine(s)
+Everything is organized by user. Each user has their own directory containing their home-manager config and their machine(s).
 
 ```
 users/
 └── mom/
-    ├── default.nix      # Home-manager config
-    ├── common.nix       # System user config (users.users.mom)
+    ├── default.nix        # Home-manager config (dot-notation enables)
+    ├── common.nix         # System user config (users.users.mom)
     └── hosts/
         └── moms-pc/
-            ├── default.nix
+            ├── default.nix    # Host config (dot-notation enables)
             └── hardware.nix
 ```
 
-## Step 1: Create the User Directory Structure
+Modules are auto-imported — you never need to manually reference file paths. Just enable what you need.
+
+---
+
+## Step 1: Create the Directory Structure
 
 ```bash
 mkdir -p users/mom/hosts/moms-pc
 ```
 
-## Step 2: Create the Home-Manager Configuration
-
-Create `users/mom/default.nix`:
-
-```nix
-{ config, pkgs, lib, inputs, ... }:
-
-{
-  imports = [
-    # Only import home-only modules here
-    # Combined modules (gnome, gaming, etc.) are imported in the host config
-    ../../modules/shell.nix
-    ../../modules/terminal.nix
-    ../../modules/media.nix
-    ../../modules/zen-browser.nix
-  ];
-
-  home.username = "mom";
-  home.homeDirectory = "/home/mom";
-  home.stateVersion = "24.11";
-
-  # Additional packages for this user
-  home.packages = with pkgs; [
-    libreoffice
-    vlc
-  ];
-}
-```
-
-## Step 3: Create the System User Configuration
+## Step 2: Create the System User Configuration
 
 Create `users/mom/common.nix`:
 
 ```nix
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
-  # Boot loader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # System user
   users.users.mom = {
     isNormalUser = true;
     description = "Mom";
-    extraGroups = [ "networkmanager" "audio" "video" ];
-    shell = pkgs.bash;
+    extraGroups = [ "wheel" "networkmanager" "audio" "video" ];
+    shell = pkgs.fish;
   };
+}
+```
+
+## Step 3: Create the Home-Manager Configuration
+
+Create `users/mom/default.nix`. Modules from `modules/_home/` are auto-imported via `sharedModules` — just enable what you need:
+
+```nix
+{ ... }:
+
+{
+  home.username = "mom";
+  home.homeDirectory = "/home/mom";
+  home.stateVersion = "25.11";
+
+  # Home modules (defined in modules/_home/)
+  shell.enable = true;
+  git.enable = true;
+  terminal.enable = true;
 }
 ```
 
 ## Step 4: Create the Host Configuration
 
-Create `users/mom/hosts/moms-pc/default.nix`:
+Create `users/mom/hosts/moms-pc/default.nix`. Modules from `modules/` are auto-imported — just enable what you need:
 
 ```nix
-{ config, pkgs, modules, disko, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
-    ../../common.nix                         # users/mom/common.nix
-    #../../vm-testing.nix                    # Uncomment for VM testing
+    ../../common.nix
     ./hardware.nix
-    # (disko + "/moms-pc.nix")               # Uncomment for real hardware
-
-    # Desktop environment (combined modules include both system and user config)
-    (modules + "/desktop/gnome.nix")
-    (modules + "/services/flatpak/base.nix")
-    (modules + "/services/ssh.nix")
-    (modules + "/tailscale.nix")
-    (modules + "/security.nix")
-    (modules + "/nix.nix")
-
-    # Optional: gaming support
-    # (modules + "/gaming.nix")
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
-  services.fwupd.enable = true;
   networking.networkmanager.enable = true;
   programs.fish.enable = true;
+  security.sudo.wheelNeedsPassword = false;
 
-  environment.systemPackages = with pkgs; [
-    git vim wget curl
-  ];
+  # NixOS modules (defined in modules/)
+  desktops.gnome.enable = true;
+  services.tailscaleDesktop.enable = true;
+  services.sshServer.enable = true;
+  services.flatpakBase.enable = true;
+  security.yubikey.enable = true;
 
   system.stateVersion = "25.11";
 }
 ```
 
-**Note:** The `modules` and `disko` variables are path shortcuts provided by `lib/default.nix` via specialArgs.
+## Step 5: Create the Hardware Configuration
 
-## Step 5: Create Hardware Configuration
+On the target machine:
 
-### Option A: VM Testing First (Recommended)
+```bash
+nixos-generate-config --show-hardware-config > users/mom/hosts/moms-pc/hardware.nix
+```
 
-Use this minimal hardware.nix for VM testing before deploying to real hardware:
+For VM testing first, use a minimal placeholder:
 
 ```nix
-{ config, lib, pkgs, modulesPath, ... }:
+{ lib, modulesPath, ... }:
 
 {
-  imports = [
-    (modulesPath + "/profiles/qemu-guest.nix")
-  ];
+  imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
 
-  # VM-compatible defaults
   boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk" ];
   boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
 
-  # Placeholder - will be replaced with real hardware config later
   fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";
     fsType = "ext4";
@@ -146,220 +121,152 @@ Use this minimal hardware.nix for VM testing before deploying to real hardware:
 }
 ```
 
-### Option B: Real Hardware
-
-On the target machine, generate the hardware config:
-
-```bash
-nixos-generate-config --show-hardware-config > users/mom/hosts/moms-pc/hardware.nix
-```
-
-## Step 6: Create VM Testing Configuration (Optional)
-
-For VM testing with auto-login, create `users/mom/vm-testing.nix`:
-
-```nix
-{ ... }:
-
-{
-  # Auto-login for convenience during VM testing
-  users.users.mom.initialPassword = "test";
-  services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = "mom";
-
-  # VM resources
-  virtualisation.vmVariant = {
-    virtualisation = {
-      memorySize = 4096;
-      cores = 4;
-      diskSize = 20480;
-      qemu.options = [ "-enable-kvm" ];
-    };
-  };
-}
-```
-
-Then import it in the host config (remove before deploying to real hardware):
-
-```nix
-imports = [
-  ../../common.nix
-  ../../vm-testing.nix  # Remove for production
-  ./hardware.nix
-  # ...
-];
-```
-
-## Step 7: Create the Disko Configuration
-
-Create `disko/moms-pc.nix` (copy from an existing one and adjust disk paths if needed).
-
-**Note:** For VM testing, you can skip disko and comment out the import in the host config.
-
-## Step 8: Add to flake.nix
-
-Edit `flake.nix`:
+## Step 6: Add to flake.nix
 
 ```nix
 nixosConfigurations = {
   laptop = myLib.mkHost {
     hostname = "laptop";
     user = "craig";
-  };
-
-  gaming-pc = myLib.mkHost {
-    hostname = "gaming-pc";
-    user = "craig";
+    extraModules = [ modules ];
   };
 
   moms-pc = myLib.mkHost {
     hostname = "moms-pc";
     user = "mom";
+    extraModules = [ modules ];
   };
 };
 ```
 
-## Step 9: Add Files to Git and Test in VM
+## Step 7: Track Files and Build
 
 ```bash
-# Add all new files to git
 git add users/mom/
 
-# Verify the flake
+# Verify
 nix flake check
 
-# Build and run a VM to test
+# Test in a VM
 nixos-rebuild build-vm --flake .#moms-pc
 ./result/bin/run-moms-pc-vm
 ```
 
-VM login: user `mom`, password `test` (if using vm-testing.nix).
-
-## Step 10: Deploy to Real Hardware
-
-Once the VM works, update for real hardware:
-
-1. Generate real hardware config on the target machine:
-   ```bash
-   nixos-generate-config --show-hardware-config > users/mom/hosts/moms-pc/hardware.nix
-   ```
-
-2. Create disko config if needed: `disko/moms-pc.nix`
-
-3. Remove vm-testing.nix import from host config
-
-4. Deploy:
-   ```bash
-   sudo nixos-rebuild switch --flake .#moms-pc
-   ```
+---
 
 ## Available Modules
 
-Modules are organized by domain. **Combined modules** set both NixOS and home-manager options.
+### NixOS Modules (set in host `default.nix`)
 
-### Desktop Modules (import in host config)
-
-| Module | Description | Good for |
-|--------|-------------|----------|
-| `desktop/gnome.nix` | GDM + GNOME + Pipewire (base system) | Desktop users |
-| `desktop/kde.nix` | SDDM + KDE Plasma + Pipewire (base system) | KDE users |
-
-### Combined Modules (import in host config)
-
-| Module | Description | Good for |
-|--------|-------------|----------|
-| `gaming.nix` | Steam + gamemode + Lutris | Gamers |
-| `development.nix` | Podman + libvirt + languages + tools | Developers |
-| `security.nix` | Polkit + Yubikey + GPG tools | Security-conscious users |
-| `tailscale.nix` | Tailscale service + systray | Remote access |
-
-### Home-Only Modules (import in user's default.nix)
-
-| Module | Description | Good for |
-|--------|-------------|----------|
-| `shell.nix` | Fish shell, Starship prompt, CLI tools | Power users |
-| `git.nix` | Git configuration (generic) | Developers |
-| `terminal.nix` | Ghostty terminal | Power users |
-| `media.nix` | Music, audio apps | Everyone |
-| `editors/vscode.nix` | VS Code + extensions | Developers |
-| `editors/neovim.nix` | Neovim config | Vim users |
-| `editors/zed.nix` | Zed editor | Developers |
-| `zen-browser.nix` | Zen Browser + addons | Everyone |
-
-### System-Only Modules (import in host config)
-
-| Module | Description |
+| Option | Description |
 |--------|-------------|
-| `nix.nix` | Nix settings, garbage collection |
-| `auto-upgrade.nix` | Auto-pull from GitHub and rebuild daily |
-| `services/ssh.nix` | SSH server |
-| `services/vpn.nix` | VPN support |
-| `services/flatpak/base.nix` | Base Flatpak apps |
+| `desktops.gnome.enable` | GNOME + GDM + Pipewire |
+| `desktops.kde.enable` | KDE Plasma + SDDM + Pipewire |
+| `gaming.enable` | Steam + Gamemode + Lutris |
+| `development.enable` | Podman + libvirt + dev tools |
+| `security.yubikey.enable` | Polkit + Yubikey + GPG |
+| `autoUpgrade.enable` | Auto-pull from GitHub and rebuild |
+| `services.tailscaleDesktop.enable` | Tailscale with systray |
+| `services.sshServer.enable` | OpenSSH server |
+| `services.vpn.enable` | VPN support |
+| `services.flatpakBase.enable` | Base Flatpak setup |
 
-### Server Modules (for headless servers)
+### Home-Manager Modules (set in user `default.nix`)
 
-| Module | Description |
+| Option | Description |
 |--------|-------------|
-| `server/podman.nix` | Rootless Podman for container hosting |
-| `server/tailscale.nix` | Tailscale (headless, no systray) |
-| `server/ssh.nix` | Hardened SSH (no root, no password) |
-| `server/restic.nix` | Backups to Backblaze B2 |
-| `server/auto-upgrade.nix` | Git pull + rebuild for /etc/nixos servers |
-| `server/container-auto-update.nix` | Daily podman-compose pull/update |
+| `shell.enable` | Fish shell + Starship + CLI tools |
+| `git.enable` | Git + lazygit |
+| `terminal.enable` | Ghostty terminal |
+| `media.enable` | Audio/media tools |
+| `editors.vscode.enable` | VSCode + extensions |
+| `editors.neovim.enable` | Neovim |
+| `editors.zed.enable` | Zed editor |
+| `browsers.zen.enable` | Zen browser + addons |
 
-**Note:** For servers, use `mkServer` instead of `mkHost` in flake.nix, which uses a minimal home-manager config without desktop apps.
+### Server Modules (set in server host `default.nix`, use `mkServer`)
 
-## Quick Reference
+| Option | Description |
+|--------|-------------|
+| `server.ssh.enable` | Hardened SSH (no root, no password auth) |
+| `server.tailscale.enable` | Tailscale headless |
+| `server.podman.enable` | Rootless Podman |
+| `server.arion.enable` | Arion (declarative Docker/Podman) |
+| `server.restic.enable` | Backups to Backblaze B2 |
+| `server.autoUpgrade.enable` | Git pull + rebuild |
+| `server.containerAutoUpdate.enable` | Daily container updates |
+| `server.services.freshrss.enable` | FreshRSS via Arion |
 
-**Directory structure for a new user:**
-```
-users/mom/
-├── default.nix      # Home-manager: home-only modules, packages
-├── common.nix       # NixOS: users.users.mom, boot loader
-├── vm-testing.nix   # VM testing settings (optional)
-└── hosts/
-    └── moms-pc/
-        ├── default.nix   # Imports: common.nix, combined modules, disko
-        └── hardware.nix  # VM hardware or generated by nixos-generate-config
-```
+---
 
-**flake.nix entry:**
+## Creating a New Module
+
+### NixOS module (in `modules/`)
+
 ```nix
-moms-pc = myLib.mkHost {
-  hostname = "moms-pc";
-  user = "mom";
-};
-```
+# modules/my-feature.nix
+{ config, lib, pkgs, ... }:
 
-**Host config uses path shortcuts:**
-```nix
-{ config, pkgs, modules, disko, ... }:
+let cfg = config.myFeature; in
 {
-  imports = [
-    (modules + "/desktop/gnome.nix")
-    (disko + "/moms-pc.nix")
-  ];
+  options.myFeature = {
+    enable = lib.mkEnableOption "description shown in LSP hover";
+  };
+
+  config = lib.mkIf cfg.enable {
+    # your NixOS config here
+  };
 }
 ```
 
+Enable it in any host:
+
+```nix
+myFeature.enable = true;
+```
+
+### Home-manager module (in `modules/_home/`)
+
+```nix
+# modules/_home/my-tool.nix
+{ config, lib, pkgs, ... }:
+
+let cfg = config.myTool; in
+{
+  options.myTool = {
+    enable = lib.mkEnableOption "description";
+  };
+
+  config = lib.mkIf cfg.enable {
+    # your home-manager config here
+  };
+}
+```
+
+Enable it in any user's `default.nix`:
+
+```nix
+myTool.enable = true;
+```
+
+Both are auto-imported — no manual file path imports needed. `git add` the new file before building.
+
+---
+
 ## Troubleshooting
 
-**"user mom not found"**
-- Make sure `users/mom/common.nix` defines `users.users.mom`
-- Make sure the host imports `../../common.nix`
-
-**"cannot find users/mom"**
-- Create `users/mom/default.nix`
-- Add it to git: `git add users/mom/`
-
 **"path does not exist" errors**
-- Add new files to git before running `nix flake check`
-- Nix flakes only see files tracked by git
+New files must be git-tracked before Nix can see them:
+```bash
+git add -A
+```
 
-**VM build fails with disko errors**
-- Comment out the disko import in the host config for VM testing
-- Disko is only needed for real hardware installation
+**Option `X` does not exist**
+The module defining `options.X.enable` isn't being swept by import-tree. Check:
+- NixOS modules are in `modules/` (not in `_home/` or `_server/`)
+- Home-manager modules are in `modules/_home/`
+- Server modules are in `modules/_server/`
+- The file has been `git add`-ed
 
-**VM runs but screen is black/tiny**
-- Increase VM memory in vm-testing.nix: `memorySize = 8192`
-- GNOME needs at least 4GB RAM to work properly
+**Server modules failing on desktop hosts**
+Server modules live in `modules/_server/` and are only loaded by `mkServer`. Don't move them into `modules/`.

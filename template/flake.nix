@@ -9,6 +9,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    import-tree.url = "github:vic/import-tree";
+
     # Dev tooling (nixfmt, statix, deadnix, nil, nix-format script)
     nix-format = {
       url = "github:crbroughton/nix-flakes?dir=nix-format";
@@ -17,9 +19,13 @@
   };
 
   outputs =
-    inputs:
+    { import-tree, ... }@inputs:
     let
       myLib = import ./lib { inherit inputs; };
+
+      # Auto-imports all .nix files in ./modules as NixOS modules
+      # Files in _home/ are skipped (home-manager modules live there)
+      modules = import-tree ./modules;
     in
     {
       nixosConfigurations = {
@@ -27,6 +33,7 @@
         hostname = myLib.mkHost {
           hostname = "pc";
           user = "demo";
+          extraModules = [ modules ];
         };
       };
 

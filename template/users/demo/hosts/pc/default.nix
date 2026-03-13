@@ -1,9 +1,8 @@
-# Host configuration for hostname
+# Host configuration for pc
 { pkgs, ... }:
 
 {
   imports = [
-    # (modules + "/desktop/gnome.nix") # Un-comment me to get an entire desktop! (remember to import modules!)
     ./hardware.nix
     ./vm-testing.nix # Remove this line when deploying to real hardware
   ];
@@ -25,9 +24,6 @@
     shell = pkgs.bash;
   };
 
-  # Shell
-  programs.fish.enable = false;
-
   # Sudo without password (optional, remove if you prefer password prompts)
   security.sudo.wheelNeedsPassword = true;
 
@@ -38,6 +34,9 @@
     curl
     wget
   ];
+
+  # Enable NixOS modules (defined in modules/)
+  # desktops.gnome.enable = true;
 
   system.stateVersion = "25.11";
 }

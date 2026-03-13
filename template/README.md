@@ -1,16 +1,15 @@
 # NixOS Configuration Template
 
-A minimal, barebones NixOS configuration template. No desktop environment, no custom shell, no opinionated defaults — just the structure to build from.
+A minimal NixOS configuration template using auto-imported modules with opt-in dot-notation enables. No desktop environment, no custom shell, no opinionated defaults — just the structure to build from.
 
 ## What you get out of the box
-
-This template gives you a working NixOS system with:
 
 - A bootable system (systemd-boot, EFI)
 - NetworkManager for networking
 - A single user with `wheel` (sudo) access
 - `git`, `vim`, `curl`, `wget` as basic system packages
 - Home-manager wired up and ready for user-level config
+- Auto-imported modules — add a file, enable it with dot-notation
 - A VM target so you can test changes before touching real hardware
 - A `justfile` with common commands (`switch`, `update`, `vm`, `rollback`, `clean`)
 
@@ -26,80 +25,113 @@ Everything beyond the basics is opt-in — you add what you need, nothing more.
 
 ## Why this approach?
 
+### Auto-imported modules
+
+All `.nix` files under `modules/` are automatically imported as NixOS modules via [`import-tree`](https://github.com/vic/import-tree). There are no manual import paths in host configs — just enable what you need:
+
+```nix
+# users/yourname/hosts/yourhostname/default.nix
+desktops.gnome.enable = true;
+shell.enable = true;
+```
+
+The same applies to home-manager modules under `modules/_home/` — they're auto-imported via `sharedModules` and available to every user:
+
+```nix
+# users/yourname/default.nix
+shell.enable = true;
+git.enable = true;
+```
+
+The `_home/` prefix tells import-tree to skip those files during the NixOS module sweep (they're home-manager modules, not NixOS modules).
+
+### Module pattern
+
+Every module follows the same shape:
+
+```nix
+{ config, lib, pkgs, ... }:
+
+let cfg = config.myFeature; in
+{
+  options.myFeature = {
+    enable = lib.mkEnableOption "description";
+  };
+
+  config = lib.mkIf cfg.enable {
+    # config only applied when enabled
+  };
+}
+```
+
+This means all modules are always available but off by default. Enable only what you need per host or user. The LSP (`nixd`) shows the description from `mkEnableOption` as hover documentation.
+
 ### Flake-based
 
-All inputs (nixpkgs, home-manager) are pinned in `flake.lock`. This means the system is fully reproducible — you can rebuild the exact same system on any machine, at any point in the future, and get the same result. No surprise updates breaking things.
+All inputs are pinned in `flake.lock`. Fully reproducible — rebuild the exact same system anywhere, any time.
 
 ### User/host separation
 
-Config is split by user and machine under `users/<name>/hosts/<hostname>/`. This keeps things tidy when you have more than one machine:
+Config is split by user and machine under `users/<name>/hosts/<hostname>/`:
 
 - User-level config (shell, editor, packages) lives under `users/yourname/`
-- Machine-level config (hardware, services, firewall) lives under `users/yourname/hosts/yourhostname/`
+- Machine-level config (hardware, services) lives under `users/yourname/hosts/yourhostname/`
 - Shared user config automatically applies to every machine that user has
 
 ### Home-manager included
 
-[Home-manager](https://github.com/nix-community/home-manager) manages user-level configuration declaratively — dotfiles, shell config, editor settings, user packages. It's wired up from the start so you don't have to integrate it yourself later.
-
-### `mkHost` helper
-
-Rather than duplicating boilerplate in every host config, `lib/default.nix` provides a `mkHost` function that wires up nixpkgs, home-manager, and your host config in one call. Adding a new machine is just adding a few lines to `flake.nix`.
+[Home-manager](https://github.com/nix-community/home-manager) is wired up from the start. Home-manager modules in `modules/_home/` are auto-loaded into every user's context.
 
 ### VM-first workflow
 
-The `vm-testing.nix` file and `just vm` command let you test any change in a VM before applying it to real hardware. This is the safest way to experiment — especially useful when learning NixOS or making significant changes.
+The `vm-testing.nix` file and `just vm` command let you test changes in a VM before applying to real hardware.
 
-For a fuller example of this structure in action — with multiple machines, desktop environments, server config, and more — see the [full configuration](https://github.com/crbroughton/nix-configuration) this template is based on.
+For a fuller example — multiple machines, desktop environments, server config, gaming — see the [full configuration](https://github.com/crbroughton/nix-configuration) this template is based on.
 
 ## Structure
 
 ```
 template/
-├── flake.nix                              # Entry point
-├── justfile                               # Common commands
+├── flake.nix                          # Entry point, import-tree sweep
+├── justfile                           # Common commands
 ├── lib/
-│   └── default.nix                        # mkHost helper
+│   └── default.nix                    # mkHost helper, homeModules wiring
+├── modules/
+│   ├── desktop/
+│   │   └── gnome.nix                  # desktops.gnome.enable
+│   └── _home/                         # Home-manager modules (skipped by NixOS sweep)
+│       └── shell.nix                  # shell.enable
 └── users/
-    └── username/                          # Your user
-        ├── default.nix                    # Home-manager config
+    └── demo/                          # Your user
+        ├── default.nix                # Home-manager config (dot-notation enables)
         └── hosts/
-            └── hostname/                  # Your machine
-                ├── default.nix            # Host config
-                ├── hardware.nix           # Hardware config (generated)
-                └── vm-testing.nix         # VM settings (remove for real hardware)
+            └── pc/                    # Your machine
+                ├── default.nix        # Host config (dot-notation enables)
+                ├── hardware.nix       # Hardware config (generated)
+                └── vm-testing.nix     # VM settings (remove for real hardware)
 ```
 
 ## Getting Started
 
 ### 1. Rename placeholders
 
-Replace `username` and `hostname` throughout:
-
 ```bash
-# Rename directories
-mv users/username users/yourname
-mv users/yourname/hosts/hostname users/yourname/hosts/yourhostname
+mv users/demo users/yourname
+mv users/yourname/hosts/pc users/yourname/hosts/yourhostname
 ```
 
-Then update these files:
+Then update:
 
 | File | What to change |
-|------|---------------|
-| `flake.nix` | Both occurrences of `hostname` and `user = "username"` |
-| `users/yourname/hosts/yourhostname/default.nix` | `username` in `users.users.username` |
-| `users/yourname/hosts/yourhostname/vm-testing.nix` | `username` in `users.users.username.initialPassword` |
+|------|----------------|
+| `flake.nix` | `hostname = "pc"` and `user = "demo"` |
+| `users/yourname/hosts/yourhostname/default.nix` | `users.users.demo` → `users.users.yourname` |
+| `users/yourname/hosts/yourhostname/vm-testing.nix` | `users.users.demo` → `users.users.yourname` |
 | `justfile` | `hostname` in the `vm` command |
 
 ### 2. Generate hardware config
 
 On your target machine (or NixOS installer):
-
-```bash
-nixos-generate-config --root /mnt --show-hardware-config > users/yourname/hosts/yourhostname/hardware.nix
-```
-
-Or on an already-running NixOS system:
 
 ```bash
 nixos-generate-config --show-hardware-config > users/yourname/hosts/yourhostname/hardware.nix
@@ -111,27 +143,20 @@ nixos-generate-config --show-hardware-config > users/yourname/hosts/yourhostname
 just vm
 ```
 
-Login with user `username` (or whatever you renamed it to), password `test`.
+Login with user `demo` (or whatever you renamed it to), password `test`.
 
 ### 4. Install on real hardware
-
-Boot the NixOS installer, then:
 
 ```bash
 nix-shell -p git just
 git clone <your-repo> /mnt/etc/nixos
 cd /mnt/etc/nixos
-
-# Partition your disk (manual or with disko)
-# Then install:
 sudo nixos-install --flake .#yourhostname
 ```
 
-Remove the `vm-testing.nix` import from `default.nix` before deploying to real hardware.
+Remove the `vm-testing.nix` import before deploying to real hardware.
 
 ### 5. Apply changes
-
-Once installed and booted:
 
 ```bash
 just switch
@@ -141,112 +166,83 @@ just switch
 
 ## Expanding the Configuration
 
-### Adding packages
-
-**System-wide** (all users on this machine):
-
-```nix
-# users/yourname/hosts/yourhostname/default.nix
-environment.systemPackages = with pkgs; [
-  git
-  vim
-  your-package
-];
-```
-
-**User packages** via home-manager:
-
-```nix
-# users/yourname/default.nix
-home.packages = with pkgs; [
-  your-package
-];
-```
-
 ### Adding a desktop environment
 
-This template includes a ready-made GNOME module at [`modules/desktop/gnome.nix`](modules/desktop/gnome.nix). It's already wired up in `users/demo/hosts/pc/default.nix` — just uncomment the import:
+Uncomment in `users/yourname/hosts/yourhostname/default.nix`:
 
 ```nix
-# users/yourname/hosts/yourhostname/default.nix
-{ modules, ... }:
+desktops.gnome.enable = true;
+```
+
+That's it. The module is already auto-imported.
+
+### Adding a NixOS module
+
+Create a file in `modules/`:
+
+```nix
+# modules/my-feature.nix
+{ config, lib, pkgs, ... }:
+
+let cfg = config.myFeature; in
 {
-  imports = [
-    (modules + "/desktop/gnome.nix")  # uncomment to enable GNOME
-    ./hardware.nix
-    ./vm-testing.nix
-  ];
+  options.myFeature = {
+    enable = lib.mkEnableOption "my feature description";
+  };
+
+  config = lib.mkIf cfg.enable {
+    environment.systemPackages = [ pkgs.htop ];
+  };
 }
 ```
 
-The `modules` path is provided automatically by `mkHost` — any file under `modules/` can be imported this way from any host config.
-
-The included GNOME module sets up GDM, GNOME, Pipewire audio, and a basic keyboard layout. Adjust the keyboard layout in `modules/desktop/gnome.nix` to match yours (`"us"`, `"de"`, etc.).
-
-For personal GNOME settings on top of the base (themes, dock layout, extensions, dconf values), see [`users/craig/gnome.nix`](https://github.com/crbroughton/nix-configuration/blob/master/users/craig/gnome.nix) in the full configuration for an example of how to layer those in home-manager.
-
-### Creating your own reusable modules
-
-The same pattern works for anything you want to share across machines. Rather than duplicating config in every host, extract it into a module:
+Then `git add` it and enable in any host:
 
 ```nix
-# modules/shell.nix
-{ pkgs, ... }:
+myFeature.enable = true;
+```
+
+### Adding a home-manager module
+
+Create a file in `modules/_home/`:
+
+```nix
+# modules/_home/my-tool.nix
+{ config, lib, pkgs, ... }:
+
+let cfg = config.myTool; in
 {
-  programs.fish.enable = true;
-  environment.systemPackages = with pkgs; [ eza bat fzf ];
+  options.myTool = {
+    enable = lib.mkEnableOption "my tool description";
+  };
+
+  config = lib.mkIf cfg.enable {
+    home.packages = [ pkgs.htop ];
+  };
 }
 ```
 
-Then import it in any host:
+Then `git add` it and enable in any user's `default.nix`:
 
 ```nix
-imports = [
-  (modules + "/shell.nix")
-  (modules + "/desktop/gnome.nix")
-  ./hardware.nix
-];
+myTool.enable = true;
 ```
 
-This is the core of the approach — keep host configs thin, and pull in self-contained modules for each concern. A new machine is then just a hardware config + a list of imports.
+### Enabling the shell module
 
-### Adding a custom shell (Fish)
+The template includes an example home-manager module at `modules/_home/shell.nix`. Enable it in `users/yourname/default.nix`:
 
 ```nix
-# default.nix - enable system-wide
-programs.fish.enable = true;
-
-# Then set it as the user's shell
-users.users.yourname.shell = pkgs.fish;
+shell.enable = true;
 ```
 
-### Adding home-manager modules
-
-Create a module file and import it:
-
-```nix
-# users/yourname/default.nix
-{ pkgs, ... }:
-{
-  imports = [ ./shell.nix ];
-  home.stateVersion = "25.11";
-}
-```
-
-```nix
-# users/yourname/shell.nix
-{ pkgs, ... }:
-{
-  programs.fish.enable = true;
-  home.packages = with pkgs; [ eza bat fzf ];
-}
-```
+This gives you fish shell, starship prompt, and common CLI tools.
 
 ### Adding another machine
 
 ```
 users/yourname/hosts/
-├── hostname/          # existing
+├── yourhostname/      # existing
 └── new-machine/       # new
     ├── default.nix
     ├── hardware.nix
@@ -256,57 +252,52 @@ users/yourname/hosts/
 Add it to `flake.nix`:
 
 ```nix
-nixosConfigurations = {
-  hostname = myLib.mkHost { ... };
-  new-machine = myLib.mkHost {
-    hostname = "new-machine";
-    user = "yourname";
-  };
+new-machine = myLib.mkHost {
+  hostname = "new-machine";
+  user = "yourname";
+  extraModules = [ modules ];
 };
 ```
 
-### Sharing config between machines
+### Adding another user
 
-Create a shared module:
-
-```nix
-# users/yourname/hosts/common.nix
-{ pkgs, ... }:
-{
-  environment.systemPackages = with pkgs; [ git vim curl ];
-}
+```
+users/
+├── yourname/          # existing
+└── other-user/        # new
+    ├── default.nix
+    ├── common.nix
+    └── hosts/
+        └── their-machine/
 ```
 
-Import it in each host's `default.nix`:
+Add it to `flake.nix`:
 
 ```nix
-imports = [
-  ./hardware.nix
-  ../common.nix  # shared between all your machines
-];
+their-machine = myLib.mkHost {
+  hostname = "their-machine";
+  user = "other-user";
+  extraModules = [ modules ];
+};
 ```
+
+Their `default.nix` gets the same auto-imported home-manager modules — they just enable what they need.
 
 ---
 
 ## Dev Shell
 
-The flake includes a dev shell with Nix tooling pre-configured:
-
 ```bash
 nix develop
 ```
-
-This gives you:
 
 | Tool | Purpose |
 |------|---------|
 | `nixfmt` | Format Nix files |
 | `statix` | Lint for anti-patterns |
 | `deadnix` | Find unused code |
-| `nixd` / `nil` | Nix language servers (for editor integration) |
+| `nixd` / `nil` | Nix language servers |
 | `nix-format` | Format all files in one command |
-
-Run `nix-format` before committing to keep files consistently formatted.
 
 ## Common Commands
 
@@ -314,7 +305,7 @@ Run `nix-format` before committing to keep files consistently formatted.
 |---------|-------------|
 | `just switch` | Apply configuration changes |
 | `just switch-verbose` | Apply with full error output |
-| `just update` | Update flake inputs (nixpkgs, etc.) |
+| `just update` | Update flake inputs |
 | `just update-all` | Update + apply in one step |
 | `just vm` | Build and run in a VM |
 | `just check` | Check for errors without building |
@@ -322,13 +313,8 @@ Run `nix-format` before committing to keep files consistently formatted.
 | `just clean` | Remove old generations (30d+) |
 | `just maintenance` | Clean + optimise store |
 
----
-
 ## VM Notes
 
-The `vm-testing.nix` file configures the VM with:
-- 4GB RAM, 4 cores, 20GB disk
-- KVM acceleration (requires KVM on the host)
-- Password set to `test` for easy login
+The `vm-testing.nix` file configures the VM with 4GB RAM, 4 cores, 20GB disk, and KVM acceleration. Password is set to `test` for easy login.
 
-Remove the `vm-testing.nix` import from `default.nix` before installing on real hardware — you don't want a world-readable hardcoded password on a real system.
+Remove the `vm-testing.nix` import before installing on real hardware.

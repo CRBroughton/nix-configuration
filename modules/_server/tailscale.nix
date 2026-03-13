@@ -1,7 +1,9 @@
 # Tailscale - VPN service for servers (headless, no systray)
 { config, lib, ... }:
 
-let cfg = config.server.tailscale; in
+let
+  cfg = config.server.tailscale;
+in
 {
   options.server.tailscale = {
     enable = lib.mkEnableOption "Tailscale VPN (headless server mode)";

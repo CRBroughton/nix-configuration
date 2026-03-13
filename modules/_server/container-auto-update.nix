@@ -1,7 +1,15 @@
 # Container Auto-Update - Daily podman-compose pull and update
-{ config, lib, pkgs, user, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  user,
+  ...
+}:
 
-let cfg = config.server.containerAutoUpdate; in
+let
+  cfg = config.server.containerAutoUpdate;
+in
 {
   options.server.containerAutoUpdate = {
     enable = lib.mkEnableOption "daily automatic podman container updates";

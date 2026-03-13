@@ -1,7 +1,14 @@
 # Podman - Rootless container runtime for servers
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let cfg = config.server.podman; in
+let
+  cfg = config.server.podman;
+in
 {
   options.server.podman = {
     enable = lib.mkEnableOption "Podman rootless container runtime";

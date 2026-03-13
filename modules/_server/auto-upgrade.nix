@@ -1,7 +1,14 @@
 # Server Auto-Upgrade - Git pull then rebuild (for /etc/nixos servers)
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let cfg = config.server.autoUpgrade; in
+let
+  cfg = config.server.autoUpgrade;
+in
 {
   options.server.autoUpgrade = {
     enable = lib.mkEnableOption "automatic NixOS upgrades with git pull";

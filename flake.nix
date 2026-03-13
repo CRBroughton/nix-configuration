@@ -57,7 +57,7 @@
   };
 
   outputs =
-    { import-tree, ... }@inputs:
+    { self, import-tree, ... }@inputs:
     let
       myLib = import ./lib { inherit inputs; };
 
@@ -88,13 +88,13 @@
           extraModules = [ serverModules ];
         };
 
-        # pi-monitor = myLib.mkPi {
-        #   hostname = "pi-monitor";
-        #   user = "craig";
-        #   extraModules = [ ];
-        # };
+        pi-monitor = myLib.mkPi {
+          hostname = "pi-monitor";
+          user = "craig";
+          extraModules = [ ];
+        };
       };
-      # images.pi-monitor = self.nixosConfigurations.pi-monitor.config.system.build.sdImage;
+      images.pi-monitor = self.nixosConfigurations.pi-monitor.config.system.build.sdImage;
 
       inherit (inputs.nix-format) devShells;
       inherit (inputs.nix-format) apps;

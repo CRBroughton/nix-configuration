@@ -1,7 +1,9 @@
 # Arion - Declarative Docker/Podman compose via Nix
 { config, lib, ... }:
 
-let cfg = config.server.arion; in
+let
+  cfg = config.server.arion;
+in
 {
   options.server.arion = {
     enable = lib.mkEnableOption "Arion declarative container management with Docker backend";

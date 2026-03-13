@@ -1,7 +1,9 @@
 # SSH - Hardened server configuration
 { config, lib, ... }:
 
-let cfg = config.server.ssh; in
+let
+  cfg = config.server.ssh;
+in
 {
   options.server.ssh = {
     enable = lib.mkEnableOption "hardened OpenSSH server";

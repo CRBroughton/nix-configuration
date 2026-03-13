@@ -1,8 +1,15 @@
 # Restic - Backup to Backblaze B2
 # Requires /etc/restic-env-password and /etc/restic-env files
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let cfg = config.server.restic; in
+let
+  cfg = config.server.restic;
+in
 {
   options.server.restic = {
     enable = lib.mkEnableOption "Restic backups to Backblaze B2";

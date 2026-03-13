@@ -1,5 +1,19 @@
-_:
-
+# SSH - Basic OpenSSH server
 {
-  services.openssh.enable = true;
+  config,
+  lib,
+  ...
+}:
+
+let
+  cfg = config.services.sshServer;
+in
+{
+  options.services.sshServer = {
+    enable = lib.mkEnableOption "OpenSSH server";
+  };
+
+  config = lib.mkIf cfg.enable {
+    services.openssh.enable = true;
+  };
 }

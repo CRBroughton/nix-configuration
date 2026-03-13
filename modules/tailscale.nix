@@ -1,37 +1,40 @@
 # Tailscale - VPN service and system tray
 {
+  config,
+  lib,
   pkgs,
   user,
   ...
 }:
 
+let
+  cfg = config.services.tailscaleDesktop;
+in
 {
-  # ============================================
-  # NixOS (system level)
-  # ============================================
+  options.services.tailscaleDesktop = {
+    enable = lib.mkEnableOption "Tailscale with system tray applet for desktop use";
+  };
 
-  services.tailscale.enable = true;
+  config = lib.mkIf cfg.enable {
+    services.tailscale.enable = true;
 
-  # ============================================
-  # Home-manager (user level)
-  # ============================================
+    home-manager.users.${user} = {
+      home.packages = with pkgs; [
+        tailscale-systray
+      ];
 
-  home-manager.users.${user} = {
-    home.packages = with pkgs; [
-      tailscale-systray
-    ];
-
-    systemd.user.services.tailscale-systray = {
-      Unit = {
-        Description = "Tailscale System Tray";
-        After = [ "graphical-session.target" ];
-      };
-      Service = {
-        ExecStart = "${pkgs.tailscale-systray}/bin/tailscale-systray";
-        Restart = "on-failure";
-      };
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
+      systemd.user.services.tailscale-systray = {
+        Unit = {
+          Description = "Tailscale System Tray";
+          After = [ "graphical-session.target" ];
+        };
+        Service = {
+          ExecStart = "${pkgs.tailscale-systray}/bin/tailscale-systray";
+          Restart = "on-failure";
+        };
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
       };
     };
   };

@@ -1,32 +1,26 @@
 # Auto-upgrade - automatically pull latest config and rebuild
-# Great for machines you want to stay up-to-date without manual intervention
 {
+  config,
+  lib,
   hostname,
   ...
 }:
 
+let
+  cfg = config.autoUpgrade;
+in
 {
-  system.autoUpgrade = {
-    enable = true;
+  options.autoUpgrade = {
+    enable = lib.mkEnableOption "automatic NixOS upgrades by pulling from GitHub and rebuilding daily";
+  };
 
-    # Pull from GitHub - change to your repo URL
-    flake = "github:CRBroughton/nix-configuration/nixos-migration#${hostname}";
-
-    # Refresh flake inputs (like running `nix flake update` first)
-    flags = [ "--refresh" ];
-
-    # When to check for updates
-    # Options: "daily", "weekly", "monthly", or cron syntax like "04:00"
-    dates = "daily";
-
-    # Allow rebooting if needed (kernel updates, etc.)
-    # Set to false if you don't want automatic reboots
-    allowReboot = false;
-
-    # Only reboot during specific hours (if allowReboot = true)
-    # rebootWindow = {
-    #   lower = "02:00";
-    #   upper = "06:00";
-    # };
+  config = lib.mkIf cfg.enable {
+    system.autoUpgrade = {
+      enable = true;
+      flake = "github:CRBroughton/nix-configuration/nixos-migration#${hostname}";
+      flags = [ "--refresh" ];
+      dates = "daily";
+      allowReboot = false;
+    };
   };
 }

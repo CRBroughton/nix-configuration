@@ -9,6 +9,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    import-tree.url = "github:vic/import-tree";
+
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -55,40 +57,42 @@
   };
 
   outputs =
-    {
-      self,
-      ...
-    }@inputs:
+    { import-tree, ... }@inputs:
     let
       myLib = import ./lib { inherit inputs; };
+
+      # Auto-imports all .nix files in ./modules as NixOS modules
+      # Files in _home/ are skipped by import-tree (home-manager modules)
+      modules = import-tree ./modules;
     in
     {
       nixosConfigurations = {
         laptop = myLib.mkHost {
           hostname = "laptop";
           user = "craig";
+          extraModules = [ modules ];
         };
 
-        gaming-pc = myLib.mkHost {
-          hostname = "gaming-pc";
-          user = "craig";
-        };
+        # gaming-pc = myLib.mkHost {
+        #   hostname = "gaming-pc";
+        #   user = "craig";
+        #   extraModules = [ desktopModules ];
+        # };
 
-        nixos-server = myLib.mkServer {
-          hostname = "nixos-server";
-          user = "craig";
-        };
+        # nixos-server = myLib.mkServer {
+        #   hostname = "nixos-server";
+        #   user = "craig";
+        #   extraModules = [ ];
+        # };
 
-        pi-monitor = myLib.mkPi {
-          hostname = "pi-monitor";
-          user = "craig";
-        };
+        # pi-monitor = myLib.mkPi {
+        #   hostname = "pi-monitor";
+        #   user = "craig";
+        #   extraModules = [ ];
+        # };
       };
+      # images.pi-monitor = self.nixosConfigurations.pi-monitor.config.system.build.sdImage;
 
-      # Build SD card images with: nix build .#images.pi-monitor
-      images.pi-monitor = self.nixosConfigurations.pi-monitor.config.system.build.sdImage;
-
-      # Re-export dev tooling from nix-format flake
       inherit (inputs.nix-format) devShells;
       inherit (inputs.nix-format) apps;
     };

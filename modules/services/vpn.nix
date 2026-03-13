@@ -1,7 +1,13 @@
-{ pkgs, ... }:
+# VPN - PIA OpenVPN via NetworkManager
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
-  # Download PIA OpenVPN configs
+  cfg = config.services.vpn;
   piaConfigs = pkgs.fetchzip {
     url = "https://www.privateinternetaccess.com/openvpn/openvpn.zip";
     sha256 = "sha256-mhXV2CF8G7dAkXY9KI7g2qSOlxUzyqgJlidL1At46GU=";
@@ -9,27 +15,27 @@ let
   };
 in
 {
-  # NetworkManager VPN plugins
-  networking.networkmanager = {
-    enable = true;
-    plugins = with pkgs; [
-      networkmanager-openvpn
-    ];
+  options.services.vpn = {
+    enable = lib.mkEnableOption "PIA OpenVPN configs and NetworkManager plugin";
   };
 
-  # Make PIA configs available system-wide
-  environment.etc."openvpn/pia".source = piaConfigs;
+  config = lib.mkIf cfg.enable {
+    networking.networkmanager.plugins = with pkgs; [
+      networkmanager-openvpn
+    ];
 
-  # Helper script to import PIA configs
-  environment.systemPackages = [
-    (pkgs.writeShellScriptBin "pia-import" ''
-      echo "PIA OpenVPN configs are at: /etc/openvpn/pia/"
-      echo ""
-      echo "To import a config into NetworkManager:"
-      echo "  nmcli connection import type openvpn file /etc/openvpn/pia/<region>.ovpn"
-      echo ""
-      echo "Available regions:"
-      ls /etc/openvpn/pia/*.ovpn | xargs -n1 basename | sed 's/.ovpn//'
-    '')
-  ];
+    environment.etc."openvpn/pia".source = piaConfigs;
+
+    environment.systemPackages = [
+      (pkgs.writeShellScriptBin "pia-import" ''
+        echo "PIA OpenVPN configs are at: /etc/openvpn/pia/"
+        echo ""
+        echo "To import a config into NetworkManager:"
+        echo "  nmcli connection import type openvpn file /etc/openvpn/pia/<region>.ovpn"
+        echo ""
+        echo "Available regions:"
+        ls /etc/openvpn/pia/*.ovpn | xargs -n1 basename | sed 's/.ovpn//'
+      '')
+    ];
+  };
 }

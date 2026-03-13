@@ -4,16 +4,16 @@
 
 {
   imports = [
-    ../../modules/shell.nix
-    ../../modules/git.nix
+    ../../modules/_home/shell.nix
+    ../../modules/_home/git.nix
     ./git.nix # Personal git config (name, email, keys)
     ./gnome.nix # Personal GNOME settings (theme, dock, extensions)
-    ../../modules/terminal.nix
-    ../../modules/media.nix
-    ../../modules/editors/vscode.nix
-    ../../modules/editors/neovim.nix
-    ../../modules/editors/zed.nix
-    ../../modules/zen-browser.nix
+    ../../modules/_home/terminal.nix
+    ../../modules/_home/media.nix
+    ../../modules/_home/editors/vscode.nix
+    ../../modules/_home/editors/neovim.nix
+    ../../modules/_home/editors/zed.nix
+    ../../modules/_home/zen-browser.nix
   ];
 
   home.username = "craig";

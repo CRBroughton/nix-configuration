@@ -37,6 +37,7 @@
   services.flatpakBase.enable = true;
   security.yubikey.enable = true;
   development.enable = true;
+  gaming.enable = true;
   autoUpgrade.enable = true;
 
   system.stateVersion = "25.11";

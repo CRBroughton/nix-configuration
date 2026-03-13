@@ -4,16 +4,8 @@
 
 {
   imports = [
-    ../../modules/_home/shell.nix
-    ../../modules/_home/git.nix
     ./git.nix # Personal git config (name, email, keys)
     ./gnome.nix # Personal GNOME settings (theme, dock, extensions)
-    ../../modules/_home/terminal.nix
-    ../../modules/_home/media.nix
-    ../../modules/_home/editors/vscode.nix
-    ../../modules/_home/editors/neovim.nix
-    ../../modules/_home/editors/zed.nix
-    ../../modules/_home/zen-browser.nix
   ];
 
   home.username = "craig";
@@ -28,4 +20,14 @@
     source = ../../fonts/shavian;
     recursive = true;
   };
+
+  # Modules
+  shell.enable = true;
+  git.enable = true;
+  terminal.enable = true;
+  media.enable = true;
+  editors.vscode.enable = true;
+  editors.neovim.enable = true;
+  editors.zed.enable = true;
+  browsers.zen.enable = true;
 }

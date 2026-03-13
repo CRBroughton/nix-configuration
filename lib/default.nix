@@ -8,6 +8,9 @@ let
     modules = ../modules;
     disko = ../disko;
   };
+
+  # Auto-imported home-manager modules (available to all users)
+  homeModules = inputs.import-tree ../modules/_home;
 in
 {
   # Create a NixOS system configuration
@@ -51,10 +54,13 @@ in
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
-            extraSpecialArgs = { inherit inputs; };
+            extraSpecialArgs = {
+              inherit inputs;
+              firefox-addons = inputs.firefox-addons;
+            };
             sharedModules = [
               inputs.zen-flatpak-config.homeManagerModules.default
-              { _module.args.firefox-addons = inputs.firefox-addons; }
+              homeModules
             ];
             users = lib.genAttrs [ user ] (u: import ../users/${u});
           };
@@ -100,9 +106,14 @@ in
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
-            extraSpecialArgs = { inherit inputs; };
+            extraSpecialArgs = {
+              inherit inputs;
+              firefox-addons = inputs.firefox-addons;
+            };
             sharedModules = [
+              inputs.zen-flatpak-config.homeManagerModules.default
               inputs.podman-flake.homeManagerModules.default
+              homeModules
             ];
             # Use host-specific home.nix for servers
             users = lib.genAttrs [ user ] (u: import ../users/${u}/hosts/${hostname}/home.nix);

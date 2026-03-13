@@ -1,15 +1,21 @@
-# Generic git configuration - enables git and common tools
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
+let cfg = config.git; in
 {
-  programs.git = {
-    enable = true;
-    settings = {
-      init.defaultBranch = "master";
-    };
+  options.git = {
+    enable = lib.mkEnableOption "git with lazygit";
   };
 
-  home.packages = with pkgs; [
-    lazygit
-  ];
+  config = lib.mkIf cfg.enable {
+    programs.git = {
+      enable = true;
+      settings = {
+        init.defaultBranch = "master";
+      };
+    };
+
+    home.packages = with pkgs; [
+      lazygit
+    ];
+  };
 }

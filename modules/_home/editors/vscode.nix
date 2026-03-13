@@ -1,77 +1,84 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
+let cfg = config.editors.vscode; in
 {
-  programs.vscode = {
-    enable = true;
-    mutableExtensionsDir = true;
+  options.editors.vscode = {
+    enable = lib.mkEnableOption "VSCode with extensions and settings";
+  };
 
-    profiles.default = {
-      enableUpdateCheck = false;
-      enableExtensionUpdateCheck = false;
+  config = lib.mkIf cfg.enable {
+    programs.vscode = {
+      enable = true;
+      mutableExtensionsDir = true;
 
-      extensions = with pkgs.vscode-marketplace; [
-        # Themes
-        antfu.theme-vitesse
-        catppuccin.catppuccin-vsc-icons
-        vscode-icons-team.vscode-icons
+      profiles.default = {
+        enableUpdateCheck = false;
+        enableExtensionUpdateCheck = false;
 
-        # Languages
-        sumneko.lua
-        bmewburn.vscode-intelephense-client
-        golang.go
-        ziglang.vscode-zig
-        bbenoist.nix
-        jakebecker.elixir-ls
+        extensions = with pkgs.vscode-marketplace; [
+          # Themes
+          antfu.theme-vitesse
+          catppuccin.catppuccin-vsc-icons
+          vscode-icons-team.vscode-icons
 
-        # TypeScript/JavaScript
-        dbaeumer.vscode-eslint
-        yoavbls.pretty-ts-errors
-        orta.vscode-twoslash-queries
+          # Languages
+          sumneko.lua
+          bmewburn.vscode-intelephense-client
+          golang.go
+          ziglang.vscode-zig
+          bbenoist.nix
+          jakebecker.elixir-ls
 
-        # CSS
-        bradlc.vscode-tailwindcss
-        antfu.unocss
+          # TypeScript/JavaScript
+          dbaeumer.vscode-eslint
+          yoavbls.pretty-ts-errors
+          orta.vscode-twoslash-queries
 
-        # Git
-        eamodio.gitlens
-        gxl.git-graph-3
-        vivaxy.vscode-conventional-commits
+          # CSS
+          bradlc.vscode-tailwindcss
+          antfu.unocss
 
-        # Utilities
-        usernamehw.errorlens
-        anthropic.claude-code
-        anweber.vscode-httpyac
-        oven.bun-vscode
-        peterj.proto
-      ];
+          # Git
+          eamodio.gitlens
+          gxl.git-graph-3
+          vivaxy.vscode-conventional-commits
 
-      userSettings = {
-        # UI
-        "workbench.iconTheme" = "vscode-icons";
-        "workbench.colorTheme" = "Vitesse Dark";
-        "window.zoomLevel" = 1;
-        "editor.fontFamily" = "'FiraCode Nerd Font', monospace";
-        "editor.fontLigatures" = true;
-        "editor.fontWeight" = "600";
-        "editor.lineNumbers" = "relative";
-        "editor.wordWrap" = "on";
-        "editor.inlineSuggest.enabled" = true;
+          # Utilities
+          usernamehw.errorlens
+          anthropic.claude-code
+          anweber.vscode-httpyac
+          oven.bun-vscode
+          peterj.proto
+        ];
 
-        # Terminal
-        "terminal.integrated.defaultProfile.linux" = "fish";
+        userSettings = {
+          # UI
+          "workbench.iconTheme" = "vscode-icons";
+          "workbench.colorTheme" = "Vitesse Dark";
+          "window.zoomLevel" = 1;
+          "editor.fontFamily" = "'FiraCode Nerd Font', monospace";
+          "editor.fontLigatures" = true;
+          "editor.fontWeight" = "600";
+          "editor.lineNumbers" = "relative";
+          "editor.wordWrap" = "on";
+          "editor.inlineSuggest.enabled" = true;
 
-        # Git
-        "git.autofetch" = true;
-        "git.openRepositoryInParentFolders" = "always";
+          # Terminal
+          "terminal.integrated.defaultProfile.linux" = "fish";
 
-        # Go
-        "go.toolsManagement.autoUpdate" = true;
-        "editor.inlayHints.enabled" = "on";
+          # Git
+          "git.autofetch" = true;
+          "git.openRepositoryInParentFolders" = "always";
 
-        # Zig
-        "zig.path" = "zig";
-        "zig.zls.enabled" = "on";
-        "[zig]"."editor.formatOnSave" = true;
+          # Go
+          "go.toolsManagement.autoUpdate" = true;
+          "editor.inlayHints.enabled" = "on";
+
+          # Zig
+          "zig.path" = "zig";
+          "zig.zls.enabled" = "on";
+          "[zig]"."editor.formatOnSave" = true;
+        };
       };
     };
   };

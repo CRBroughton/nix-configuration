@@ -1,15 +1,21 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
+let cfg = config.editors.neovim; in
 {
-  programs.neovim = {
-    enable = true;
-    defaultEditor = false;
+  options.editors.neovim = {
+    enable = lib.mkEnableOption "Neovim with external config";
   };
 
-  # External neovim config
-  xdg.configFile."nvim".source = ../../../config/neovim;
+  config = lib.mkIf cfg.enable {
+    programs.neovim = {
+      enable = true;
+      defaultEditor = false;
+    };
 
-  home.packages = with pkgs; [
-    tree-sitter
-  ];
+    xdg.configFile."nvim".source = ../../../config/neovim;
+
+    home.packages = with pkgs; [
+      tree-sitter
+    ];
+  };
 }

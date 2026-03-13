@@ -6,14 +6,16 @@
 
 {
   imports = [
-    ../../../../modules/_home/shell.nix
-    ../../../../modules/_home/git.nix
     ../../git.nix # Personal git config
   ];
 
   home.username = "craig";
   home.homeDirectory = "/home/craig";
   home.stateVersion = "25.11";
+
+  # Modules
+  shell.enable = true;
+  git.enable = true;
 
   # Podman with user socket for lazydocker/glance (via podman-flake)
   programs.podman-config = {

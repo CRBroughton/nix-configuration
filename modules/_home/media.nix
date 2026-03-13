@@ -1,9 +1,16 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
+let cfg = config.media; in
 {
-  home.packages = with pkgs; [
-    qpwgraph
-    picard
-    mumble
-  ];
+  options.media = {
+    enable = lib.mkEnableOption "media tools (qpwgraph, picard, mumble)";
+  };
+
+  config = lib.mkIf cfg.enable {
+    home.packages = with pkgs; [
+      qpwgraph
+      picard
+      mumble
+    ];
+  };
 }

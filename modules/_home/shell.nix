@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let cfg = config.shell; in
+let
+  cfg = config.shell;
+in
 {
   options.shell = {
     enable = lib.mkEnableOption "fish shell with starship, zoxide, and CLI tools";

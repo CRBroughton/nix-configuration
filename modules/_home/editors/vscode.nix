@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let cfg = config.editors.vscode; in
+let
+  cfg = config.editors.vscode;
+in
 {
   options.editors.vscode = {
     enable = lib.mkEnableOption "VSCode with extensions and settings";

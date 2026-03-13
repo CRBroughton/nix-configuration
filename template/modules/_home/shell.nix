@@ -1,7 +1,14 @@
 # Shell - enable with: shell.enable = true
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let cfg = config.shell; in
+let
+  cfg = config.shell;
+in
 {
   options.shell = {
     enable = lib.mkEnableOption "fish shell with starship prompt and common CLI tools";

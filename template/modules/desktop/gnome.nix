@@ -1,7 +1,9 @@
 # GNOME Desktop - enable with: desktops.gnome.enable = true
 { config, lib, ... }:
 
-let cfg = config.desktops.gnome; in
+let
+  cfg = config.desktops.gnome;
+in
 {
   options.desktops.gnome = {
     enable = lib.mkEnableOption "GNOME desktop environment with GDM and Pipewire";

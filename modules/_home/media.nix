@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let cfg = config.media; in
+let
+  cfg = config.media;
+in
 {
   options.media = {
     enable = lib.mkEnableOption "media tools (qpwgraph, picard, mumble)";

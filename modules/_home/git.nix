@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let cfg = config.git; in
+let
+  cfg = config.git;
+in
 {
   options.git = {
     enable = lib.mkEnableOption "git with lazygit";

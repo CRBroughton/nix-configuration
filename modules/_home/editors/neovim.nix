@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let cfg = config.editors.neovim; in
+let
+  cfg = config.editors.neovim;
+in
 {
   options.editors.neovim = {
     enable = lib.mkEnableOption "Neovim with external config";

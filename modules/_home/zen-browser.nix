@@ -1,6 +1,14 @@
-{ config, lib, pkgs, firefox-addons, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  firefox-addons,
+  ...
+}:
 
-let cfg = config.browsers.zen; in
+let
+  cfg = config.browsers.zen;
+in
 {
   options.browsers.zen = {
     enable = lib.mkEnableOption "Zen browser (Flatpak) with extensions and pins";

@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let cfg = config.terminal; in
+let
+  cfg = config.terminal;
+in
 {
   options.terminal = {
     enable = lib.mkEnableOption "Ghostty terminal emulator";

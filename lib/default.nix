@@ -56,7 +56,7 @@ in
             useUserPackages = true;
             extraSpecialArgs = {
               inherit inputs;
-              firefox-addons = inputs.firefox-addons;
+              inherit (inputs) firefox-addons;
             };
             sharedModules = [
               inputs.zen-flatpak-config.homeManagerModules.default
@@ -108,7 +108,7 @@ in
             useUserPackages = true;
             extraSpecialArgs = {
               inherit inputs;
-              firefox-addons = inputs.firefox-addons;
+              inherit (inputs) firefox-addons;
             };
             sharedModules = [
               inputs.zen-flatpak-config.homeManagerModules.default

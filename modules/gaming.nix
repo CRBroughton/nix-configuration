@@ -8,10 +8,10 @@
 }:
 
 let
-  cfg = config.gaming;
+  cfg = config.modules.gaming;
 in
 {
-  options.gaming = {
+  options.modules.gaming = {
     enable = lib.mkEnableOption "gaming support with Steam, Gamemode, Gamescope, and Lutris";
   };
 

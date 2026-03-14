@@ -8,10 +8,10 @@
 }:
 
 let
-  cfg = config.development;
+  cfg = config.modules.development;
 in
 {
-  options.development = {
+  options.modules.development = {
     enable = lib.mkEnableOption "development environment with Podman, libvirt, and common languages and tools";
   };
 

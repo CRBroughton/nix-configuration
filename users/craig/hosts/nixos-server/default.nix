@@ -88,14 +88,15 @@
   ];
 
   # Modules
-  server.ssh.enable = true;
-  server.tailscale.enable = true;
-  server.podman.enable = true;
-  server.restic.enable = true;
-  server.autoUpgrade.enable = true;
-  server.containerAutoUpdate.enable = true;
-  server.arion.enable = true;
-  server.services.freshrss.enable = true;
+  modules.shell.enable = true;
+  modules.git.enable = true;
+  modules.server.ssh.enable = true;
+  modules.server.tailscale.enable = true;
+  modules.server.podman.enable = true;
+  modules.server.restic.enable = true;
+  modules.server.autoUpgrade.enable = true;
+  modules.server.containerAutoUpdate.enable = true;
+  modules.server.arion.enable = true;
+  modules.server.services.freshrss.enable = true;
 
-  system.stateVersion = "25.11";
 }

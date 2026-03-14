@@ -2,10 +2,10 @@
 { config, lib, ... }:
 
 let
-  cfg = config.server.ssh;
+  cfg = config.modules.server.ssh;
 in
 {
-  options.server.ssh = {
+  options.modules.server.ssh = {
     enable = lib.mkEnableOption "hardened OpenSSH server";
   };
 

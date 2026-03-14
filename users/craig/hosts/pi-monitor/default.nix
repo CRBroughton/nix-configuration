@@ -94,5 +94,4 @@
     trustedInterfaces = [ "tailscale0" ];
   };
 
-  system.stateVersion = "25.11";
 }

@@ -6,10 +6,10 @@
 }:
 
 let
-  cfg = config.services.flatpakBase;
+  cfg = config.modules.flatpak;
 in
 {
-  options.services.flatpakBase = {
+  options.modules.flatpak = {
     enable = lib.mkEnableOption "Flatpak with Flathub remote and base desktop applications";
   };
 

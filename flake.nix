@@ -62,35 +62,37 @@
       myLib = import ./lib { inherit inputs; };
 
       # Auto-imports all .nix files in ./modules as NixOS modules
-      # Files in _home/ and _server/ are skipped by import-tree
       modules = import-tree ./modules;
 
-      # Server-specific modules (arion options only available in mkServer)
-      serverModules = import-tree ./modules/_server;
+      stateVersion = "25.11";
     in
     {
       nixosConfigurations = {
         laptop = myLib.mkHost {
           hostname = "laptop";
           user = "craig";
+          inherit stateVersion;
           extraModules = [ modules ];
         };
 
         gaming-pc = myLib.mkHost {
           hostname = "gaming-pc";
           user = "craig";
+          inherit stateVersion;
           extraModules = [ modules ];
         };
 
-        nixos-server = myLib.mkServer {
+        nixos-server = myLib.mkHost {
           hostname = "nixos-server";
           user = "craig";
-          extraModules = [ serverModules ];
+          inherit stateVersion;
+          extraModules = [ modules ];
         };
 
         pi-monitor = myLib.mkPi {
           hostname = "pi-monitor";
           user = "craig";
+          inherit stateVersion;
           extraModules = [ ];
         };
       };

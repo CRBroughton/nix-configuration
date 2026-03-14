@@ -8,10 +8,10 @@
 }:
 
 let
-  cfg = config.services.tailscaleDesktop;
+  cfg = config.modules.tailscale;
 in
 {
-  options.services.tailscaleDesktop = {
+  options.modules.tailscale = {
     enable = lib.mkEnableOption "Tailscale with system tray applet for desktop use";
   };
 

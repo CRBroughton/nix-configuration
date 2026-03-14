@@ -7,7 +7,7 @@ Everything is organized by user. Each user has their own directory containing th
 ```
 users/
 └── mom/
-    ├── default.nix        # Home-manager config (dot-notation enables)
+    ├── default.nix        # Home-manager identity config (username, stateVersion, personal imports)
     ├── common.nix         # System user config (users.users.mom)
     └── hosts/
         └── moms-pc/
@@ -16,6 +16,8 @@ users/
 ```
 
 Modules are auto-imported — you never need to manually reference file paths. Just enable what you need.
+
+All modules live in `modules/` and work at the NixOS level. Home-manager config is wrapped inside modules using `home-manager.users.${user} = { ... }`, so you can enable any module from any host config.
 
 ---
 
@@ -47,7 +49,7 @@ Create `users/mom/common.nix`:
 
 ## Step 3: Create the Home-Manager Configuration
 
-Create `users/mom/default.nix`. Modules from `modules/_home/` are auto-imported via `sharedModules` — just enable what you need:
+Create `users/mom/default.nix`. This is for identity and personal config only — module enables go in the host config:
 
 ```nix
 { ... }:
@@ -56,17 +58,12 @@ Create `users/mom/default.nix`. Modules from `modules/_home/` are auto-imported 
   home.username = "mom";
   home.homeDirectory = "/home/mom";
   home.stateVersion = "25.11";
-
-  # Home modules (defined in modules/_home/)
-  shell.enable = true;
-  git.enable = true;
-  terminal.enable = true;
 }
 ```
 
 ## Step 4: Create the Host Configuration
 
-Create `users/mom/hosts/moms-pc/default.nix`. Modules from `modules/` are auto-imported — just enable what you need:
+Create `users/mom/hosts/moms-pc/default.nix`. All modules (including home-manager ones) are enabled here:
 
 ```nix
 { pkgs, ... }:
@@ -82,12 +79,15 @@ Create `users/mom/hosts/moms-pc/default.nix`. Modules from `modules/` are auto-i
   programs.fish.enable = true;
   security.sudo.wheelNeedsPassword = false;
 
-  # NixOS modules (defined in modules/)
+  # Modules — NixOS and home-manager both enabled from here
   desktops.gnome.enable = true;
   services.tailscaleDesktop.enable = true;
   services.sshServer.enable = true;
   services.flatpakBase.enable = true;
   security.yubikey.enable = true;
+  shell.enable = true;
+  git.enable = true;
+  terminal.enable = true;
 
   system.stateVersion = "25.11";
 }
@@ -156,56 +156,58 @@ nixos-rebuild build-vm --flake .#moms-pc
 
 ## Available Modules
 
-### NixOS Modules (set in host `default.nix`)
+All modules are enabled from the host `default.nix` using dot-notation. Modules that configure home-manager do so internally — no separate user-level enable needed.
+
+### Desktop / System Modules
 
 | Option | Description |
 |--------|-------------|
-| `desktops.gnome.enable` | GNOME + GDM + Pipewire |
-| `desktops.kde.enable` | KDE Plasma + SDDM + Pipewire |
-| `gaming.enable` | Steam + Gamemode + Lutris |
-| `development.enable` | Podman + libvirt + dev tools |
-| `security.yubikey.enable` | Polkit + Yubikey + GPG |
-| `autoUpgrade.enable` | Auto-pull from GitHub and rebuild |
-| `services.tailscaleDesktop.enable` | Tailscale with systray |
-| `services.sshServer.enable` | OpenSSH server |
-| `services.vpn.enable` | VPN support |
-| `services.flatpakBase.enable` | Base Flatpak setup |
+| `modules.gnome.enable` | GNOME + GDM + Pipewire |
+| `modules.kde.enable` | KDE Plasma + SDDM + Pipewire |
+| `modules.gaming.enable` | Steam + Gamemode + Lutris |
+| `modules.development.enable` | Podman + libvirt + dev tools |
+| `modules.yubikey.enable` | Polkit + Yubikey + GPG |
+| `modules.autoUpgrade.enable` | Auto-pull from GitHub and rebuild |
+| `modules.tailscale.enable` | Tailscale with systray |
+| `modules.ssh.enable` | OpenSSH server |
+| `modules.vpn.enable` | VPN support |
+| `modules.flatpak.enable` | Base Flatpak setup |
 
-### Home-Manager Modules (set in user `default.nix`)
-
-| Option | Description |
-|--------|-------------|
-| `shell.enable` | Fish shell + Starship + CLI tools |
-| `git.enable` | Git + lazygit |
-| `terminal.enable` | Ghostty terminal |
-| `media.enable` | Audio/media tools |
-| `editors.vscode.enable` | VSCode + extensions |
-| `editors.neovim.enable` | Neovim |
-| `editors.zed.enable` | Zed editor |
-| `browsers.zen.enable` | Zen browser + addons |
-
-### Server Modules (set in server host `default.nix`, use `mkServer`)
+### User Environment Modules
 
 | Option | Description |
 |--------|-------------|
-| `server.ssh.enable` | Hardened SSH (no root, no password auth) |
-| `server.tailscale.enable` | Tailscale headless |
-| `server.podman.enable` | Rootless Podman |
-| `server.arion.enable` | Arion (declarative Docker/Podman) |
-| `server.restic.enable` | Backups to Backblaze B2 |
-| `server.autoUpgrade.enable` | Git pull + rebuild |
-| `server.containerAutoUpdate.enable` | Daily container updates |
-| `server.services.freshrss.enable` | FreshRSS via Arion |
+| `modules.shell.enable` | Fish shell + Starship + CLI tools |
+| `modules.git.enable` | Git + lazygit |
+| `modules.terminal.enable` | Ghostty terminal |
+| `modules.media.enable` | Audio/media tools |
+| `modules.editors.vscode.enable` | VSCode + extensions |
+| `modules.editors.neovim.enable` | Neovim |
+| `modules.editors.zed.enable` | Zed editor |
+| `modules.browsers.zen.enable` | Zen browser + addons |
+
+### Server / Headless Modules
+
+| Option | Description |
+|--------|-------------|
+| `modules.server.ssh.enable` | Hardened SSH (no root, no password auth) |
+| `modules.server.tailscale.enable` | Tailscale headless |
+| `modules.server.podman.enable` | Rootless Podman + user socket |
+| `modules.server.arion.enable` | Arion (declarative Docker/Podman) |
+| `modules.server.restic.enable` | Backups to Backblaze B2 |
+| `modules.server.autoUpgrade.enable` | Git pull + rebuild |
+| `modules.server.containerAutoUpdate.enable` | Daily container updates |
+| `modules.server.services.freshrss.enable` | FreshRSS via Arion |
 
 ---
 
 ## Creating a New Module
 
-### NixOS module (in `modules/`)
+All modules live in `modules/` and follow the same pattern. If the module configures home-manager, wrap that config in `home-manager.users.${user} = { ... }`:
 
 ```nix
 # modules/my-feature.nix
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, user, ... }:
 
 let cfg = config.myFeature; in
 {
@@ -214,7 +216,13 @@ let cfg = config.myFeature; in
   };
 
   config = lib.mkIf cfg.enable {
-    # your NixOS config here
+    # NixOS config (optional)
+    programs.fish.enable = true;
+
+    # Home-manager config (optional)
+    home-manager.users.${user} = {
+      home.packages = with pkgs; [ my-tool ];
+    };
   };
 }
 ```
@@ -225,31 +233,7 @@ Enable it in any host:
 myFeature.enable = true;
 ```
 
-### Home-manager module (in `modules/_home/`)
-
-```nix
-# modules/_home/my-tool.nix
-{ config, lib, pkgs, ... }:
-
-let cfg = config.myTool; in
-{
-  options.myTool = {
-    enable = lib.mkEnableOption "description";
-  };
-
-  config = lib.mkIf cfg.enable {
-    # your home-manager config here
-  };
-}
-```
-
-Enable it in any user's `default.nix`:
-
-```nix
-myTool.enable = true;
-```
-
-Both are auto-imported — no manual file path imports needed. `git add` the new file before building.
+Auto-imported — no manual file path imports needed. `git add` the new file before building.
 
 ---
 
@@ -263,10 +247,5 @@ git add -A
 
 **Option `X` does not exist**
 The module defining `options.X.enable` isn't being swept by import-tree. Check:
-- NixOS modules are in `modules/` (not in `_home/` or `_server/`)
-- Home-manager modules are in `modules/_home/`
-- Server modules are in `modules/_server/`
+- The module is in `modules/` (or a subdirectory — any name without a leading `_`)
 - The file has been `git add`-ed
-
-**Server modules failing on desktop hosts**
-Server modules live in `modules/_server/` and are only loaded by `mkServer`. Don't move them into `modules/`.

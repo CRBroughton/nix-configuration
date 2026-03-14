@@ -2,10 +2,10 @@
 { config, lib, ... }:
 
 let
-  cfg = config.server.tailscale;
+  cfg = config.modules.server.tailscale;
 in
 {
-  options.server.tailscale = {
+  options.modules.server.tailscale = {
     enable = lib.mkEnableOption "Tailscale VPN (headless server mode)";
   };
 

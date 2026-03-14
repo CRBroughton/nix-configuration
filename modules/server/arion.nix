@@ -2,10 +2,10 @@
 { config, lib, ... }:
 
 let
-  cfg = config.server.arion;
+  cfg = config.modules.server.arion;
 in
 {
-  options.server.arion = {
+  options.modules.server.arion = {
     enable = lib.mkEnableOption "Arion declarative container management with Docker backend";
   };
 

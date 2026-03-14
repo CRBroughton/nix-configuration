@@ -12,9 +12,6 @@
         },
         "nixos-server": {
           "expr": "(builtins.getFlake \"/home/craig/nix-configuration\").nixosConfigurations.nixos-server.options"
-        },
-        "home-manager": {
-          "expr": "(builtins.getFlake \"/home/craig/nix-configuration\").nixosConfigurations.laptop.options.home-manager.users.type.getSubOptions []"
         }
       },
       "formatting": {

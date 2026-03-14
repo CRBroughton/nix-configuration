@@ -8,10 +8,10 @@
 }:
 
 let
-  cfg = config.server.containerAutoUpdate;
+  cfg = config.modules.server.containerAutoUpdate;
 in
 {
-  options.server.containerAutoUpdate = {
+  options.modules.server.containerAutoUpdate = {
     enable = lib.mkEnableOption "daily automatic podman container updates";
   };
 

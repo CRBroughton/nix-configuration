@@ -10,7 +10,6 @@
 
   home.username = "craig";
   home.homeDirectory = "/home/craig";
-  home.stateVersion = "24.11";
 
   # Font configuration
   fonts.fontconfig.enable = true;
@@ -21,13 +20,4 @@
     recursive = true;
   };
 
-  # Modules
-  shell.enable = true;
-  git.enable = true;
-  terminal.enable = true;
-  media.enable = true;
-  editors.vscode.enable = true;
-  editors.neovim.enable = true;
-  editors.zed.enable = true;
-  browsers.zen.enable = true;
 }

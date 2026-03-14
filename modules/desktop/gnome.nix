@@ -6,10 +6,10 @@
 }:
 
 let
-  cfg = config.desktops.gnome;
+  cfg = config.modules.gnome;
 in
 {
-  options.desktops.gnome = {
+  options.modules.gnome = {
     enable = lib.mkEnableOption "GNOME Desktop Environment";
   };
 

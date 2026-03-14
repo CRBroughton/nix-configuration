@@ -6,10 +6,10 @@
 }:
 
 let
-  cfg = config.desktops.kde;
+  cfg = config.modules.kde;
 in
 {
-  options.desktops.kde = {
+  options.modules.kde = {
     enable = lib.mkEnableOption "KDE Desktop Environment";
   };
 

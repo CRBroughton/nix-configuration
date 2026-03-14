@@ -8,10 +8,10 @@
 }:
 
 let
-  cfg = config.security.yubikey;
+  cfg = config.modules.yubikey;
 in
 {
-  options.security.yubikey = {
+  options.modules.yubikey = {
     enable = lib.mkEnableOption "Polkit and Yubikey support with smartcard daemon and management tools";
   };
 

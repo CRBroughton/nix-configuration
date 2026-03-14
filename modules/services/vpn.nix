@@ -7,7 +7,7 @@
 }:
 
 let
-  cfg = config.services.vpn;
+  cfg = config.modules.vpn;
   piaConfigs = pkgs.fetchzip {
     url = "https://www.privateinternetaccess.com/openvpn/openvpn.zip";
     sha256 = "sha256-mhXV2CF8G7dAkXY9KI7g2qSOlxUzyqgJlidL1At46GU=";
@@ -15,7 +15,7 @@ let
   };
 in
 {
-  options.services.vpn = {
+  options.modules.vpn = {
     enable = lib.mkEnableOption "PIA OpenVPN configs and NetworkManager plugin";
   };
 

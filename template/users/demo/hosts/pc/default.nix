@@ -35,8 +35,9 @@
     wget
   ];
 
-  # Enable NixOS modules (defined in modules/)
+  # Enable modules (defined in modules/)
   # desktops.gnome.enable = true;
+  # shell.enable = true;
 
   system.stateVersion = "25.11";
 }

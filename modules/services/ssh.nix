@@ -6,10 +6,10 @@
 }:
 
 let
-  cfg = config.services.sshServer;
+  cfg = config.modules.ssh;
 in
 {
-  options.services.sshServer = {
+  options.modules.ssh = {
     enable = lib.mkEnableOption "OpenSSH server";
   };
 

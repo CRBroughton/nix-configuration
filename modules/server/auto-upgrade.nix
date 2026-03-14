@@ -7,10 +7,10 @@
 }:
 
 let
-  cfg = config.server.autoUpgrade;
+  cfg = config.modules.server.autoUpgrade;
 in
 {
-  options.server.autoUpgrade = {
+  options.modules.server.autoUpgrade = {
     enable = lib.mkEnableOption "automatic NixOS upgrades with git pull";
   };
 

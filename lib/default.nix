@@ -8,16 +8,16 @@ let
     modules = ../modules;
     disko = ../disko;
   };
-
-  # Auto-imported home-manager modules (available to all users)
-  homeModules = inputs.import-tree ../modules/_home;
 in
 {
   # Create a NixOS system configuration
+  # Hosts with a users/${user}/hosts/${hostname}/home.nix get that as their HM config;
+  # otherwise falls back to users/${user}/default.nix
   mkHost =
     {
       hostname,
-      user, # Required: the user who owns this host
+      user,
+      stateVersion,
       system ? "x86_64-linux",
       extraModules ? [ ],
     }:
@@ -25,6 +25,7 @@ in
       inherit system;
       specialArgs = {
         inherit inputs hostname user;
+        inherit (inputs) firefox-addons;
       }
       // paths;
       modules = [
@@ -33,6 +34,7 @@ in
         inputs.disko.nixosModules.disko
         inputs.home-manager.nixosModules.home-manager
         inputs.nix-flatpak.nixosModules.nix-flatpak
+        inputs.arion.nixosModules.arion
 
         # Shared modules
         ../modules/common.nix
@@ -43,6 +45,7 @@ in
         # Base configuration
         {
           networking.hostName = hostname;
+          system.stateVersion = stateVersion;
 
           nixpkgs = {
             config.allowUnfree = true;
@@ -56,67 +59,19 @@ in
             useUserPackages = true;
             extraSpecialArgs = {
               inherit inputs;
-              inherit (inputs) firefox-addons;
-            };
-            sharedModules = [
-              inputs.zen-flatpak-config.homeManagerModules.default
-              homeModules
-            ];
-            users = lib.genAttrs [ user ] (u: import ../users/${u});
-          };
-        }
-      ]
-      ++ extraModules;
-    };
-
-  # Create a server configuration (headless, no desktop modules)
-  mkServer =
-    {
-      hostname,
-      user,
-      system ? "x86_64-linux",
-      extraModules ? [ ],
-    }:
-    inputs.nixpkgs.lib.nixosSystem {
-      inherit system;
-      specialArgs = {
-        inherit inputs hostname user;
-      }
-      // paths;
-      modules = [
-        # External modules (server doesn't need chaotic/flatpak)
-        inputs.disko.nixosModules.disko
-        inputs.home-manager.nixosModules.home-manager
-        inputs.arion.nixosModules.arion
-
-        # Shared modules
-        ../modules/common.nix
-
-        # Host-specific config (under user directory)
-        ../users/${user}/hosts/${hostname}
-
-        # Base configuration
-        {
-          networking.hostName = hostname;
-
-          nixpkgs = {
-            config.allowUnfree = true;
-          };
-
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            extraSpecialArgs = {
-              inherit inputs;
-              inherit (inputs) firefox-addons;
             };
             sharedModules = [
               inputs.zen-flatpak-config.homeManagerModules.default
               inputs.podman-flake.homeManagerModules.default
-              homeModules
+              { home.stateVersion = stateVersion; }
             ];
-            # Use host-specific home.nix for servers
-            users = lib.genAttrs [ user ] (u: import ../users/${u}/hosts/${hostname}/home.nix);
+            users = lib.genAttrs [ user ] (
+              u:
+              let
+                hostHome = ../users/${u}/hosts/${hostname}/home.nix;
+              in
+              if builtins.pathExists hostHome then import hostHome else import ../users/${u}
+            );
           };
         }
       ]
@@ -128,6 +83,7 @@ in
     {
       hostname,
       user,
+      stateVersion,
       extraModules ? [ ],
     }:
     inputs.nixpkgs.lib.nixosSystem {
@@ -146,6 +102,7 @@ in
         # Base configuration
         {
           nixpkgs.config.allowUnfree = true;
+          system.stateVersion = stateVersion;
         }
       ]
       ++ extraModules;

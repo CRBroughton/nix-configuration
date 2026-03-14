@@ -8,10 +8,10 @@
 }:
 
 let
-  cfg = config.server.restic;
+  cfg = config.modules.server.restic;
 in
 {
-  options.server.restic = {
+  options.modules.server.restic = {
     enable = lib.mkEnableOption "Restic backups to Backblaze B2";
   };
 

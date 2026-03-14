@@ -2,12 +2,12 @@
 { config, lib, ... }:
 
 let
-  cfg = config.server.services.freshrss;
+  cfg = config.modules.server.services.freshrss;
   arionLib = import ../../../lib/arion.nix { inherit lib; };
   dataDir = "/etc/nixos/services/freshrss";
 in
 {
-  options.server.services.freshrss = {
+  options.modules.server.services.freshrss = {
     enable = lib.mkEnableOption "FreshRSS RSS reader (Arion/Docker)";
   };
 

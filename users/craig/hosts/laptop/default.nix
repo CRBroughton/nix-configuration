@@ -30,15 +30,22 @@
   services.power-profiles-daemon.enable = true;
 
   # Modules
-  desktops.gnome.enable = true;
-  services.tailscaleDesktop.enable = true;
-  services.sshServer.enable = true;
-  services.vpn.enable = true;
-  services.flatpakBase.enable = true;
-  security.yubikey.enable = true;
-  development.enable = true;
-  gaming.enable = true;
-  autoUpgrade.enable = true;
+  modules.gnome.enable = true;
+  modules.tailscale.enable = true;
+  modules.ssh.enable = true;
+  modules.vpn.enable = true;
+  modules.flatpak.enable = true;
+  modules.yubikey.enable = true;
+  modules.development.enable = true;
+  modules.gaming.enable = true;
+  modules.autoUpgrade.enable = true;
+  modules.shell.enable = true;
+  modules.git.enable = true;
+  modules.terminal.enable = true;
+  modules.media.enable = true;
+  modules.editors.vscode.enable = true;
+  modules.editors.neovim.enable = true;
+  modules.editors.zed.enable = true;
+  modules.browsers.zen.enable = true;
 
-  system.stateVersion = "25.11";
 }

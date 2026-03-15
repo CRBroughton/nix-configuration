@@ -50,5 +50,4 @@
   modules.editors.neovim.enable = true;
   modules.editors.zed.enable = true;
   modules.browsers.zen.enable = true;
-
 }

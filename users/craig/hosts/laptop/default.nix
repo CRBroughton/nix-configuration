@@ -30,7 +30,10 @@
   services.power-profiles-daemon.enable = true;
 
   # Modules
-  modules.gnome.enable = true;
+  modules.gnome = {
+    enable = true;
+    apps.baseApplications = true;
+  };
   modules.tailscale.enable = true;
   modules.ssh.enable = true;
   modules.vpn.enable = true;

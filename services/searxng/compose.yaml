@@ -1,0 +1,34 @@
+# SearXNG - Privacy-respecting metasearch engine
+# Run with: podman compose up -d
+
+services:
+  tailscale-searxng:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-searxng
+    hostname: searxng
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  searxng:
+    container_name: searxng
+    image: docker.io/searxng/searxng:latest
+    restart: unless-stopped
+    network_mode: service:tailscale-searxng
+    depends_on:
+      - tailscale-searxng
+    volumes:
+      - ./config:/etc/searxng:Z
+      - ./data:/var/cache/searxng:Z
+    environment:
+      - SEARXNG_BASE_URL=https://searxng.tail538465.ts.net

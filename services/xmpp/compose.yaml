@@ -1,0 +1,66 @@
+# Prosody XMPP Server - Podman Compose Configuration
+# Run with: podman compose up -d
+
+services:
+  tailscale-xmpp:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-xmpp
+    hostname: xmpp
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro
+      - ./certs:/certs:Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  prosody:
+    build: .
+    image: localhost/prosody-custom:latest
+    container_name: prosody
+    restart: unless-stopped
+    network_mode: service:tailscale-xmpp
+    depends_on:
+      - tailscale-xmpp
+
+    volumes:
+      # Configuration
+      - ./config/prosody.cfg.lua:/etc/prosody/prosody.cfg.lua:ro,Z
+      # Certificates
+      - ./certs:/etc/prosody/certs:ro,Z
+      # Persistent data (accounts, messages, etc)
+      - ./data:/var/lib/prosody:Z
+
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '1.0'
+        reservations:
+          memory: 64M
+
+    # Health check
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 5222 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    # Logging
+    logging:
+      driver: "journald"
+      options:
+        tag: "prosody"

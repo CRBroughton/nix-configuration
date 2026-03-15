@@ -4,11 +4,28 @@
   "nix.serverSettings": {
     "nixd": {
       "nixpkgs": {
-        "expr": "import <nixpkgs> { }"
+        "expr": "import (builtins.getFlake \"/home/craig/nix-configuration\").inputs.nixpkgs { }"
+      },
+      "options": {
+        "nixos": {
+          "expr": "(builtins.getFlake \"/home/craig/nix-configuration\").nixosConfigurations.laptop.options"
+        },
+        "nixos-server": {
+          "expr": "(builtins.getFlake \"/home/craig/nix-configuration\").nixosConfigurations.nixos-server.options"
+        }
       },
       "formatting": {
-        "command": ["nixfmt"]
+        "command": [ "nixfmt" ]
       }
     }
+  },
+  "editor.formatOnSave": false,
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.nix$",
+        "cmd": "nix-format"
+      }
+    ]
   }
 }

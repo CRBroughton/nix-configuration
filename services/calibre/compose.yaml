@@ -1,0 +1,39 @@
+# Calibre Web Automated - Ebook management
+# Run with: podman compose up -d
+
+services:
+  tailscale-calibre:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-calibre
+    hostname: calibre
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  calibre-web-automated:
+    image: crocodilestick/calibre-web-automated:latest
+    container_name: calibre-web-automated
+    restart: unless-stopped
+    network_mode: service:tailscale-calibre
+    depends_on:
+      - tailscale-calibre
+
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+
+    volumes:
+      - ./config:/config
+      - ./ingest:/cwa-book-ingest
+      - ./calibre-library:/calibre-library

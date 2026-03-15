@@ -1,0 +1,53 @@
+# Linkding - Bookmark manager
+# Run with: podman compose up -d
+
+services:
+  tailscale-linkding:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-linkding
+    hostname: linkding
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  linkding:
+    image: sissbruecker/linkding:latest
+    container_name: linkding
+    restart: unless-stopped
+    network_mode: service:tailscale-linkding
+    depends_on:
+      - tailscale-linkding
+
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+
+    volumes:
+      - ./data:/etc/linkding/data
+
+    security_opt:
+      - no-new-privileges:true
+
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '1.0'
+        reservations:
+          memory: 64M
+
+    logging:
+      driver: "journald"
+      options:
+        tag: "linkding"

@@ -1,0 +1,109 @@
+services:
+  tailscale-penpot:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-penpot
+    hostname: penpot
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  penpot-frontend:
+    image: penpotapp/frontend:latest
+    container_name: penpot-frontend
+    restart: unless-stopped
+    network_mode: service:tailscale-penpot
+    depends_on:
+      - tailscale-penpot
+      - penpot-backend
+      - penpot-exporter
+    volumes:
+      - penpot_assets:/opt/data/assets:Z
+    environment:
+      - PENPOT_FLAGS=enable-registration enable-login-with-password
+
+  penpot-backend:
+    image: penpotapp/backend:latest
+    container_name: penpot-backend
+    restart: unless-stopped
+    networks:
+      - penpot
+    depends_on:
+      penpot-postgres:
+        condition: service_healthy
+      penpot-valkey:
+        condition: service_started
+    volumes:
+      - penpot_assets:/opt/data/assets:Z
+    environment:
+      - PENPOT_FLAGS=enable-registration enable-login-with-password disable-email-verification disable-secure-session-cookies
+      - PENPOT_SECRET_KEY=your-secret-key-change-me
+      - PENPOT_DATABASE_URI=postgresql://penpot-postgres/penpot
+      - PENPOT_DATABASE_USERNAME=penpot
+      - PENPOT_DATABASE_PASSWORD=penpot
+      - PENPOT_REDIS_URI=redis://penpot-valkey/0
+      - PENPOT_ASSETS_STORAGE_BACKEND=assets-fs
+      - PENPOT_STORAGE_ASSETS_FS_DIRECTORY=/opt/data/assets
+      - PENPOT_TELEMETRY_ENABLED=false
+      # SMTP disabled - no email verification
+      # - PENPOT_SMTP_DEFAULT_FROM=no-reply@example.com
+      # - PENPOT_SMTP_HOST=smtp.example.com
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '2.0'
+
+  penpot-exporter:
+    image: penpotapp/exporter:latest
+    container_name: penpot-exporter
+    restart: unless-stopped
+    networks:
+      - penpot
+    environment:
+      - PENPOT_PUBLIC_URI=http://penpot-frontend
+      - PENPOT_REDIS_URI=redis://penpot-valkey/0
+      - PENPOT_SECRET_KEY=your-secret-key-change-me
+
+  penpot-postgres:
+    image: postgres:15
+    container_name: penpot-postgres
+    restart: unless-stopped
+    networks:
+      - penpot
+    volumes:
+      - penpot_postgres:/var/lib/postgresql/data:Z
+    environment:
+      - POSTGRES_INITDB_ARGS=--data-checksums
+      - POSTGRES_DB=penpot
+      - POSTGRES_USER=penpot
+      - POSTGRES_PASSWORD=penpot
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U penpot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  penpot-valkey:
+    image: valkey/valkey:8
+    container_name: penpot-valkey
+    restart: unless-stopped
+    networks:
+      - penpot
+    command: valkey-server --maxmemory 128mb --maxmemory-policy allkeys-lru
+
+networks:
+  penpot:
+
+volumes:
+  penpot_assets:
+  penpot_postgres:

@@ -1,0 +1,45 @@
+# nostr-rs-relay configuration
+# https://github.com/scsibug/nostr-rs-relay
+
+[info]
+# Relay information for NIP-11
+relay_url = "wss://nostr.tail538465.ts.net/"
+name = "Craig's Nostr Relay"
+description = "Personal Nostr relay"
+pubkey = ""  # Your Nostr pubkey (hex format) - optional
+contact = ""  # Contact email - optional
+
+[database]
+# SQLite database location
+data_directory = "/usr/src/app/db"
+
+[network]
+# Listen on all interfaces
+address = "0.0.0.0"
+port = 8080
+
+[limits]
+# Connection limits
+max_conn = 128
+max_event_bytes = 131072  # 128KB max event size
+max_ws_message_bytes = 131072
+max_ws_frame_bytes = 131072
+
+# Rate limiting
+messages_per_sec = 3
+subscriptions_per_min = 10
+db_conns = 8
+
+[authorization]
+# Public relay - anyone can read/write
+# Set to your pubkey to restrict writes to only you
+# pubkey_whitelist = ["your-hex-pubkey"]
+
+[verified_users]
+# NIP-05 verification
+verify_expiration = "1 week"
+verify_update_frequency = "24 hours"
+
+[pay_to_relay]
+# Disabled - free relay
+enabled = false

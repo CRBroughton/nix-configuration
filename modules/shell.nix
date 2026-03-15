@@ -1,79 +1,66 @@
-{ pkgs, ... }:
-
+# Shell - fish, starship, zoxide, and CLI tools
 {
-  # Fish shell configuration
-  programs.fish = {
-    enable = true;
-    shellAliases = {
-      cd = "z";
-      cat = "bat";
-      ls = "eza";
-    };
-    shellInit = ''
-      set -gx CGO_ENABLED 1
-      # Add pnpm global bin to PATH
-      set -gx PATH "$HOME/.local/share/pnpm" $PATH
-    '';
-    functions = {
-      just = {
-        description = "Run just - uses local justfile if present, otherwise nix-configuration justfile";
-        wraps = "just";
-        body = ''
-          # Check for local justfile first
-          if test -f justfile; or test -f Justfile
-            command just $argv
-            return
-          end
+  config,
+  lib,
+  pkgs,
+  user,
+  ...
+}:
 
-          # Fall back to nix-configuration justfile
-          set -l nix_config_dir "$HOME/nix-configuration"
+let
+  cfg = config.modules.shell;
+in
+{
+  options.modules.shell = {
+    enable = lib.mkEnableOption "fish shell with starship, zoxide, and CLI tools";
+  };
 
-          if not test -d "$nix_config_dir"
-            echo "Error: Nix configuration directory not found at $nix_config_dir"
-            return 1
-          end
-
-          if not test -f "$nix_config_dir/justfile"
-            echo "Error: justfile not found at $nix_config_dir/justfile"
-            return 1
-          end
-
-          command just --justfile "$nix_config_dir/justfile" --working-directory "$nix_config_dir" $argv
+  config = lib.mkIf cfg.enable {
+    home-manager.users.${user} = {
+      programs.fish = {
+        enable = true;
+        shellAliases = {
+          cd = "z";
+          cat = "bat";
+          ls = "eza";
+        };
+        shellInit = ''
+          set -gx CGO_ENABLED 1
+          set -gx PATH "$HOME/.local/share/pnpm" $PATH
         '';
+        functions = {
+          # Use local justfile if exists, otherwise fallback to nix-configuration
+          just = ''
+            if test -f justfile; or test -f .justfile; or test -f Justfile
+              command just $argv
+            else
+              command just --justfile ~/nix-configuration/justfile --working-directory ~/nix-configuration $argv
+            end
+          '';
+        };
       };
+
+      programs.starship = {
+        enable = true;
+        enableFishIntegration = true;
+      };
+
+      programs.zoxide = {
+        enable = true;
+        enableFishIntegration = true;
+      };
+
+      home.packages = with pkgs; [
+        bat
+        eza
+        btop
+        ripgrep
+        fd
+        jq
+        jnv
+        tokei
+        croc
+      ];
     };
-  };
-
-  # Add Fish completion for just - uses local or nix-configuration justfile
-  home.file.".config/fish/completions/just.fish".text = ''
-    # Completions for just - local justfile takes precedence
-    function __just_complete
-      # Check for local justfile first
-      if test -f justfile; or test -f Justfile
-        command just --summary 2>/dev/null | string split ' '
-        return
-      end
-
-      # Fall back to nix-configuration justfile
-      set -l nix_config_dir "$HOME/nix-configuration"
-      if test -f "$nix_config_dir/justfile"
-        command just --justfile "$nix_config_dir/justfile" --summary 2>/dev/null | string split ' '
-      end
-    end
-
-    # Complete just with recipe names
-    complete -c just -f -a "(__just_complete)"
-  '';
-
-  # Starship prompt
-  programs.starship = {
-    enable = true;
-    enableFishIntegration = true;
-  };
-
-  # Zoxide (smarter cd)
-  programs.zoxide = {
-    enable = true;
-    enableFishIntegration = true;
   };
 }

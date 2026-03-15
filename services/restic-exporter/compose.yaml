@@ -1,0 +1,19 @@
+# Restic Exporter - Backup stats for Glance dashboard
+# Run with: podman compose up -d
+
+services:
+  restic-exporter:
+    build: .
+    container_name: restic-exporter
+    restart: unless-stopped
+    ports:
+      - "8087:8080"
+    environment:
+      - RESTIC_REPOSITORY=s3:https://s3.eu-central-003.backblazeb2.com/crbroughton-nixos-server
+      - RESTIC_PASSWORD_FILE=/run/secrets/restic-password
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - REFRESH_INTERVAL=3600
+      - PORT=8080
+    volumes:
+      - /etc/restic-env-password:/run/secrets/restic-password:ro,Z

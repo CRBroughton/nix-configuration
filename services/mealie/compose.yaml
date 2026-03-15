@@ -1,0 +1,44 @@
+# Mealie - Recipe manager
+# Run with: podman compose up -d
+
+services:
+  tailscale-mealie:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-mealie
+    hostname: mealie
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:latest
+    container_name: mealie
+    restart: unless-stopped
+    network_mode: service:tailscale-mealie
+    depends_on:
+      - tailscale-mealie
+
+    environment:
+      ALLOW_SIGNUP: "true"
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/London
+      MAX_WORKERS: 1
+      WEB_CONCURRENCY: 1
+      BASE_URL: https://mealie.tail538465.ts.net
+
+    volumes:
+      - mealie-data:/app/data
+
+volumes:
+  mealie-data:

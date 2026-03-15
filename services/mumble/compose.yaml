@@ -1,0 +1,87 @@
+# Mumble Voice Server
+# Run with: podman compose up -d
+
+services:
+  tailscale-mumble:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-mumble
+    hostname: mumble
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  murmur:
+    image: mumblevoip/mumble-server:latest
+    container_name: murmur
+    restart: unless-stopped
+    network_mode: service:tailscale-mumble
+    depends_on:
+      - tailscale-mumble
+
+    volumes:
+      # Persistent data (database, certificates)
+      # Note: TLS certs (cert.pem, key.pem) should be copied to ./data/
+      - ./data:/data:Z
+
+    environment:
+      # Server identity
+      MUMBLE_CONFIG_SERVER_PASSWORD: ""  # Empty = no password (set one for private server)
+      MUMBLE_CONFIG_WELCOME_TEXT: "Welcome to the Mumble server!"
+      MUMBLE_CONFIG_REGISTER_NAME: "LocalMumble"
+
+      # TLS configuration
+      MUMBLE_CONFIG_SSL_CERT: /data/cert.pem
+      MUMBLE_CONFIG_SSL_KEY: /data/key.pem
+
+      # Security settings
+      MUMBLE_CONFIG_ALLOW_HTML: "false"
+      MUMBLE_CONFIG_BONJOUR: "false"
+
+      # Bandwidth and quality
+      MUMBLE_CONFIG_BANDWIDTH: "558000"  # Max bandwidth per user (bits/s)
+      MUMBLE_CONFIG_USERS: "100"         # Max concurrent users
+
+      # Logging
+      MUMBLE_VERBOSE: "false"
+
+      # Skip chown on /data (we manage permissions ourselves)
+      MUMBLE_CHOWN_DATA: "false"
+
+      # SuperUser password - CHANGE THIS or it will be auto-generated
+      # Check logs for auto-generated password: podman logs murmur | grep -i password
+      # MUMBLE_SUPERUSER_PASSWORD: "your-secure-password-here"
+
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '1.0'
+        reservations:
+          memory: 64M
+
+    # Health check
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 64738 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    # Logging
+    logging:
+      driver: "journald"
+      options:
+        tag: "murmur"

@@ -1,0 +1,57 @@
+# Copyparty - File sharing server
+# Run with: podman compose up -d
+
+services:
+  tailscale-copyparty:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-copyparty
+    hostname: copyparty
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  copyparty:
+    image: docker.io/copyparty/ac:latest
+    container_name: copyparty
+    restart: unless-stopped
+    network_mode: service:tailscale-copyparty
+    depends_on:
+      - tailscale-copyparty
+
+    volumes:
+      # Files to share
+      - ./data:/w:Z
+      # Config file (not in /cfg to avoid auto-discovery conflict)
+      - ./config/copyparty.conf:/etc/copyparty.conf:ro,Z
+
+    # Use config file
+    command: ["-c", "/etc/copyparty.conf"]
+
+    # Security
+    security_opt:
+      - no-new-privileges:true
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '2.0'
+        reservations:
+          memory: 64M
+
+    # Logging
+    logging:
+      driver: "journald"
+      options:
+        tag: "copyparty"

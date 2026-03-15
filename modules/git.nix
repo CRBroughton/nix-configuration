@@ -1,35 +1,32 @@
-{ config, pkgs, ... }:
-
+# Git - git with lazygit
 {
-  programs.git = {
-    enable = true;
+  config,
+  lib,
+  pkgs,
+  user,
+  ...
+}:
 
-    signing = {
-      key = "~/.ssh/id_ed25519";
-      signByDefault = true;
-    };
-
-    settings = {
-      user = {
-        name = "CRBroughton";
-        email = "crbroughton@posteo.uk";
-      };
-      init = {
-        defaultBranch = "master";
-      };
-      gpg = {
-        format = "ssh";
-      };
-    };
+let
+  cfg = config.modules.git;
+in
+{
+  options.modules.git = {
+    enable = lib.mkEnableOption "git with lazygit";
   };
 
-  programs.jujutsu = {
-    enable = true;
-    settings = {
-      user = {
-        name = "CRBroughton";
-        email = "crbroughton@posteo.uk";
+  config = lib.mkIf cfg.enable {
+    home-manager.users.${user} = {
+      programs.git = {
+        enable = true;
+        settings = {
+          init.defaultBranch = "master";
+        };
       };
+
+      home.packages = with pkgs; [
+        lazygit
+      ];
     };
   };
 }

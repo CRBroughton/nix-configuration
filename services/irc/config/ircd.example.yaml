@@ -1,0 +1,228 @@
+# Ergo IRC Server Configuration
+# Modern IRC server with best practices
+
+network:
+  name: "LocalIRC"
+
+datastore:
+  path: /ircd/data/ircd.db
+  autoupgrade: true
+
+server:
+  name: "irc.localhost"
+  enforce-utf8: true
+  listeners:
+    # Plain IRC - disabled for security (uncomment if needed for local testing)
+    # ":6667":
+
+    # TLS-only IRC (recommended)
+    ":6697":
+      tls:
+        cert: /certs/server.crt
+        key: /certs/server.key
+      min-tls-version: 1.2
+
+    # WebSocket for web clients (TLS)
+    ":8097":
+      websocket: true
+      tls:
+        cert: /certs/server.crt
+        key: /certs/server.key
+
+  # Connection limits
+  max-sendq: 96k
+  connection-limits:
+    max-connections-per-ip: 16
+    throttle-bandwidth: "16k"
+    throttle-cooldown: 10s
+  connection-throttling:
+    enabled: true
+    duration: 1m
+    max-connections: 12
+    ban-duration: 10m
+    ban-message: "Connection throttled - try again later"
+
+  # STS (Strict Transport Security) for IRC
+  sts:
+    enabled: true
+    duration: 1mo
+    port: 6697
+
+  # Cloaking for privacy (hides user IP addresses)
+  # Generate a new secret with: openssl rand -hex 32
+  cloaks:
+    enabled: true
+    enabled-for-always-on: true
+    netname: "local"
+    secret: "CHANGE_ME_generate_with_openssl_rand_-hex_32"
+    num-bits: 64
+
+  # DNS lookups
+  lookup-hostnames: false
+  forward-confirm-hostnames: false
+
+  # Security
+  check-ident: false
+  relaymsg:
+    enabled: false
+
+  # MOTD
+  motd: /config/motd.txt
+  motd-formatting: true
+
+accounts:
+  # Require all users to authenticate (no anonymous users)
+  require-sasl:
+    enabled: false
+    # Exempt localhost so users can connect locally to register
+    # exempted:
+    #   - "localhost"
+    #   - "127.0.0.0/8"
+
+  # Account registration
+  # Disabled - admins create accounts with: /msg NickServ SAREGISTER username password
+  registration:
+    enabled: false
+    allow-before-connect: false
+    throttling:
+      enabled: true
+      duration: 10m
+      max-attempts: 3
+    bcrypt-cost: 12
+    verify-timeout: "48h"
+    email-verification:
+      enabled: false
+
+  # Authentication
+  authentication-enabled: true
+  skip-server-password: true
+
+  # Always-on (bouncer) functionality - major feature of Ergo
+  multiclient:
+    enabled: true
+    allowed-by-default: true
+    always-on: opt-in
+    auto-away: opt-in
+    always-on-expiration: 30d
+
+  # Account settings
+  nick-reservation:
+    enabled: true
+    method: strict
+    allow-custom-enforcement: true
+    force-nick-equals-account: true
+
+  # VHosts
+  vhosts:
+    enabled: true
+    max-length: 64
+    valid-regexp: '^[0-9A-Za-z.\-_]+$'
+
+channels:
+  # Channel registration
+  registration:
+    enabled: true
+
+  # Defaults for new channels
+  # +n = no external messages, +t = only ops can change topic, +R = registered users only
+  default-modes: "+ntR"
+  max-channels-per-client: 100
+  operator-only-creation: true
+
+  # Channel listing
+  list:
+    opersonly: false
+
+  # Invite exceptions
+  invite-expiration: 24h
+
+# History settings (bouncer playback)
+history:
+  enabled: true
+  channel-length: 2048
+  client-length: 256
+  autoresize-window: 3d
+  autoreplay-on-join: 100
+  chathistory-maxmessages: 1000
+  znc-maxmessages: 2048
+  restrictions:
+    expire-time: 1w
+    query-cutoff: "none"
+    grace-period: 1h
+
+  persistent:
+    enabled: false
+    unregistered-channels: false
+    registered-channels: false
+    direct-messages: false
+
+  retention:
+    allow-individual-delete: false
+    enable-account-indexing: false
+
+# Operator configuration
+# To add an oper, generate a password hash with: just irc-genpasswd
+# Then uncomment and configure:
+# opers:
+#   admin:
+#     class: "server-admin"
+#     whois-line: "is a server administrator"
+#     password: "<paste hash here>"
+
+oper-classes:
+  "chat-moderator":
+    title: "Chat Moderator"
+    capabilities:
+      - "kill"
+      - "ban"
+      - "nofakelag"
+      - "relaymsg"
+      - "vhosts"
+      - "sajoin"
+      - "samode"
+
+  "server-admin":
+    title: "Server Admin"
+    extends: "chat-moderator"
+    capabilities:
+      - "rehash"
+      - "accreg"
+      - "chanreg"
+      - "history"
+      - "defcon"
+      - "massmessage"
+
+# Logging
+logging:
+  - method: stderr
+    type: "*"
+    level: info
+
+# Limits
+limits:
+  awaylen: 390
+  chanlistmodes: 60
+  channellen: 64
+  identlen: 20
+  kicklen: 390
+  nicklen: 32
+  topiclen: 390
+  whowas:
+    entries: 100
+
+# DNSBL (disabled for localhost)
+dnsbl:
+  enabled: false
+
+# Fakelag (helps prevent flooding)
+fakelag:
+  enabled: true
+  window: 1s
+  burst-limit: 5
+  messages-per-window: 2
+  cooldown: 2s
+
+# Role-playing commands
+roleplay:
+  enabled: true
+  add-suffix: true

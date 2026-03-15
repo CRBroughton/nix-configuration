@@ -1,18 +1,29 @@
 {
-  description = "Home Manager configuration for Craig";
+  description = "NixOS configuration for laptop, gaming PC, and home server";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-flatpak.url = "github:gmodena/nix-flatpak";
 
-    # Ghostty with nixGL wrapper
-    ghostty-wrapped.url = "path:./ghostty-flake";
+    import-tree.url = "github:vic/import-tree";
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # CachyOS kernel and optimizations
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+
+    # VSCode extensions from marketplace
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
+
+    # Declarative flatpak
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
 
     # Zen Browser Flatpak Configuration
     zen-flatpak-config = {
@@ -26,55 +37,68 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    lua-dev = {
-      url = "github:crbroughton/nix-flakes?dir=lua";
+    # Podman user socket/service for rootless containers
+    podman-flake = {
+      url = "github:CRBroughton/nix-flakes?dir=podman-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    love2d = {
-      url = "github:crbroughton/nix-flakes?dir=love2d";
+
+    # Arion - Docker/Podman compose in Nix
+    arion = {
+      url = "github:hercules-ci/arion";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Dev tooling (nixfmt, statix, deadnix, etc.)
+    nix-format = {
+      url = "github:crbroughton/nix-flakes?dir=nix-format";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs =
-    {
-      nixpkgs,
-      home-manager,
-      nix-flatpak,
-      ghostty-wrapped,
-      nix-vscode-extensions,
-      zen-flatpak-config,
-      firefox-addons,
-      lua-dev,
-      love2d,
-      ...
-    }:
+    { self, import-tree, ... }@inputs:
     let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [
-          nix-vscode-extensions.overlays.default
-        ];
-      };
+      myLib = import ./lib { inherit inputs; };
+
+      # Auto-imports all .nix files in ./modules as NixOS modules
+      modules = import-tree ./modules;
+
+      stateVersion = "25.11";
     in
     {
-      homeConfigurations."craig" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
+      nixosConfigurations = {
+        laptop = myLib.mkHost {
+          hostname = "laptop";
+          user = "craig";
+          inherit stateVersion;
+          extraModules = [ modules ];
+        };
 
-        modules = [
-          nix-flatpak.homeManagerModules.nix-flatpak
-          ghostty-wrapped.homeManagerModules.default
-          lua-dev.homeManagerModules.default
-          love2d.homeManagerModules.default
-          zen-flatpak-config.homeManagerModules.default
-          {
-            _module.args = {
-              inherit firefox-addons;
-            };
-          }
-          ./home.nix
-        ];
+        gaming-pc = myLib.mkHost {
+          hostname = "gaming-pc";
+          user = "craig";
+          inherit stateVersion;
+          extraModules = [ modules ];
+        };
+
+        nixos-server = myLib.mkHost {
+          hostname = "nixos-server";
+          user = "craig";
+          inherit stateVersion;
+          extraModules = [ modules ];
+        };
+
+        pi-monitor = myLib.mkPi {
+          hostname = "pi-monitor";
+          user = "craig";
+          inherit stateVersion;
+          extraModules = [ ];
+        };
       };
+      images.pi-monitor = self.nixosConfigurations.pi-monitor.config.system.build.sdImage;
+
+      inherit (inputs.nix-format) devShells;
+      inherit (inputs.nix-format) apps;
     };
 }

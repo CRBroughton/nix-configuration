@@ -17,7 +17,7 @@ in
   config = lib.mkIf cfg.enable {
     system.autoUpgrade = {
       enable = true;
-      flake = "github:CRBroughton/nix-configuration/nixos-migration#${hostname}";
+      flake = "github:CRBroughton/nix-configuration/master#${hostname}";
       flags = [ "--refresh" ];
       dates = "daily";
       allowReboot = false;

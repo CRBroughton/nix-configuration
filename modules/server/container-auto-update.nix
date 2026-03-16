@@ -16,7 +16,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.services."podman-auto-update" = {
+    systemd.services."custom-podman-auto-update" = {
       description = "Pull and update podman containers";
       path = [
         pkgs.podman-compose
@@ -44,7 +44,7 @@ in
       };
     };
 
-    systemd.timers."podman-auto-update" = {
+    systemd.timers."custom-podman-auto-update" = {
       description = "Run podman auto-update daily";
       wantedBy = [ "timers.target" ];
       timerConfig = {

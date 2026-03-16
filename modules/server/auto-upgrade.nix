@@ -26,7 +26,7 @@ in
       allowReboot = false;
     };
 
-    systemd.services."nixos-upgrade-git-pull" = {
+    systemd.services."custom-nixos-upgrade-git-pull" = {
       description = "Pull latest NixOS configuration from git";
       before = [ "nixos-upgrade.service" ];
       wantedBy = [ "nixos-upgrade.service" ];

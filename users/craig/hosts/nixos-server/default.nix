@@ -85,6 +85,7 @@
     openssl
     lazygit
     btop
+    systemctl-tui
   ];
 
   # Modules

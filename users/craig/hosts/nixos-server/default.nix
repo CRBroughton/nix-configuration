@@ -99,5 +99,6 @@
   modules.server.containerAutoUpdate.enable = true;
   modules.server.arion.enable = true;
   modules.server.services.freshrss.enable = true;
+  modules.server.services.harmonia.enable = true;
 
 }

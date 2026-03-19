@@ -70,7 +70,8 @@ nix-configuration/
 │       ├── container-auto-update.nix  # Daily podman-compose updates
 │       ├── arion.nix              # Docker + Arion base config
 │       └── services/              # Arion service definitions
-│           └── freshrss.nix       # FreshRSS + Tailscale sidecar
+│           ├── freshrss.nix       # FreshRSS + Tailscale sidecar
+│           └── harmonia.nix       # Nix binary cache server
 ├── services/                      # Podman compose services (for server)
 │   ├── adguard/                   # DNS ad blocker
 │   ├── calibre/                   # Ebook manager
@@ -143,6 +144,7 @@ nix-configuration/
 | Containers | Rootless Podman with compose |
 | Services | AdGuard, Calibre, FreshRSS, Mealie, Mumble, IRC (Ergo), XMPP (Prosody), Open WebUI + Ollama, SearXNG, Linkding, Glance dashboard |
 | Networking | Tailscale (all services exposed via Tailscale Funnel) |
+| Binary Cache | Harmonia (serves local Nix store to all machines via Tailscale) |
 | Backups | Restic to Backblaze B2 (daily at 02:00) |
 | Auto-update | Git pull + rebuild (daily at 04:00), container updates (daily at 05:00) |
 
@@ -448,6 +450,41 @@ podman ps               # List running containers
 sudo systemctl status restic-backups-b2
 sudo journalctl -u restic-backups-b2 -f  # View logs
 ```
+
+### Setting Up the Binary Cache (First Time)
+
+The server runs [Harmonia](https://github.com/nix-community/harmonia) as a Nix binary cache, served to all machines over Tailscale. This means custom packages (chaotic kernel, vscode extensions overlay, etc.) are built once on the server and shared — other machines download instead of rebuilding.
+
+**Step 1 — Generate the signing key on nixos-server (one-time, manual):**
+
+```bash
+sudo mkdir -p /etc/harmonia
+sudo nix-store --generate-binary-cache-key nixos-server \
+  /etc/harmonia/signing-key.secret \
+  /etc/harmonia/signing-key.pub
+cat /etc/harmonia/signing-key.pub   # copy this
+tailscale ip -4                     # copy the server's Tailscale IP
+```
+
+**Step 2 — Fill in the values in `modules/nix.nix`:**
+
+Replace `TAILSCALE_IP` and `HARMONIA_PUBLIC_KEY` with the values from Step 1.
+
+**Step 3 — Deploy the server first, then other machines:**
+
+```bash
+# On the server
+just switch
+
+# Verify harmonia is running
+systemctl status harmonia
+curl http://localhost:5000/nix-cache-info
+
+# Then rebuild other machines (they will use the cache)
+nixos-rebuild switch --flake .#laptop
+```
+
+The cache starts empty and fills naturally as machines build packages. The first rebuild is no different to normal — subsequent rebuilds skip anything the server already has.
 
 ### Building the Pi SD Card Image
 

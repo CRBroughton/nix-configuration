@@ -12,6 +12,17 @@ _:
       "root"
       "@wheel"
     ];
+
+    # Binary cache - nixos-server via Tailscale (checked before upstream)
+    substituters = [
+      "http://100.86.95.111:5000"
+      "https://cache.nixos.org"
+    ];
+    trusted-public-keys = [
+      "nixos-server:HwKsO2QULgIbnWor1Q/tsQUSaLZGvDsnyu5MeyFUv4s="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    ];
+    connect-timeout = 5;
   };
 
   # Garbage collection

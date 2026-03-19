@@ -116,6 +116,11 @@ vm-mum:
     nix build .#nixosConfigurations.mum-pc.config.system.build.vm
     ./result/bin/run-mum-pc-vm
 
+# Build VM for mums-laptop config
+vm-mums-laptop:
+    nix build .#nixosConfigurations.mums-laptop.config.system.build.vm
+    ./result/bin/run-mums-laptop-vm
+
 #═══════════════════════════════════════════════════════════════════════════════
 # Installation (run from NixOS installer)
 #═══════════════════════════════════════════════════════════════════════════════

@@ -111,6 +111,11 @@ vm-brighton:
     nix build .#nixosConfigurations.brighton-pc.config.system.build.vm
     ./result/bin/run-brighton-pc-vm
 
+# Build VM for mum-pc config
+vm-mum:
+    nix build .#nixosConfigurations.mum-pc.config.system.build.vm
+    ./result/bin/run-mum-pc-vm
+
 #═══════════════════════════════════════════════════════════════════════════════
 # Installation (run from NixOS installer)
 #═══════════════════════════════════════════════════════════════════════════════

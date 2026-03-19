@@ -106,6 +106,11 @@ vm-gaming:
     nix build .#nixosConfigurations.gaming-pc.config.system.build.vm
     ./result/bin/run-gaming-pc-vm
 
+# Build VM for brighton-pc config
+vm-brighton:
+    nix build .#nixosConfigurations.brighton-pc.config.system.build.vm
+    ./result/bin/run-brighton-pc-vm
+
 #═══════════════════════════════════════════════════════════════════════════════
 # Installation (run from NixOS installer)
 #═══════════════════════════════════════════════════════════════════════════════

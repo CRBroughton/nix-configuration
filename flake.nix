@@ -82,6 +82,13 @@
           extraModules = [ modules ];
         };
 
+        brighton-pc = myLib.mkHost {
+          hostname = "brighton-pc";
+          user = "craig";
+          inherit stateVersion;
+          extraModules = [ modules ];
+        };
+
         nixos-server = myLib.mkHost {
           hostname = "nixos-server";
           user = "craig";

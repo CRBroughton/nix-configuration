@@ -31,11 +31,12 @@ services:
       TZ: Europe/London
       HASHED_PASSWORD: ${HASHED_PASSWORD}
       NIX_REMOTE: daemon
-      PATH: /nix/var/nix/profiles/default/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      NIX_CONFIG: "experimental-features = nix-command flakes"
+      PATH: /run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     volumes:
       - code-server-data:/home/coder:Z
       - /nix:/nix
-      - /run/current-system/sw/bin/nix:/usr/local/bin/nix:ro
+      - /run/current-system/sw:/run/current-system/sw:ro
 
 volumes:
   code-server-data:

@@ -1,0 +1,37 @@
+# Code Server - VS Code in the browser
+# Run with: podman compose up -d
+
+services:
+  tailscale-code-server:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-code-server
+    hostname: code
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  code-server:
+    image: ghcr.io/coder/code-server:latest
+    container_name: code-server
+    restart: unless-stopped
+    network_mode: service:tailscale-code-server
+    depends_on:
+      - tailscale-code-server
+    environment:
+      TZ: Europe/London
+      HASHED_PASSWORD: ${HASHED_PASSWORD}
+    volumes:
+      - code-server-data:/home/coder:Z
+
+volumes:
+  code-server-data:

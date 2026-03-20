@@ -74,6 +74,8 @@ pages:
                 hide: true
               tailscale-romm:
                 hide: true
+              tailscale-code-server:
+                hide: true
               # HTTP services (Tailscale Funnel)
               thelounge:
                 name: The lounge
@@ -122,6 +124,10 @@ pages:
                 name: RomM
                 description: ROM manager (web client)
                 url: https://romm.tail538465.ts.net
+              code-server:
+                name: Code Server
+                description: VS Code in the browser
+                url: https://code.tail538465.ts.net
               # Non-HTTP services (MagicDNS only)
               adguard:
                 name: Adguard

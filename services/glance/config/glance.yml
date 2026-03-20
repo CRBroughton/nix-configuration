@@ -28,6 +28,8 @@ pages:
               # Tailscale sidecars (hidden)
               glance:
                 hide: true
+              romm-db:
+                hide: true
               tailscale-glance:
                 hide: true
               restic-exporter:

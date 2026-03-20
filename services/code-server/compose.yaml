@@ -32,6 +32,7 @@ services:
       HASHED_PASSWORD: ${HASHED_PASSWORD}
     volumes:
       - code-server-data:/home/coder:Z
+      - ~/.ssh:/home/coder/.ssh:ro,Z
 
 volumes:
   code-server-data:

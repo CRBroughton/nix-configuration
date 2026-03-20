@@ -41,6 +41,7 @@
   modules.yubikey.enable = true;
   modules.development.enable = true;
   modules.gaming.enable = true;
+  modules.gamingEmulation.enable = true;
   modules.autoUpgrade.enable = true;
   modules.shell.enable = true;
   modules.git.enable = true;

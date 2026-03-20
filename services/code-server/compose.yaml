@@ -30,13 +30,11 @@ services:
     environment:
       TZ: Europe/London
       HASHED_PASSWORD: ${HASHED_PASSWORD}
-      NIX_REMOTE: daemon
-      NIX_CONFIG: "experimental-features = nix-command flakes"
-      PATH: /nix-sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     volumes:
       - code-server-data:/home/coder:Z
       - /nix:/nix
       - /run/current-system/sw:/nix-sw:ro
+      - ./nix-path.sh:/etc/profile.d/nix-path.sh:ro,Z
 
 volumes:
   code-server-data:

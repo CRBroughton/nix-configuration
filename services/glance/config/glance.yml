@@ -70,6 +70,8 @@ pages:
                 hide: true
               tailscale-linkding:
                 hide: true
+              tailscale-romm:
+                hide: true
               # HTTP services (Tailscale Funnel)
               thelounge:
                 name: The lounge
@@ -114,6 +116,10 @@ pages:
                 name: Linkding
                 description: Bookmark manager (web client)
                 url: https://linkding.tail538465.ts.net
+              romm:
+                name: RomM
+                description: ROM manager (web client)
+                url: https://romm.tail538465.ts.net
               # Non-HTTP services (MagicDNS only)
               adguard:
                 name: Adguard

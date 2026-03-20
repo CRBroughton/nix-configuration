@@ -142,6 +142,19 @@ For now, create a placeholder:
 
 ---
 
+## Add a VM target to `justfile`
+
+Add a new VM recipe alongside the existing `vm-*` targets (around line 96+):
+
+```just
+# Build VM for <hostname> config
+vm-<hostname>:
+    nix build .#nixosConfigurations.<hostname>.config.system.build.vm
+    ./result/bin/run-<hostname>-vm
+```
+
+---
+
 ## Register the host in `flake.nix`
 
 Add to the `nixosConfigurations` attrset:

@@ -10,7 +10,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.harmonia = {
+    services.harmonia.cache = {
       enable = true;
       signKeyPaths = [ "/etc/harmonia/signing-key.secret" ];
       settings.bind = "[::]:5000";

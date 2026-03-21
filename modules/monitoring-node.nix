@@ -44,33 +44,33 @@ in
       serviceConfig = {
         Type = "oneshot";
         ExecStart = pkgs.writeShellScript "nixos-upgrade-report" ''
-          OUTFILE="${textfileDir}/nixos_upgrade.prom"
+                    OUTFILE="${textfileDir}/nixos_upgrade.prom"
 
-          RESULT=$(${pkgs.systemd}/bin/systemctl show nixos-upgrade.service --property=Result --value)
-          SUCCESS=0
-          [ "$RESULT" = "success" ] && SUCCESS=1
+                    RESULT=$(${pkgs.systemd}/bin/systemctl show nixos-upgrade.service --property=Result --value)
+                    SUCCESS=0
+                    [ "$RESULT" = "success" ] && SUCCESS=1
 
-          GEN=$(basename "$(readlink /nix/var/nix/profiles/system)" | grep -o '[0-9]*' | head -1)
-          TS=$(date +%s)
+                    GEN=$(basename "$(readlink /nix/var/nix/profiles/system)" | grep -o '[0-9]*' | head -1)
+                    TS=$(date +%s)
 
-          START=$(${pkgs.systemd}/bin/systemctl show nixos-upgrade.service --property=ExecMainStartTimestampMonotonic --value)
-          EXIT_TS=$(${pkgs.systemd}/bin/systemctl show nixos-upgrade.service --property=ExecMainExitTimestampMonotonic --value)
-          DURATION_SEC=$(( (EXIT_TS - START) / 1000000 ))
+                    START=$(${pkgs.systemd}/bin/systemctl show nixos-upgrade.service --property=ExecMainStartTimestampMonotonic --value)
+                    EXIT_TS=$(${pkgs.systemd}/bin/systemctl show nixos-upgrade.service --property=ExecMainExitTimestampMonotonic --value)
+                    DURATION_SEC=$(( (EXIT_TS - START) / 1000000 ))
 
-          cat > "$OUTFILE" <<EOF
-# HELP nixos_upgrade_success 1 if last upgrade succeeded, 0 if failed
-# TYPE nixos_upgrade_success gauge
-nixos_upgrade_success{host="${hostname}"} $SUCCESS
-# HELP nixos_upgrade_generation Current NixOS generation number
-# TYPE nixos_upgrade_generation gauge
-nixos_upgrade_generation{host="${hostname}"} $GEN
-# HELP nixos_upgrade_timestamp_seconds Unix timestamp of last upgrade attempt
-# TYPE nixos_upgrade_timestamp_seconds gauge
-nixos_upgrade_timestamp_seconds{host="${hostname}"} $TS
-# HELP nixos_upgrade_duration_seconds Duration of last upgrade in seconds
-# TYPE nixos_upgrade_duration_seconds gauge
-nixos_upgrade_duration_seconds{host="${hostname}"} $DURATION_SEC
-EOF
+                    cat > "$OUTFILE" <<EOF
+          # HELP nixos_upgrade_success 1 if last upgrade succeeded, 0 if failed
+          # TYPE nixos_upgrade_success gauge
+          nixos_upgrade_success{host="${hostname}"} $SUCCESS
+          # HELP nixos_upgrade_generation Current NixOS generation number
+          # TYPE nixos_upgrade_generation gauge
+          nixos_upgrade_generation{host="${hostname}"} $GEN
+          # HELP nixos_upgrade_timestamp_seconds Unix timestamp of last upgrade attempt
+          # TYPE nixos_upgrade_timestamp_seconds gauge
+          nixos_upgrade_timestamp_seconds{host="${hostname}"} $TS
+          # HELP nixos_upgrade_duration_seconds Duration of last upgrade in seconds
+          # TYPE nixos_upgrade_duration_seconds gauge
+          nixos_upgrade_duration_seconds{host="${hostname}"} $DURATION_SEC
+          EOF
         '';
       };
     };

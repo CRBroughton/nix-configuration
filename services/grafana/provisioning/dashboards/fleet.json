@@ -74,7 +74,10 @@
       "title": "Fleet Upgrade Status",
       "transformations": [
         { "id": "merge", "options": {} },
-        { "id": "organize", "options": { "renameByName": { "instance": "Machine", "Value #A": "Status", "Value #B": "Generation", "Value #C": "Last Upgrade", "Value #D": "Duration (s)" } } }
+        { "id": "organize", "options": {
+          "excludeByName": { "Time": true, "instance 1": true, "instance 2": true, "instance 3": true },
+          "renameByName": { "instance": "Machine", "Value #A": "Status", "Value #B": "Generation", "Value #C": "Last Upgrade", "Value #D": "Duration (s)" }
+        }}
       ],
       "type": "table",
       "targets": [

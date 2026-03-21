@@ -37,9 +37,7 @@
       "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "mappings": [
-            { "options": { "0": { "color": "red", "text": "FAILED" }, "1": { "color": "green", "text": "OK" } }, "type": "value" }
-          ],
+          "mappings": [],
           "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] }
         },
         "overrides": []
@@ -61,11 +59,35 @@
     {
       "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
+        "defaults": {
+          "unit": "h",
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 30 }, { "color": "red", "value": 48 }] }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
+      "id": 9,
+      "options": { "colorMode": "background", "graphMode": "none", "justifyMode": "center", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "auto" },
+      "title": "Longest since upgrade",
+      "description": "Hours since the least recently upgraded machine last ran",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "max((time() - nixos_upgrade_timestamp_seconds) / 3600)",
+          "instant": true,
+          "legendFormat": "hours"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
         "defaults": { "custom": { "align": "left" } },
         "overrides": [
           { "matcher": { "id": "byName", "options": "Status" }, "properties": [{ "id": "mappings", "value": [{ "options": { "0": { "color": "red", "text": "FAILED" }, "1": { "color": "green", "text": "OK" } }, "type": "value" }] }, { "id": "custom.displayMode", "value": "color-background" }] },
           { "matcher": { "id": "byName", "options": "Last Upgrade" }, "properties": [{ "id": "unit", "value": "dateTimeFromNow" }] },
-          { "matcher": { "id": "byName", "options": "Duration" }, "properties": [{ "id": "unit", "value": "s" }] }
+          { "matcher": { "id": "byName", "options": "Duration (s)" }, "properties": [{ "id": "unit", "value": "s" }] }
         ]
       },
       "gridPos": { "h": 8, "w": 24, "x": 0, "y": 4 },
@@ -90,7 +112,7 @@
     {
       "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
-        "defaults": { "custom": { "lineWidth": 2, "spanNulls": true }, "min": 0, "max": 1, "mappings": [], "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] } },
+        "defaults": { "custom": { "lineWidth": 2, "spanNulls": true }, "min": 0, "max": 1, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] } },
         "overrides": []
       },
       "gridPos": { "h": 8, "w": 24, "x": 0, "y": 12 },
@@ -181,6 +203,144 @@
           "legendFormat": "{{instance}}"
         }
       ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": { "custom": { "lineWidth": 2, "spanNulls": true }, "unit": "percentunit", "min": 0, "max": 1,
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.75 }, { "color": "red", "value": 0.9 }] }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 36 },
+      "id": 10,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "title": "Disk Usage (root)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "1 - (node_filesystem_avail_bytes{mountpoint=\"/\",fstype!=\"tmpfs\"} / node_filesystem_size_bytes{mountpoint=\"/\",fstype!=\"tmpfs\"})",
+          "legendFormat": "{{instance}}"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": { "custom": { "lineWidth": 2, "spanNulls": true }, "unit": "s" },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 36 },
+      "id": 11,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "title": "Uptime",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "time() - node_boot_time_seconds",
+          "legendFormat": "{{instance}}"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": { "custom": { "lineWidth": 2, "spanNulls": true }, "unit": "Bps" },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 44 },
+      "id": 12,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "title": "Network Receive",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "rate(node_network_receive_bytes_total{device!~\"lo|tailscale.*|podman.*|cni.*\"}[5m])",
+          "legendFormat": "{{instance}} {{device}}"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": { "custom": { "lineWidth": 2, "spanNulls": true }, "unit": "Bps" },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 44 },
+      "id": 13,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "title": "Network Transmit",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "rate(node_network_transmit_bytes_total{device!~\"lo|tailscale.*|podman.*|cni.*\"}[5m])",
+          "legendFormat": "{{instance}} {{device}}"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": { "custom": { "lineWidth": 2, "spanNulls": true }, "unit": "celsius" },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 52 },
+      "id": 14,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "title": "CPU Temperature",
+      "description": "Only shown for machines with hardware sensors available",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "node_hwmon_temp_celsius{chip=~\".*coretemp.*|.*k10temp.*\"}",
+          "legendFormat": "{{instance}} {{sensor}}"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": { "custom": { "align": "left" } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Active" }, "properties": [
+            { "id": "mappings", "value": [{ "options": { "0": { "color": "red", "text": "inactive" }, "1": { "color": "green", "text": "active" } }, "type": "value" }] },
+            { "id": "custom.displayMode", "value": "color-background" }
+          ]}
+        ]
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 52 },
+      "id": 15,
+      "options": { "footer": { "show": false }, "showHeader": true },
+      "title": "Systemd Service States",
+      "transformations": [
+        { "id": "merge", "options": {} },
+        { "id": "organize", "options": {
+          "excludeByName": { "Time": true, "instance 1": true },
+          "renameByName": { "instance": "Machine", "Value #A": "nixos-upgrade", "Value #B": "podman" }
+        }}
+      ],
+      "type": "table",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "node_systemd_unit_state{name=\"nixos-upgrade.service\",state=\"active\"}",
+          "instant": true,
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "node_systemd_unit_state{name=\"podman.service\",state=\"active\"}",
+          "instant": true,
+          "legendFormat": "{{instance}}",
+          "refId": "B"
+        }
+      ]
     }
   ],
   "schemaVersion": 38,
@@ -199,5 +359,5 @@
   "timepicker": {},
   "title": "NixOS Fleet",
   "uid": "nixos-fleet",
-  "version": 1
+  "version": 2
 }

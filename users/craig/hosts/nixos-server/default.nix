@@ -96,6 +96,7 @@
   modules.server.podman.enable = true;
   modules.server.restic.enable = true;
   modules.server.autoUpgrade.enable = true;
+  modules.monitoringNode.enable = true;
   modules.server.containerAutoUpdate.enable = true;
   modules.server.arion.enable = true;
   modules.server.services.freshrss.enable = true;

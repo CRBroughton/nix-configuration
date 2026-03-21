@@ -1,0 +1,39 @@
+# Grafana - Fleet monitoring dashboards
+# Run with: podman compose up -d
+
+services:
+  tailscale-grafana:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-grafana
+    hostname: grafana
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    restart: unless-stopped
+    network_mode: service:tailscale-grafana
+    depends_on:
+      - tailscale-grafana
+    environment:
+      - GF_SERVER_ROOT_URL=https://grafana.tail538465.ts.net
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_ADMIN_PASSWORD}
+    volumes:
+      - grafana-data:/var/lib/grafana:Z
+      - ./provisioning:/etc/grafana/provisioning:ro,Z
+
+volumes:
+  grafana-data:

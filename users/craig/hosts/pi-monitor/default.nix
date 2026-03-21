@@ -84,6 +84,18 @@
     };
   };
 
+  # Prometheus node_exporter - report metrics to central Prometheus scraper
+  # tailscale0 is trusted so no extra firewall rule needed
+  services.prometheus.exporters.node = {
+    enable = true;
+    port = 9100;
+    enabledCollectors = [ "textfile" ];
+    extraFlags = [ "--collector.textfile.directory=/var/lib/prometheus-node-exporter/textfile" ];
+  };
+  systemd.tmpfiles.rules = [
+    "d /var/lib/prometheus-node-exporter/textfile 0755 root root -"
+  ];
+
   # Firewall
   networking.firewall = {
     enable = true;

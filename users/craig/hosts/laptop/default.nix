@@ -43,6 +43,7 @@
   modules.gaming.enable = true;
   modules.gamingEmulation.enable = true;
   modules.autoUpgrade.enable = true;
+  modules.monitoringNode.enable = true;
   modules.shell.enable = true;
   modules.git.enable = true;
   modules.terminal.enable = true;

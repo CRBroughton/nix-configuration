@@ -74,6 +74,10 @@ pages:
                 hide: true
               tailscale-romm:
                 hide: true
+              tailscale-prometheus:
+                hide: true
+              tailscale-grafana:
+                hide: true
               tailscale-code-server:
                 hide: true
               # HTTP services (Tailscale Funnel)
@@ -124,6 +128,10 @@ pages:
                 name: RomM
                 description: ROM manager (web client)
                 url: https://romm.tail538465.ts.net
+              grafana:
+                name: Grafana
+                description: Fleet monitoring dashboards
+                url: https://grafana.tail538465.ts.net
               code-server:
                 name: Code Server
                 description: VS Code in the browser
@@ -235,6 +243,28 @@ pages:
 
 
 
+
+  - name: Fleet
+    columns:
+      - size: full
+        widgets:
+          - type: custom-api
+            title: NixOS Fleet Upgrades
+            cache: 5m
+            url: http://prometheus.tail538465.ts.net:9090/api/v1/query?query=nixos_upgrade_success
+            template: |
+              {{ range .JSON.Array "data.result" }}
+              {{ .String "metric.instance" }}: {{ if eq (.String "value.1") "1" }}OK (gen {{ .String "metric.host" }}){{ else }}FAILED{{ end }}
+              {{ end }}
+
+          - type: custom-api
+            title: Last Upgrade Times
+            cache: 5m
+            url: http://prometheus.tail538465.ts.net:9090/api/v1/query?query=nixos_upgrade_timestamp_seconds
+            template: |
+              {{ range .JSON.Array "data.result" }}
+              {{ .String "metric.instance" }}: {{ .String "value.1" | parseTime "unix" | formatTime "02 Jan 2006 15:04" }}
+              {{ end }}
 
   # Add more pages here:
   # - name: Your page name

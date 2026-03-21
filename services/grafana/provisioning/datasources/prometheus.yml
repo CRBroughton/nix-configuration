@@ -1,0 +1,9 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    # Grafana routes through its tailscale sidecar, so MagicDNS resolves correctly
+    url: http://prometheus.tail538465.ts.net:9090
+    isDefault: true
+    access: proxy

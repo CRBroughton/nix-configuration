@@ -1,0 +1,37 @@
+# Prometheus - Metrics collection for fleet monitoring
+# Run with: podman compose up -d
+
+services:
+  tailscale-prometheus:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-prometheus
+    hostname: prometheus
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    network_mode: service:tailscale-prometheus
+    depends_on:
+      - tailscale-prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro,Z
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=90d'
+
+volumes:
+  prometheus-data:

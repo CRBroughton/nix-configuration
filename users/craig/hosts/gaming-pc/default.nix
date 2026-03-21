@@ -51,4 +51,5 @@
   modules.editors.zed.enable = true;
   modules.browsers.zen.enable = true;
   modules.autoUpgrade.enable = true;
+  modules.monitoringNode.enable = true;
 }

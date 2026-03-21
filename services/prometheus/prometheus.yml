@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 60s
+  evaluation_interval: 60s
+
+scrape_configs:
+  - job_name: 'nixos-fleet'
+    static_configs:
+      - targets:
+          - 'gaming-pc.tail538465.ts.net:9100'
+          - 'brighton-pc.tail538465.ts.net:9100'
+          - 'laptop.tail538465.ts.net:9100'
+          - 'nixos-server.tail538465.ts.net:9100'
+          - 'pi-monitor.tail538465.ts.net:9100'
+          # Not yet online - will show as DOWN until configured
+          - 'mum-pc.tail538465.ts.net:9100'
+          - 'mums-laptop.tail538465.ts.net:9100'
+    # Shorten the instance label to just the hostname
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '([^.]+)\..*'
+        target_label: instance
+        replacement: '$1'

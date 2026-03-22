@@ -136,6 +136,10 @@ pages:
                 name: Code Server
                 description: VS Code in the browser
                 url: https://code.tail538465.ts.net
+              prometheus:
+                name: Prometheus
+                description: Metrics storage and query engine
+                url: https://prometheus.tail538465.ts.net
               # Non-HTTP services (MagicDNS only)
               adguard:
                 name: Adguard

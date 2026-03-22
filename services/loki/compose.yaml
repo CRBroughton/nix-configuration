@@ -1,0 +1,36 @@
+# Loki - Log aggregation for fleet monitoring
+# Run with: podman compose up -d
+
+services:
+  tailscale-loki:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-loki
+    hostname: loki
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: unless-stopped
+    network_mode: service:tailscale-loki
+    depends_on:
+      - tailscale-loki
+    volumes:
+      - ./loki-config.yaml:/etc/loki/config.yaml:ro,Z
+      - loki-data:/loki
+    command: -config.file=/etc/loki/config.yaml
+
+volumes:
+  loki-data:

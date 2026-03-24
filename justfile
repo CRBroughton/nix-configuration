@@ -121,6 +121,11 @@ vm-mums-laptop:
     nix build .#nixosConfigurations.mums-laptop.config.system.build.vm
     ./result/bin/run-mums-laptop-vm
 
+# Build VM for moons-pc config
+vm-moons-pc:
+    nix build .#nixosConfigurations.moons-pc.config.system.build.vm
+    ./result/bin/run-moons-pc-vm
+
 #═══════════════════════════════════════════════════════════════════════════════
 # Installation (run from NixOS installer)
 #═══════════════════════════════════════════════════════════════════════════════

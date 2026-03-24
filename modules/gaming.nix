@@ -31,6 +31,9 @@ in
 
     hardware.graphics.enable = true;
     hardware.graphics.enable32Bit = true;
+    hardware.graphics.extraPackages = with pkgs; [
+      lsfg-vk
+    ];
 
     # ============================================
     # Home-manager (user level)
@@ -39,6 +42,9 @@ in
     home-manager.users.${user} = {
       home.packages = with pkgs; [
         lutris
+        lsfg-vk
+        lsfg-vk-ui
+        mangohud
       ];
     };
   };

@@ -17,7 +17,9 @@ in
     enable = lib.mkEnableOption "Prometheus node exporter and NixOS upgrade reporting";
 
     promtail = {
-      enable = lib.mkEnableOption "Promtail log shipping to Loki" // { default = true; };
+      enable = lib.mkEnableOption "Promtail log shipping to Loki" // {
+        default = true;
+      };
       lokiUrl = lib.mkOption {
         type = lib.types.str;
         default = "https://loki.tail538465.ts.net/loki/api/v1/push";

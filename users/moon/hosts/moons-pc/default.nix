@@ -11,6 +11,7 @@
 
   environment.systemPackages = with pkgs; [
     google-chrome
+    ckb-next
   ];
 
   modules.gnome.enable = true;

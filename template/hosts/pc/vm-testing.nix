@@ -2,7 +2,7 @@
 _:
 
 {
-  # Password for VM login (user: username, password: test)
+  # Password for VM login (user: demo, password: test)
   users.users.demo.initialPassword = "test";
 
   virtualisation.vmVariant = {

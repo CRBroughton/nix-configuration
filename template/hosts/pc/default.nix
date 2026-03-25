@@ -14,17 +14,6 @@
   # Network
   networking.networkmanager.enable = true;
 
-  # User
-  users.users.demo = {
-    isNormalUser = true;
-    extraGroups = [
-      "wheel"
-      "networkmanager"
-    ];
-    shell = pkgs.bash;
-  };
-
-  # Sudo without password (optional, remove if you prefer password prompts)
   security.sudo.wheelNeedsPassword = true;
 
   # Basic packages
@@ -38,6 +27,4 @@
   # Enable modules (defined in modules/)
   # desktops.gnome.enable = true;
   # shell.enable = true;
-
-  system.stateVersion = "25.11";
 }

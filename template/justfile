@@ -17,10 +17,9 @@ update:
 # Update and apply in one step
 update-all: update switch
 
-# Build and run VM (replace 'hostname' with your hostname)
-vm:
-    nix build .#nixosConfigurations.hostname.config.system.build.vm
-    ./result/bin/run-pc-vm
+# Build and run VM for a given host (default: pc)
+vm host="pc":
+    nix run .#nixosConfigurations.{{host}}.config.system.build.vm
 
 # Check for errors without building
 check:

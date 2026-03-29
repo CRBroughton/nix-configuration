@@ -49,6 +49,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Claude Desktop (Debian-based wrapper for NixOS)
+    claude-desktop = {
+      url = "github:aaddrick/claude-desktop-debian";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Dev tooling (nixfmt, statix, deadnix, etc.)
     nix-format = {
       url = "github:crbroughton/nix-flakes?dir=nix-format";

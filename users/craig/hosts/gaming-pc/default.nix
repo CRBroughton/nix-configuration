@@ -52,4 +52,5 @@
   modules.browsers.zen.enable = true;
   modules.autoUpgrade.enable = true;
   modules.monitoringNode.enable = true;
+  modules.claude-desktop.enable = true;
 }

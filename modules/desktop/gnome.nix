@@ -46,6 +46,7 @@ in
           gnome-logs # Logs
           gnome-calendar # Calendar
           gnome-software # Software
+          gnome-calculator
         ]
       )
       ++ lib.optionals cfg.apps.extraApplications (
@@ -55,7 +56,6 @@ in
           decibels # Audio player
           epiphany # Web browser
           gnome-text-editor
-          gnome-calculator
           gnome-characters
           gnome-clocks
           gnome-console

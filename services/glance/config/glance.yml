@@ -84,6 +84,8 @@ pages:
                 hide: true
               firefly-db:
                 hide: true
+              firefly-cron:
+                hide: true
               # HTTP services (Tailscale Funnel)
               thelounge:
                 name: The lounge

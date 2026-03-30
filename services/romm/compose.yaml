@@ -45,9 +45,9 @@ services:
     volumes:
       - romm_resources:/romm/resources
       - romm_redis_data:/redis-data
-      - /path/to/library:/romm/library   # Your game library
-      - /path/to/assets:/romm/assets     # Saves, states, etc.
-      - /path/to/config:/romm/config     # config.yml location
+      - ./library:/romm/library   # Your game library
+      - ./assets:/romm/assets     # Saves, states, etc.
+      - ./config:/romm/config     # config.yml location
 
   romm-db:
     image: mariadb:latest

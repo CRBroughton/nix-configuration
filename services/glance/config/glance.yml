@@ -28,11 +28,15 @@ pages:
               # Tailscale sidecars (hidden)
               glance:
                 hide: true
+              loki:
+                hide: true
               romm-db:
                 hide: true
               tailscale-glance:
                 hide: true
               restic-exporter:
+                hide: true
+              tailscale-loki:
                 hide: true
               tailscale-thelounge:
                 hide: true

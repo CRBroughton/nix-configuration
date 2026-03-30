@@ -1,0 +1,75 @@
+# Firefly III - Personal finance manager
+# Run with: podman compose up -d
+#
+# Generate APP_KEY with:
+#   head /dev/urandom | LC_ALL=C tr -dc 'A-Za-z0-9' | head -c 32 && echo
+
+services:
+  tailscale-firefly:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-firefly
+    hostname: firefly
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    networks:
+      - firefly
+
+  firefly:
+    image: fireflyiii/core:latest
+    container_name: firefly
+    restart: unless-stopped
+    network_mode: service:tailscale-firefly
+    depends_on:
+      firefly-db:
+        condition: service_healthy
+      tailscale-firefly:
+        condition: service_started
+    environment:
+      TZ: Europe/London
+      APP_KEY: ${FIREFLY_APP_KEY}
+      DB_CONNECTION: pgsql
+      DB_HOST: firefly-db
+      DB_PORT: 5432
+      DB_DATABASE: firefly
+      DB_USERNAME: firefly
+      DB_PASSWORD: ${FIREFLY_DB_PASSWORD}
+      APP_URL: https://firefly.tail538465.ts.net
+      TRUSTED_PROXIES: "**"
+    volumes:
+      - firefly-upload:/var/www/html/storage/upload
+
+  firefly-db:
+    image: postgres:15
+    container_name: firefly-db
+    restart: unless-stopped
+    networks:
+      - firefly
+    volumes:
+      - firefly-db-data:/var/lib/postgresql/data:Z
+    environment:
+      POSTGRES_DB: firefly
+      POSTGRES_USER: firefly
+      POSTGRES_PASSWORD: ${FIREFLY_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U firefly"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  firefly:
+
+volumes:
+  firefly-upload:
+  firefly-db-data:

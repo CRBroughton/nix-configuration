@@ -80,6 +80,10 @@ pages:
                 hide: true
               tailscale-code-server:
                 hide: true
+              tailscale-firefly:
+                hide: true
+              firefly-db:
+                hide: true
               # HTTP services (Tailscale Funnel)
               thelounge:
                 name: The lounge
@@ -136,6 +140,10 @@ pages:
                 name: Code Server
                 description: VS Code in the browser
                 url: https://code.tail538465.ts.net
+              firefly:
+                name: Firefly III
+                description: Personal finance manager
+                url: https://firefly.tail538465.ts.net
               prometheus:
                 name: Prometheus
                 description: Metrics storage and query engine

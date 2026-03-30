@@ -3,3 +3,8 @@ result
 *.qcow2
 services/**/.env
 services/**/tailscale/
+services/calibre/calibre-library
+services/calibre/config
+services/copyparty/data
+services/freshrss/volume
+services/romm

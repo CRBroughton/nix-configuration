@@ -26,7 +26,8 @@ in
         };
         shellInit = ''
           set -gx CGO_ENABLED 1
-          set -gx PATH "$HOME/.local/share/pnpm" $PATH
+          set -gx PNPM_HOME "$HOME/.local/share/pnpm"
+          set -gx PATH "$PNPM_HOME" $PATH
         '';
         functions = {
           # Use local justfile if exists, otherwise fallback to nix-configuration

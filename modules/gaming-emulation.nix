@@ -34,6 +34,7 @@ in
         snes9x
         sameboy
         pcsx2
+        mgba
         duckstation
       ];
     };

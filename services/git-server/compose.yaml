@@ -7,8 +7,8 @@
 #   podman compose up -d
 #
 # Add SSH keys: drop public keys into ./keys/, then podman compose restart
-# Create repo:  podman exec -it git-server sh -c "cd repos && mkdir <name>.git && cd <name>.git && git init --bare"
-# Clone:        git clone ssh://git@git-server.tail538465.ts.net:2222/repos/<name>.git
+# Create repo:  podman exec -it git-server sh -c "cd /git-server/repos && mkdir <name>.git && cd <name>.git && git init --bare"
+# Clone via SSH: git clone ssh://git@git-server.tail538465.ts.net/git-server/repos/<name>.git
 
 services:
   tailscale-git-server:
@@ -41,5 +41,16 @@ services:
     environment:
       TZ: Europe/London
     volumes:
-      - ./keys:/home/git/.ssh/authorized_keys.d:Z
-      - ./repos:/repos:Z
+      - ./keys:/git-server/keys:Z
+      - ./repos:/git-server/repos:Z
+
+  cgit:
+    image: docker.io/emarcs/nginx-cgit:latest
+    container_name: cgit
+    restart: unless-stopped
+    network_mode: service:tailscale-git-server
+    depends_on:
+      - tailscale-git-server
+      - git-server
+    volumes:
+      - ./repos:/git-server/repos:ro,Z

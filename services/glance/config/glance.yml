@@ -90,6 +90,8 @@ pages:
                 hide: true
               tailscale-git-server:
                 hide: true
+              cgit:
+                hide: true
               firefly-db:
                 hide: true
               firefly-cron:

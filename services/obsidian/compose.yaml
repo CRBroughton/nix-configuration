@@ -1,0 +1,41 @@
+# Obsidian - Note-taking app
+# Run with: podman compose up -d
+
+services:
+  tailscale-obsidian:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-obsidian
+    hostname: obsidian
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  obsidian:
+    image: lscr.io/linuxserver/obsidian:latest
+    container_name: obsidian
+    restart: unless-stopped
+    network_mode: service:tailscale-obsidian
+    depends_on:
+      - tailscale-obsidian
+    shm_size: 1gb
+    environment:
+      TZ: Europe/London
+      PUID: 1000
+      PGID: 1000
+      CUSTOM_USER: ${OBSIDIAN_USER:-obsidian}
+      PASSWORD: ${OBSIDIAN_PASSWORD}
+    volumes:
+      - obsidian-config:/config
+
+volumes:
+  obsidian-config:

@@ -86,6 +86,8 @@ pages:
                 hide: true
               tailscale-firefly:
                 hide: true
+              tailscale-obsidian:
+                hide: true
               firefly-db:
                 hide: true
               firefly-cron:
@@ -150,6 +152,10 @@ pages:
                 name: Firefly III
                 description: Personal finance manager
                 url: https://firefly.tail538465.ts.net
+              obsidian:
+                name: Obsidian
+                description: Note-taking app
+                url: https://obsidian.tail538465.ts.net
               prometheus:
                 name: Prometheus
                 description: Metrics storage and query engine

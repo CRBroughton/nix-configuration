@@ -10,6 +10,7 @@ Self-hosted git server with cgit web UI, accessed over Tailscale.
 ```bash
 mkdir -p keys repos
 echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrDtLXrygEh0uessk5PifLw+t6SDKJz08w6u9iQxMpo crbroughton@posteo.uk" > keys/craig.pub
+podman compose build
 podman compose up -d
 ```
 

@@ -20,7 +20,7 @@ services:
       - /dev/net/tun:/dev/net/tun
 
   git-server:
-    image: crbroughton/git-server:latest
+    build: .
     restart: unless-stopped
     container_name: git-server
     network_mode: service:tailscale-git-server

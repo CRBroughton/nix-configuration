@@ -88,6 +88,8 @@ pages:
                 hide: true
               tailscale-obsidian:
                 hide: true
+              tailscale-git-server:
+                hide: true
               firefly-db:
                 hide: true
               firefly-cron:
@@ -156,6 +158,10 @@ pages:
                 name: Obsidian
                 description: Note-taking app
                 url: https://obsidian.tail538465.ts.net
+              git-server:
+                name: Git Server
+                description: Self-hosted git with cgit
+                url: https://git-server.tail538465.ts.net
               prometheus:
                 name: Prometheus
                 description: Metrics storage and query engine

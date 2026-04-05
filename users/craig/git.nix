@@ -3,6 +3,7 @@ _:
 
 {
   programs.git = {
+    ignores = [ ".local/" ];
     signing = {
       key = "~/.ssh/id_ed25519";
       signByDefault = true;

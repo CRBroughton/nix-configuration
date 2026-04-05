@@ -3,7 +3,7 @@
 Self-hosted git server using [Soft Serve](https://github.com/charmbracelet/soft-serve), accessed over Tailscale.
 
 - **Web UI:** https://git-server.tail538465.ts.net
-- **SSH:** `ssh://git@git-server.tail538465.ts.net` (port 23231)
+- **SSH:** `ssh://git-server.tail538465.ts.net` (port 22)
 
 ## First-time setup
 
@@ -18,7 +18,7 @@ The admin key in `.env` grants immediate admin access over SSH.
 ## Managing repos via SSH TUI
 
 ```bash
-ssh git-server.tail538465.ts.net -p 23231
+ssh git-server.tail538465.ts.net
 ```
 
 ## Cloning / pushing

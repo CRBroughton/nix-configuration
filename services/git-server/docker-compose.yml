@@ -28,5 +28,6 @@ services:
       - tailscale-git-server
     environment:
       SOFT_SERVE_INITIAL_ADMIN_KEYS: "${SOFT_SERVE_ADMIN_KEY}"
+      SOFT_SERVE_SSH_LISTEN_ADDR: ":22"
     volumes:
       - ./data:/soft-serve:Z

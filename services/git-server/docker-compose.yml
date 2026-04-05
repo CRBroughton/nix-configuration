@@ -1,4 +1,4 @@
-version: '3'
+version: "3.1"
 
 services:
   tailscale-git-server:
@@ -19,23 +19,14 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
 
-  git-server:
-    build: .
+  soft-serve:
+    image: charmcli/soft-serve:latest
+    container_name: soft-serve
     restart: unless-stopped
-    container_name: git-server
     network_mode: service:tailscale-git-server
     depends_on:
       - tailscale-git-server
+    environment:
+      SOFT_SERVE_INITIAL_ADMIN_KEYS: "${SOFT_SERVE_ADMIN_KEY}"
     volumes:
-      - ./keys:/git-server/keys:Z
-      - ./repos:/git-server/repos:Z
-
-  cgit-server:
-    image: emarcs/nginx-cgit
-    restart: unless-stopped
-    container_name: cgit-server
-    network_mode: service:tailscale-git-server
-    depends_on:
-      - tailscale-git-server
-    volumes:
-      - ./repos:/srv/git:Z
+      - ./data:/soft-serve:Z

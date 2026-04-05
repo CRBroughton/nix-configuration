@@ -1,41 +1,37 @@
-# Git Server
+# Git Server (Soft Serve)
 
-Self-hosted git server with cgit web UI, accessed over Tailscale.
+Self-hosted git server using [Soft Serve](https://github.com/charmbracelet/soft-serve), accessed over Tailscale.
 
 - **Web UI:** https://git-server.tail538465.ts.net
-- **SSH:** `ssh://git@git-server.tail538465.ts.net`
+- **SSH:** `ssh://git@git-server.tail538465.ts.net` (port 23231)
 
 ## First-time setup
 
+Copy `.env.example` to `.env`, then:
+
 ```bash
-mkdir -p keys repos
-echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrDtLXrygEh0uessk5PifLw+t6SDKJz08w6u9iQxMpo crbroughton@posteo.uk" > keys/craig.pub
-podman compose build
 podman compose up -d
 ```
 
-## Creating a repository
+The admin key in `.env` grants immediate admin access over SSH.
+
+## Managing repos via SSH TUI
 
 ```bash
-podman exec -it git-server sh -c "cd /git-server/repos && mkdir <name>.git && cd <name>.git && git init --bare"
-sudo chown -R craig repos/
+ssh git-server.tail538465.ts.net -p 23231
 ```
 
 ## Cloning / pushing
 
 ```bash
 # Clone
-git clone ssh://git@git-server.tail538465.ts.net/git-server/repos/<name>.git
+git clone ssh://git-server.tail538465.ts.net/repo-name
 
 # Push existing repo
-git remote add origin ssh://git@git-server.tail538465.ts.net/git-server/repos/<name>.git
+git remote add origin ssh://git-server.tail538465.ts.net/repo-name
 git push -u origin main
 ```
 
 ## SSH keys
 
-Keys live in `./keys/`. Each file should contain one public key. Restart after adding:
-
-```bash
-podman compose restart git-server
-```
+The initial admin key is set via `SOFT_SERVE_ADMIN_KEY` in `.env`. Additional keys and users can be managed through the SSH TUI or web UI after first boot.

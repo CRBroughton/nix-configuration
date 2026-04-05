@@ -35,7 +35,5 @@ services:
       CUSTOM_USER: ${OBSIDIAN_USER:-obsidian}
       PASSWORD: ${OBSIDIAN_PASSWORD}
     volumes:
-      - obsidian-config:/config
-
-volumes:
-  obsidian-config:
+      - ./config:/config:Z
+      - ./vault:/config/obsidian:Z

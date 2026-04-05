@@ -1,14 +1,4 @@
-# Git Server - Self-hosted git with cgit web UI
-# Run with: podman compose up -d
-#
-# First-time setup:
-#   git clone https://github.com/CRBroughton/git-server-docker src
-#   podman compose build
-#   podman compose up -d
-#
-# Add SSH keys: drop public keys into ./keys/, then podman compose restart
-# Create repo:  podman exec -it git-server sh -c "cd /git-server/repos && mkdir <name>.git && cd <name>.git && git init --bare"
-# Clone via SSH: git clone ssh://git@git-server.tail538465.ts.net/git-server/repos/<name>.git
+version: '3'
 
 services:
   tailscale-git-server:
@@ -30,27 +20,22 @@ services:
       - /dev/net/tun:/dev/net/tun
 
   git-server:
-    build:
-      context: ./src
-      dockerfile: Dockerfile
-    container_name: git-server
+    image: crbroughton/git-server:latest
     restart: unless-stopped
+    container_name: git-server
     network_mode: service:tailscale-git-server
     depends_on:
       - tailscale-git-server
-    environment:
-      TZ: Europe/London
     volumes:
       - ./keys:/git-server/keys:Z
       - ./repos:/git-server/repos:Z
 
-  cgit:
-    image: docker.io/emarcs/nginx-cgit:latest
-    container_name: cgit
+  cgit-server:
+    image: emarcs/nginx-cgit
     restart: unless-stopped
+    container_name: cgit-server
     network_mode: service:tailscale-git-server
     depends_on:
       - tailscale-git-server
-      - git-server
     volumes:
-      - ./repos:/git-server/repos:ro,Z
+      - ./repos:/srv/git:Z

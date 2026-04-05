@@ -90,7 +90,7 @@ pages:
                 hide: true
               tailscale-git-server:
                 hide: true
-              cgit:
+              cgit-server:
                 hide: true
               firefly-db:
                 hide: true
@@ -160,7 +160,7 @@ pages:
                 name: Obsidian
                 description: Note-taking app
                 url: https://obsidian.tail538465.ts.net
-              git-server:
+              cgit-server:
                 name: Git Server
                 description: Self-hosted git with cgit
                 url: https://git-server.tail538465.ts.net

@@ -1,0 +1,32 @@
+#!/bin/sh
+printf '%s\n' "Welcome to your dockerised git server!"
+printf '%s\n' "You've successfully authenticated!"
+
+printf '\n'
+
+printf '%s\n' 'To create a new repository, cd into the repos'
+printf '%s\n' 'folder and run the below command:'
+
+printf '\n'
+
+printf '%s\n' 'cd repos && mkdir <REPO_NAME>.git && cd <REPO_NAME.git && git init --bare'
+
+printf '\n'
+
+printf '%s\n' "The following repositories are available:"
+for REPO in /git-server/repos/*
+do
+  printf '%s\n' " - $(basename ${REPO%.git})"
+done
+
+printf '\n'
+printf '%s\n' "To clone, use the following URL:"
+printf '%s\n' "ssh://git@<SERVER>:<PORT>/git-server/repos/<REPO_NAME>.git"
+
+printf '\n'
+
+printf '%s\n' 'For more information, read the repositories README.md'
+
+printf '\n'
+
+exit 128

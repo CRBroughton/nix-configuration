@@ -12,7 +12,7 @@ let
 in
 {
   options.modules.git = {
-    enable = lib.mkEnableOption "git with lazygit";
+    enable = lib.mkEnableOption "git, gh & lazygit";
   };
 
   config = lib.mkIf cfg.enable {
@@ -26,6 +26,7 @@ in
 
       home.packages = with pkgs; [
         lazygit
+        gh
       ];
     };
   };

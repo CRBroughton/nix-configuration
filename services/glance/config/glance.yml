@@ -92,7 +92,7 @@ pages:
                 hide: true
               tailscale-stirling-pdf:
                 hide: true
-              soft-serve:
+              tailscale-soft-serve:
                 hide: true
               firefly-db:
                 hide: true

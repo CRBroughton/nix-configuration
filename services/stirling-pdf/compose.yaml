@@ -1,0 +1,44 @@
+# Stirling PDF - PDF manipulation tools
+# Run with: podman compose up -d
+
+services:
+  tailscale-stirling-pdf:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-stirling-pdf
+    hostname: stirling-pdf
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  stirling-pdf:
+    image: stirlingtools/stirling-pdf:latest
+    container_name: stirling-pdf
+    restart: unless-stopped
+    network_mode: service:tailscale-stirling-pdf
+    depends_on:
+      - tailscale-stirling-pdf
+    environment:
+      TZ: Europe/London
+      SECURITY_ENABLELOGIN: "false"
+      LANGS: en_GB
+    volumes:
+      - stirling-pdf-configs:/configs
+      - stirling-pdf-tessdata:/usr/share/tessdata
+      - stirling-pdf-logs:/logs
+      - stirling-pdf-pipeline:/pipeline
+
+volumes:
+  stirling-pdf-configs:
+  stirling-pdf-tessdata:
+  stirling-pdf-logs:
+  stirling-pdf-pipeline:

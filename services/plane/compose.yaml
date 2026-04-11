@@ -1,0 +1,41 @@
+# Plane - Project management
+# Run with: podman compose up -d
+#
+# Prerequisites:
+#   1. Run Plane's setup script first: ./setup.sh (select Install, then Exit)
+#      This generates ./plane-app/docker-compose.yaml and ./plane-app/plane.env
+#   2. Edit plane-app/plane.env:
+#        WEB_URL=https://plane.tail538465.ts.net
+#        CORS_ALLOWED_ORIGINS=https://plane.tail538465.ts.net
+#      Optionally bind the proxy to localhost only to avoid direct host exposure:
+#        LISTEN_HTTP_PORT=80  (leave default; Tailscale handles external access)
+#   3. Start Plane first: cd plane-app && podman compose up -d
+#   4. Then start this sidecar: cd .. && podman compose up -d
+#
+# The Tailscale sidecar joins the plane-app Docker network and proxies to
+# the plane-proxy nginx container.
+
+services:
+  tailscale-plane:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-plane
+    hostname: plane
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    networks:
+      - plane-app_default
+
+networks:
+  plane-app_default:
+    external: true

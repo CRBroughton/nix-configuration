@@ -94,6 +94,22 @@ pages:
                 hide: true
               tailscale-soft-serve:
                 hide: true
+              tailscale-plane:
+                hide: true
+              plane-proxy:
+                hide: true
+              plane-api:
+                hide: true
+              plane-worker:
+                hide: true
+              plane-beat-worker:
+                hide: true
+              plane-live:
+                hide: true
+              plane-db:
+                hide: true
+              plane-redis:
+                hide: true
               firefly-db:
                 hide: true
               firefly-cron:
@@ -174,6 +190,10 @@ pages:
                 name: Stirling PDF
                 description: PDF manipulation tools
                 url: https://stirling-pdf.tail538465.ts.net
+              plane-web:
+                name: Plane
+                description: Project management
+                url: https://plane.tail538465.ts.net
               # Non-HTTP services (MagicDNS only)
               adguard:
                 name: Adguard

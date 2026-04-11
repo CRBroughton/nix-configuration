@@ -1,0 +1,4 @@
+services:
+  proxy:
+    volumes:
+      - ../Caddyfile:/etc/caddy/Caddyfile:ro

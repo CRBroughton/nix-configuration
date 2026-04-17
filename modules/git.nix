@@ -27,6 +27,7 @@ in
       home.packages = with pkgs; [
         lazygit
         gh
+        gource
       ];
     };
   };

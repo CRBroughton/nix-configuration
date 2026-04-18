@@ -16,8 +16,8 @@ in
   options.modules.monitoringNode = {
     enable = lib.mkEnableOption "Prometheus node exporter and NixOS upgrade reporting";
 
-    promtail = {
-      enable = lib.mkEnableOption "Promtail log shipping to Loki" // {
+    alloy = {
+      enable = lib.mkEnableOption "Grafana Alloy log shipping to Loki" // {
         default = true;
       };
       lokiUrl = lib.mkOption {
@@ -89,37 +89,32 @@ in
         };
       }
 
-      # Ship systemd journal logs to Loki via Promtail
-      (lib.mkIf cfg.promtail.enable {
-        services.promtail = {
+      # Ship systemd journal logs to Loki via Grafana Alloy
+      (lib.mkIf cfg.alloy.enable {
+        services.alloy = {
           enable = true;
-          configuration = {
-            server = {
-              http_listen_port = 9080;
-              grpc_listen_port = 0;
-            };
-            clients = [
-              { url = cfg.promtail.lokiUrl; }
-            ];
-            scrape_configs = [
-              {
-                job_name = "systemd-journal";
-                journal = {
-                  max_age = "12h";
-                  labels = {
-                    job = "systemd-journal";
-                    host = hostname;
-                  };
-                };
-                relabel_configs = [
-                  {
-                    source_labels = [ "__journal__systemd_unit" ];
-                    target_label = "unit";
-                  }
-                ];
+          configPath = pkgs.writeText "alloy-config.alloy" ''
+            loki.source.journal "systemd" {
+              max_age    = "12h"
+              labels     = { job = "systemd-journal", host = "${hostname}" }
+              forward_to = [loki.relabel.journal.receiver]
+            }
+
+            loki.relabel "journal" {
+              forward_to = [loki.write.default.receiver]
+
+              rule {
+                source_labels = ["__journal__systemd_unit"]
+                target_label  = "unit"
               }
-            ];
-          };
+            }
+
+            loki.write "default" {
+              endpoint {
+                url = "${cfg.alloy.lokiUrl}"
+              }
+            }
+          '';
         };
       })
     ]

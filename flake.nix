@@ -51,7 +51,7 @@
 
     # Claude Desktop (Debian-based wrapper for NixOS)
     claude-desktop = {
-      url = "github:aaddrick/claude-desktop-debian";
+      url = "github:aaddrick/claude-desktop-debian/a4fa9c8b24b42ebcee56b995bd57a93b69dc8de5";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -70,7 +70,7 @@
       # Auto-imports all .nix files in ./modules as NixOS modules
       modules = import-tree ./modules;
 
-      stateVersion = "25.11";
+      stateVersion = "26.05";
     in
     {
       nixosConfigurations = {

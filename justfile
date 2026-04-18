@@ -146,6 +146,9 @@ install-laptop:
 install-gaming:
     sudo nixos-install --flake .#gaming-pc
 
+install-brighton-pc:
+    sudo nixos-install --flake .#brighton-pc
+
 #═══════════════════════════════════════════════════════════════════════════════
 # VPN
 #═══════════════════════════════════════════════════════════════════════════════

@@ -12,10 +12,10 @@ let
 
   duckstation = pkgs.appimageTools.wrapType2 {
     pname = "duckstation";
-    version = "latest";
+    version = "v0.1-10998";
     src = pkgs.fetchurl {
-      url = "https://github.com/stenzek/duckstation/releases/download/latest/DuckStation-x64.AppImage";
-      hash = "sha256-6LkTXBZYwEloCT+kcgJCB351NpU0W/LXo0NO+5yKw/E=";
+      url = "https://github.com/stenzek/duckstation/releases/download/v0.1-10998/DuckStation-x64.AppImage";
+      hash = "sha256-sgSIa7SY7eGikCFfwu+1IcDC8muWR4jfaXtPwss/f3s=";
     };
   };
 in

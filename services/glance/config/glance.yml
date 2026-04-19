@@ -114,7 +114,7 @@ pages:
                 hide: true
               plane-app_api_1:
                 hide: true
-              plane-app_beat_worker_1:
+              plane-app_beat-worker_1:
                 hide: true
               plane-app_live_1:
                 hide: true
@@ -134,7 +134,7 @@ pages:
                 hide: true
               plane-app_worker_1:
                 hide: true
-              plan-app_migrator_1:
+              plane-app_migrator_1:
                 hide: true
               firefly-db:
                 hide: true

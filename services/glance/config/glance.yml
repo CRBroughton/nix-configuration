@@ -110,6 +110,32 @@ pages:
                 hide: true
               plane-redis:
                 hide: true
+              plane-app_admin_1:
+                hide: true
+              plane-app_api_1:
+                hide: true
+              plane-app_beat_worker_1:
+                hide: true
+              plane-app_live_1:
+                hide: true
+              plane-app_plane-db_1:
+                hide: true
+              plane-app_plane-minio_1:
+                hide: true
+              plane-app_plane-mq_1:
+                hide: true
+              plane-app_plane-redis_1:
+                hide: true
+              plane-app_proxy_1:
+                hide: true
+              plane-app_space_1:
+                hide: true
+              plane-app_web_1:
+                hide: true
+              plane-app_worker_1:
+                hide: true
+              plan-app_migrator_1:
+                hide: true
               firefly-db:
                 hide: true
               firefly-cron:
@@ -119,6 +145,10 @@ pages:
                 name: The lounge
                 description: IRC server (web client)
                 url: https://thelounge.tail538465.ts.net
+              plane:
+                name: Plane
+                description: Jira Board
+                url: https://plane.tail538465.ts.net
               freshrss:
                 name: FreshRSS
                 description: RSS feed (web client)

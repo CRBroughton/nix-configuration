@@ -15,5 +15,6 @@
     direnv
     nvd
     nix-output-monitor
+    nh
   ];
 }

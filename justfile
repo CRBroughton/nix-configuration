@@ -6,21 +6,21 @@ default:
 # System Management
 #═══════════════════════════════════════════════════════════════════════════════
 
-# Switch NixOS configuration
+# Switch NixOS configuration (shows diff + confirmation prompt)
 switch:
-    sudo nixos-rebuild switch --flake .
+    nh os switch .
 
 # Switch with trace output for debugging
 switch-verbose:
-    sudo nixos-rebuild switch --flake . --show-trace
+    nh os switch . -- --show-trace
 
 # Test configuration without making it the boot default
 test:
-    sudo nixos-rebuild test --flake .
+    nh os test .
 
 # Build without switching (dry run)
 build:
-    nixos-rebuild build --flake .
+    nh os build .
 
 # Update all flake inputs
 update:

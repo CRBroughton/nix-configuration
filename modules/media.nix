@@ -1,4 +1,4 @@
-# Media - qpwgraph, picard, mumble
+# Media - OBS Studio, qpwgraph, picard, mumble
 {
   config,
   lib,
@@ -12,12 +12,13 @@ let
 in
 {
   options.modules.media = {
-    enable = lib.mkEnableOption "media tools (qpwgraph, picard, mumble)";
+    enable = lib.mkEnableOption "media tools (obs-studio, qpwgraph, picard, mumble)";
   };
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${user} = {
       home.packages = with pkgs; [
+        obs-studio
         qpwgraph
         picard
         mumble

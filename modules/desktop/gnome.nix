@@ -87,7 +87,7 @@ in
       pulse.enable = true;
       extraConfig.pipewire."92-quantum" = {
         "context.properties" = {
-          "default.clock.quantum"     = 512;
+          "default.clock.quantum" = 512;
           "default.clock.min-quantum" = 64;
           "default.clock.max-quantum" = 1024;
         };

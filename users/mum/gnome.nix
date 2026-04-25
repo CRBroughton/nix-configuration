@@ -18,11 +18,16 @@
       ];
       enabled-extensions = [
         "appindicatorsupport@rgcjonas.gmail.com"
+        "dash-to-dock@micxgx.gmail.com"
       ];
+    };
+    "org/gnome/shell/extensions/dash-to-dock" = {
+      dock-position = "LEFT";
     };
   };
 
   home.packages = with pkgs; [
     gnomeExtensions.appindicator
+    gnomeExtensions.dash-to-dock
   ];
 }

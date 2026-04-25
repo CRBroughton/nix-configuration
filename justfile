@@ -138,9 +138,9 @@ disko-laptop device="/dev/nvme0n1":
 disko-gaming device="/dev/nvme0n1":
     sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko ./disko/gaming-pc.nix --arg device '"{{device}}"'
 
-# Partition disk with disko (mums-pc)
-disko-mums-pc device="/dev/sda":
-    sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko ./disko/mums-pc.nix --arg device '"{{device}}"'
+# Partition disk with disko (mum-pc)
+disko-mum-pc device="/dev/sda":
+    sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko ./disko/mum-pc.nix --arg device '"{{device}}"'
 
 # Install NixOS (laptop)
 install-laptop:
@@ -152,6 +152,10 @@ install-gaming:
 
 install-brighton-pc:
     sudo nixos-install --flake .#brighton-pc
+
+# Install NixOS (mum-pc)
+install-mum-pc:
+    sudo nixos-install --flake .#mum-pc
 
 #═══════════════════════════════════════════════════════════════════════════════
 # VPN

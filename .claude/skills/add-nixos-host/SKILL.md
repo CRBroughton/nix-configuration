@@ -16,18 +16,20 @@ Ask the user for (if not already provided):
 
 ---
 
-## Directory structure to create
+## Directory structure
 
 ```
+hosts/<hostname>/
+  default.nix
+  hardware.nix
+
 users/<username>/           ← skip if user already exists
   common.nix
   default.nix
   vm-testing.nix            ← optional, for VM testing
-
-users/<username>/hosts/<hostname>/
-  default.nix
-  hardware.nix
 ```
+
+Hosts can have multiple users. Each user's `common.nix` is auto-imported by `mkHost`.
 
 ---
 
@@ -90,19 +92,18 @@ Useful for local VM smoke-testing before deploying to real hardware.
 
 ---
 
-### `users/<username>/hosts/<hostname>/default.nix`
-Main NixOS host config. Choose modules appropriate to the machine's purpose.
+### `hosts/<hostname>/default.nix`
+Main NixOS host config. `common.nix` is auto-imported by `mkHost` — do not import it here.
+Import user-specific files (flatpaks, vm-testing) with explicit paths if needed.
 
 ```nix
 { ... }:
 {
   imports = [
-    ../../common.nix
-    # ../../vm-testing.nix   # uncomment only for VM testing
+    # ../../users/<username>/vm-testing.nix   # uncomment only for VM testing
     ./hardware.nix
   ];
 
-  networking.hostName = "<hostname>";
   networking.networkmanager.enable = true;
 
   # Enable modules — remove or add as needed:
@@ -125,7 +126,7 @@ Available modules (dot-notation, all auto-imported via import-tree):
 
 ---
 
-### `users/<username>/hosts/<hostname>/hardware.nix`
+### `hosts/<hostname>/hardware.nix`
 **On real hardware**, generate with:
 ```bash
 nixos-generate-config --show-hardware-config
@@ -139,6 +140,17 @@ For now, create a placeholder:
   # nixos-generate-config --show-hardware-config
 }
 ```
+
+---
+
+### Per-host home-manager override (optional)
+If a user needs a custom HM config for this specific host, create:
+
+```
+hosts/<hostname>/users/<username>/home.nix
+```
+
+Otherwise `mkHost` falls back to `users/<username>/default.nix`.
 
 ---
 
@@ -162,9 +174,9 @@ Add to the `nixosConfigurations` attrset:
 ```nix
 <hostname> = myLib.mkHost {
   hostname = "<hostname>";
-  user = "<username>";
+  users = [ "<username>" ];   # list — supports multiple users per host
   inherit stateVersion;
-  extraModules = [ inputs.nixos-hardware.nixosModules.common-pc-laptop ];  # optional
+  extraModules = [ modules ];
 };
 ```
 
@@ -176,7 +188,7 @@ Find the block that contains the other `mkHost` calls and add the new entry alon
 
 1. Stage new files — **git add is required before nix can see them**:
    ```bash
-   git add users/<username>/
+   git add hosts/<hostname>/ users/<username>/
    ```
 2. Check the config:
    ```bash
@@ -191,7 +203,8 @@ Find the block that contains the other `mkHost` calls and add the new entry alon
 
 ## Notes
 
+- Do **not** import `users/<username>/common.nix` in the host file — `mkHost` auto-imports it
 - Do **not** manually import modules — `import-tree` auto-loads everything in `modules/`
-- The `user` variable (from `mkHost`) is automatically available in all module configs
 - `stateVersion` is inherited from `flake.nix` — do not hardcode it in host files
 - Remove the `vm-testing.nix` import before deploying to real hardware
+- To add a second user to an existing host: add their username to `users = [...]` in `flake.nix`

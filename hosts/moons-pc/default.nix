@@ -2,8 +2,7 @@
 
 {
   imports = [
-    ../../common.nix
-    ../../vm-testing.nix
+    ../../users/moon/vm-testing.nix
     ./hardware.nix
   ];
 

@@ -6,7 +6,6 @@
 
 {
   imports = [
-    ../../common.nix
     ./hardware.nix
   ];
 
@@ -101,5 +100,4 @@
   modules.server.arion.enable = true;
   modules.server.services.freshrss.enable = true;
   modules.server.services.harmonia.enable = true;
-
 }

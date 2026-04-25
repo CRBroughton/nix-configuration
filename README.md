@@ -14,29 +14,41 @@ See [`template/README.md`](template/README.md) for setup instructions and guidan
 nix-configuration/
 ├── flake.nix                      # Entry point - defines inputs and hosts
 ├── lib/
-│   ├── default.nix                # Helper functions (mkHost, mkServer, mkPi)
+│   ├── default.nix                # Helper functions (mkHost, mkPi)
 │   └── arion.nix                  # Arion helpers (mkTailscaleService)
-├── users/                         # User configs + their machines
+├── hosts/                         # One directory per machine
+│   ├── laptop/
+│   │   ├── default.nix            # NixOS config (modules, packages, services)
+│   │   └── hardware.nix
+│   ├── gaming-pc/
+│   │   ├── default.nix
+│   │   └── hardware.nix
+│   ├── brighton-pc/
+│   │   ├── default.nix
+│   │   └── hardware.nix
+│   ├── nixos-server/              # Home server
+│   │   ├── default.nix
+│   │   ├── hardware.nix
+│   │   └── users/craig/home.nix   # Per-host home-manager override
+│   ├── pi-monitor/                # Raspberry Pi monitoring
+│   │   └── default.nix
+│   ├── moons-pc/
+│   │   ├── default.nix
+│   │   └── hardware.nix
+│   ├── mum-pc/
+│   │   ├── default.nix
+│   │   └── hardware.nix
+│   └── mums-laptop/
+│       ├── default.nix
+│       └── hardware.nix
+├── users/                         # User configs (HM + system user definition)
 │   └── craig/
 │       ├── default.nix            # Home-manager config (shell, editors, etc.)
 │       ├── git.nix                # Personal git config (name, email, keys)
 │       ├── gnome.nix              # Personal GNOME settings (theme, dock, extensions)
 │       ├── flatpaks.nix           # Personal Flatpak apps
-│       ├── common.nix             # System user config (users.users.craig)
-│       ├── vm-testing.nix         # VM testing settings
-│       └── hosts/                 # Craig's machines
-│           ├── laptop/
-│           │   ├── default.nix    # Laptop config (imports modules directly)
-│           │   └── hardware.nix
-│           ├── gaming-pc/
-│           │   ├── default.nix
-│           │   └── hardware.nix
-│           ├── nixos-server/      # Home server
-│           │   ├── default.nix
-│           │   ├── hardware.nix
-│           │   └── home.nix       # Minimal server home-manager
-│           └── pi-monitor/        # Raspberry Pi monitoring
-│               └── default.nix
+│       ├── common.nix             # System user config (users.users.craig) — auto-imported by mkHost
+│       └── vm-testing.nix         # VM testing settings
 ├── modules/                       # Domain-based modules
 │   ├── common.nix                 # Packages for ALL systems (git, nixfmt, etc.)
 │   ├── gaming.nix                 # Steam + gamemode + Lutris (combined)
@@ -244,7 +256,7 @@ Then run `just switch`.
 **Flatpak apps**:
 
 Base flatpaks (everyone gets): `modules/services/flatpak/base.nix`
-Personal flatpaks: `users/craig/flatpaks.nix`
+Personal flatpaks (imported by host): `users/craig/flatpaks.nix`
 
 ```nix
 services.flatpak.packages = [
@@ -361,7 +373,7 @@ Edit `modules/auto-upgrade.nix` to customize:
    }
    ```
 
-3. Import it in a host config using the `modules` path shortcut:
+3. Import it in a host config (`hosts/<hostname>/default.nix`) using the `modules` path shortcut:
    ```nix
    imports = [
      (modules + "/<name>.nix")
@@ -374,22 +386,25 @@ See [docs/adding-new-user.md](docs/adding-new-user.md) for the complete guide.
 
 **Quick summary:**
 
-1. Create the user directory structure:
+1. Create the host and (if new) user directories:
    ```bash
-   mkdir -p users/<username>/hosts/<hostname>
+   mkdir -p hosts/<hostname>
+   mkdir -p users/<username>   # skip if user already exists
    ```
 
 2. Create the required files:
-   - `users/<username>/default.nix` - Home-manager config
-   - `users/<username>/common.nix` - System user config
-   - `users/<username>/hosts/<hostname>/default.nix` - Host config
-   - `users/<username>/hosts/<hostname>/hardware.nix` - Hardware config
+   - `hosts/<hostname>/default.nix` - NixOS host config
+   - `hosts/<hostname>/hardware.nix` - Hardware config
+   - `users/<username>/default.nix` - Home-manager config (if new user)
+   - `users/<username>/common.nix` - System user config (if new user) — auto-imported by `mkHost`
 
 3. Add to `flake.nix`:
    ```nix
    <hostname> = myLib.mkHost {
      hostname = "<hostname>";
-     user = "<username>";
+     users = [ "<username>" ];   # list — supports multiple users per host
+     inherit stateVersion;
+     extraModules = [ modules ];
    };
    ```
 
@@ -538,7 +553,7 @@ just maintenance # Clean + optimise
    ```
 5. Generate hardware config:
    ```bash
-   nixos-generate-config --root /mnt --show-hardware-config > users/craig/hosts/laptop/hardware.nix
+   nixos-generate-config --root /mnt --show-hardware-config > hosts/laptop/hardware.nix
    ```
 6. Install:
    ```bash

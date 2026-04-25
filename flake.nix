@@ -76,49 +76,49 @@
       nixosConfigurations = {
         laptop = myLib.mkHost {
           hostname = "laptop";
-          user = "craig";
+          users = [ "craig" ];
           inherit stateVersion;
           extraModules = [ modules ];
         };
 
         gaming-pc = myLib.mkHost {
           hostname = "gaming-pc";
-          user = "craig";
+          users = [ "craig" ];
           inherit stateVersion;
           extraModules = [ modules ];
         };
 
         brighton-pc = myLib.mkHost {
           hostname = "brighton-pc";
-          user = "craig";
+          users = [ "craig" ];
           inherit stateVersion;
           extraModules = [ modules ];
         };
 
         mum-pc = myLib.mkHost {
           hostname = "mum-pc";
-          user = "mum";
+          users = [ "mum" ];
           inherit stateVersion;
           extraModules = [ modules ];
         };
 
         mums-laptop = myLib.mkHost {
           hostname = "mums-laptop";
-          user = "mum";
+          users = [ "mum" ];
           inherit stateVersion;
           extraModules = [ modules ];
         };
 
         moons-pc = myLib.mkHost {
           hostname = "moons-pc";
-          user = "moon";
+          users = [ "moon" ];
           inherit stateVersion;
           extraModules = [ modules ];
         };
 
         nixos-server = myLib.mkHost {
           hostname = "nixos-server";
-          user = "craig";
+          users = [ "craig" ];
           inherit stateVersion;
           extraModules = [ modules ];
         };

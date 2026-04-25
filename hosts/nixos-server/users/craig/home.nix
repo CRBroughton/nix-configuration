@@ -3,7 +3,7 @@
 
 {
   imports = [
-    ../../git.nix # Personal git config
+    ../../../../users/craig/git.nix # Personal git config
   ];
 
   home.username = "craig";

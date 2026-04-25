@@ -2,8 +2,7 @@
 
 {
   imports = [
-    ../../common.nix
-    # ../../vm-testing.nix   # uncomment only for VM testing
+    # ../../users/mum/vm-testing.nix   # uncomment only for VM testing
     ./hardware.nix
   ];
 

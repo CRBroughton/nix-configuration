@@ -11,12 +11,14 @@ let
 in
 {
   # Create a NixOS system configuration
-  # Hosts with a users/${user}/hosts/${hostname}/home.nix get that as their HM config;
-  # otherwise falls back to users/${user}/default.nix
+  # Hosts live in hosts/<hostname>/; users in users/<username>/.
+  # Each user's common.nix (NixOS user definition) is auto-imported.
+  # Per-host HM overrides go in hosts/<hostname>/users/<username>/home.nix;
+  # otherwise falls back to users/<username>/default.nix.
   mkHost =
     {
       hostname,
-      user,
+      users, # list of usernames, e.g. [ "craig" ]
       stateVersion,
       system ? "x86_64-linux",
       extraModules ? [ ],
@@ -24,7 +26,8 @@ in
     inputs.nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = {
-        inherit inputs hostname user;
+        inherit inputs hostname users;
+        user = builtins.head users; # primary user — for module backwards-compat
         inherit (inputs) firefox-addons;
       }
       // paths;
@@ -39,8 +42,11 @@ in
         # Shared modules
         ../modules/common.nix
 
-        # Host-specific config (under user directory)
-        ../users/${user}/hosts/${hostname}
+        # Host-specific config
+        ../hosts/${hostname}
+
+        # Auto-import each user's NixOS user definition
+        { imports = map (u: ../users/${u}/common.nix) users; }
 
         # Base configuration
         {
@@ -65,10 +71,10 @@ in
               inputs.podman-flake.homeManagerModules.default
               { home.stateVersion = stateVersion; }
             ];
-            users = lib.genAttrs [ user ] (
+            users = lib.genAttrs users (
               u:
               let
-                hostHome = ../users/${u}/hosts/${hostname}/home.nix;
+                hostHome = ../hosts/${hostname}/users/${u}/home.nix;
               in
               if builtins.pathExists hostHome then import hostHome else import ../users/${u}
             );
@@ -96,8 +102,8 @@ in
         # Shared modules
         ../modules/common.nix
 
-        # Host-specific config (under user directory)
-        ../users/${user}/hosts/${hostname}
+        # Host-specific config
+        ../hosts/${hostname}
 
         # Base configuration
         {

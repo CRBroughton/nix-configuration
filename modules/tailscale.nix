@@ -26,11 +26,14 @@ in
       systemd.user.services.tailscale-systray = {
         Unit = {
           Description = "Tailscale System Tray";
-          After = [ "graphical-session.target" ];
+          After = [ "graphical-session-pre.target" "tray.target" ];
+          Requires = [ "tray.target" ];
         };
         Service = {
+          ExecStartPre = "${pkgs.coreutils}/bin/sleep 3";
           ExecStart = "${pkgs.tailscale-systray}/bin/tailscale-systray";
           Restart = "on-failure";
+          RestartSec = "5s";
         };
         Install = {
           WantedBy = [ "graphical-session.target" ];

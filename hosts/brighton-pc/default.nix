@@ -6,13 +6,11 @@
 
 {
   imports = [
-    ../../common.nix
-    #../../vm-testing.nix
     ./hardware.nix
     (disko + "/gaming-pc.nix")
 
     # Personal
-    ../../flatpaks.nix
+    ../../users/craig/flatpaks.nix
   ];
 
   # Kernel - CachyOS with sched_ext (uncomment for AMD gaming PC)
@@ -25,6 +23,8 @@
   boot.kernelPackages = pkgs.linuxPackages_zen;
   services.fwupd.enable = true;
   networking.networkmanager.enable = true;
+  # I225-V NIC drops connection after sleep - disable Ultra Low Power mode
+  boot.extraModprobeConfig = "options igc enable_ulp=0";
   programs.fish.enable = true;
   security.sudo.wheelNeedsPassword = false;
 

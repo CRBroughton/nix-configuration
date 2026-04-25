@@ -8,6 +8,7 @@
     isNormalUser = true;
     description = "Mum";
     extraGroups = [
+      "wheel"
       "networkmanager"
       "audio"
       "video"

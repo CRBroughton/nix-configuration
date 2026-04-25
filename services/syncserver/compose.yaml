@@ -27,6 +27,7 @@ services:
     network_mode: service:tailscale-syncserver
     depends_on:
       - tailscale-syncserver
+    entrypoint: ["/usr/local/bin/gunicorn", "--paste", "/app/syncserver.ini"]
     environment:
       TZ: Europe/London
     volumes:

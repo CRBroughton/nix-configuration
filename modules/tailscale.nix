@@ -26,7 +26,10 @@ in
       systemd.user.services.tailscale-systray = {
         Unit = {
           Description = "Tailscale System Tray";
-          After = [ "graphical-session-pre.target" "tray.target" ];
+          After = [
+            "graphical-session-pre.target"
+            "tray.target"
+          ];
           Requires = [ "tray.target" ];
         };
         Service = {

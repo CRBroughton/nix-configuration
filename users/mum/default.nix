@@ -1,7 +1,10 @@
 { pkgs, ... }:
 
 {
-  imports = [ ./gnome.nix ];
+  imports = [
+    ./gnome.nix
+    ./zen.nix
+  ];
 
   home.homeDirectory = "/home/mum";
 

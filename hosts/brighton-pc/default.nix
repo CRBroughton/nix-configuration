@@ -21,6 +21,7 @@
   # };
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
+  nix.settings.secret-key-files = [ "/etc/nix/signing-key.secret" ];
   services.fwupd.enable = true;
   networking.networkmanager.enable = true;
   # I225-V NIC drops connection after sleep - disable Ultra Low Power mode

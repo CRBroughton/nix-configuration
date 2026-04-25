@@ -21,6 +21,7 @@ _:
     trusted-public-keys = [
       "nixos-server:HwKsO2QULgIbnWor1Q/tsQUSaLZGvDsnyu5MeyFUv4s="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "brighton-pc:fK9lPG6vw1PQ3CqScRCbfqSPEyKjN827noRnyl6tMJY="
     ];
     connect-timeout = 5;
   };

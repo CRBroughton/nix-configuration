@@ -42,6 +42,8 @@ in
     home-manager.users.${user} = {
       home.packages = with pkgs; [
         lutris
+        wine-wayland
+        winetricks
         lsfg-vk
         lsfg-vk-ui
         mangohud

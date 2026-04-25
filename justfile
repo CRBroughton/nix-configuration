@@ -138,6 +138,10 @@ disko-laptop device="/dev/nvme0n1":
 disko-gaming device="/dev/nvme0n1":
     sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko ./disko/gaming-pc.nix --arg device '"{{device}}"'
 
+# Partition disk with disko (mums-pc)
+disko-mums-pc device="/dev/sda":
+    sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko ./disko/mums-pc.nix --arg device '"{{device}}"'
+
 # Install NixOS (laptop)
 install-laptop:
     sudo nixos-install --flake .#laptop

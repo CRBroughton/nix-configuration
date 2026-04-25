@@ -322,6 +322,24 @@ fix-git-ownership:
     sudo git config --global --add safe.directory /etc/nixos
 
 #═══════════════════════════════════════════════════════════════════════════════
+# Cache (push built packages to Harmonia on nixos-server)
+#═══════════════════════════════════════════════════════════════════════════════
+
+cache_host := "craig@100.86.95.111"
+
+# Push any package to cache (e.g., just cache-push nixpkgs#firefox)
+cache-push pkg:
+    nix copy --to ssh-ng://{{cache_host}} {{pkg}}
+
+# Push current system closure to cache (run after a rebuild with slow packages)
+cache-push-system:
+    nix copy --to ssh-ng://{{cache_host}} /run/current-system
+
+# Push gaming packages (wine, winetricks — slow to build)
+cache-push-gaming:
+    nix copy --to ssh-ng://{{cache_host}} nixpkgs#wineWowPackages.wayland nixpkgs#winetricks
+
+#═══════════════════════════════════════════════════════════════════════════════
 # Raspberry Pi
 #═══════════════════════════════════════════════════════════════════════════════
 

@@ -8,6 +8,7 @@
   ];
 
   networking.networkmanager.enable = true;
+  security.sudo.wheelNeedsPassword = false;
 
   modules.ssh.enable = true;
   modules.gnome.enable = true;

@@ -36,7 +36,4 @@ services:
       SYNCSERVER_FORCE_WSGI_ENVIRON: "true"
       PORT: 5000
     volumes:
-      - syncserver-data:/data
-
-volumes:
-  syncserver-data:
+      - ./data:/data:Z

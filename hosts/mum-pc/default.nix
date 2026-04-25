@@ -1,9 +1,10 @@
-{ ... }:
+{ disko, ... }:
 
 {
   imports = [
     ../../users/mum/vm-testing.nix
     ./hardware.nix
+    (disko + "/mum-pc.nix")
   ];
 
   networking.networkmanager.enable = true;

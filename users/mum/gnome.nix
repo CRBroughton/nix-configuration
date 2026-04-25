@@ -24,6 +24,9 @@
     "org/gnome/shell/extensions/dash-to-dock" = {
       dock-position = "LEFT";
     };
+    "org/gnome/desktop/notifications/application/org-gnome-nautilus" = {
+      enable = false;
+    };
   };
 
   home.packages = with pkgs; [

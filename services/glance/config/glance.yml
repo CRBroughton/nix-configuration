@@ -90,6 +90,8 @@ pages:
                 hide: true
               tailscale-git-server:
                 hide: true
+              tailscale-syncserver:
+                hide: true
               tailscale-stirling-pdf:
                 hide: true
               tailscale-soft-serve:
@@ -220,6 +222,10 @@ pages:
                 name: Stirling PDF
                 description: PDF manipulation tools
                 url: https://stirling-pdf.tail538465.ts.net
+              syncserver:
+                name: Firefox Sync
+                description: Bookmark, tab, and password sync
+                url: https://syncserver.tail538465.ts.net
               plane-web:
                 name: Plane
                 description: Project management

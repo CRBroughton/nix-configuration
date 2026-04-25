@@ -1,0 +1,41 @@
+# Firefox Sync - Bookmark, tab, and password sync server
+# Run with: podman compose up -d
+
+services:
+  tailscale-syncserver:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-syncserver
+    hostname: syncserver
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+  syncserver:
+    image: mozilla/syncserver:latest
+    container_name: syncserver
+    restart: unless-stopped
+    network_mode: service:tailscale-syncserver
+    depends_on:
+      - tailscale-syncserver
+    environment:
+      TZ: Europe/London
+      SYNCSERVER_PUBLIC_URL: https://syncserver.tail538465.ts.net
+      SYNCSERVER_SECRET: ${SYNCSERVER_SECRET}
+      SYNCSERVER_ALLOW_NEW_USERS: "true"
+      SYNCSERVER_FORCE_WSGI_ENVIRON: "true"
+      PORT: 5000
+    volumes:
+      - syncserver-data:/data
+
+volumes:
+  syncserver-data:

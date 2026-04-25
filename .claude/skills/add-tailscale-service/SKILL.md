@@ -106,6 +106,26 @@ volumes:
 
 ---
 
+### `services/<name>/.env`
+
+Always create this file. Include `TS_AUTHKEY` plus any app-specific secrets gathered from the user:
+
+```
+TS_AUTHKEY=
+# add any app-specific secret env vars below
+```
+
+Also create `services/<name>/.env.example` as a committed reference (values blank or annotated):
+
+```
+TS_AUTHKEY=         # Tailscale auth key from https://login.tailscale.com/admin/settings/keys
+# add any app-specific secret env vars below
+```
+
+Both `.env` and `.env.example` live in the service directory. `.env` is gitignored (`services/**/.env`); `.env.example` is committed.
+
+---
+
 ### `services/<name>/serve.json` (HTTP services only)
 
 Replace `<port>` with the container's listening port:
@@ -167,7 +187,8 @@ The Tailscale network domain is `tail538465.ts.net`.
 ## Notes
 
 - The `tailscale/` directory (state volume) is gitignored — do not commit it
-- `TS_AUTHKEY` must be set in the environment when running `podman compose up`
+- `.env` is gitignored (`services/**/.env`) — always create it but never commit it; commit `.env.example` instead
+- `TS_AUTHKEY` must be set in `.env` (or shell env) before running `podman compose up`
 - The app container must **not** publish any ports directly — all traffic goes through the Tailscale sidecar's network namespace
 - If the service needs to reach other containers on the host (e.g. Ollama), add `extra_hosts: ["host.containers.internal:host-gateway"]` to the app service
 - Named volumes are preferred over bind mounts for persistent data; adjust paths to match the image's documented data directory

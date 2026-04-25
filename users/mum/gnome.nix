@@ -17,7 +17,6 @@
         "com.obsproject.Studio.desktop"
       ];
       enabled-extensions = [
-        "appindicatorsupport@rgcjonas.gmail.com"
         "dash-to-dock@micxgx.gmail.com"
       ];
     };
@@ -30,7 +29,6 @@
   };
 
   home.packages = with pkgs; [
-    gnomeExtensions.appindicator
     gnomeExtensions.dash-to-dock
   ];
 }

@@ -1,0 +1,17 @@
+[server:main]
+use = egg:gunicorn
+host = 0.0.0.0
+port = 5000
+workers = 1
+timeout = 30
+
+[app:main]
+use = egg:syncserver
+
+[syncserver]
+public_url = https://syncserver.tail538465.ts.net
+identity_provider = https://accounts.firefox.com/
+sqluri = sqlite:////data/syncserver.db
+secret = INSERT_SECRET_HERE  # generate: openssl rand -hex 32
+allow_new_users = true
+force_wsgi_environ = true

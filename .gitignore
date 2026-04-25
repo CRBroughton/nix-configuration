@@ -7,4 +7,4 @@ services/calibre/calibre-library
 services/calibre/config
 services/copyparty/data
 services/freshrss/volume
-services/romm
+services/rommservices/**/syncserver.ini

@@ -26,6 +26,7 @@ in
 
       home.packages = with pkgs; [
         lazygit
+        jjui
         gh
         gource
       ];

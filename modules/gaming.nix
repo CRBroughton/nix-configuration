@@ -48,6 +48,7 @@ in
         lsfg-vk-ui
         mangohud
         vulkan-tools
+        gamemode
       ];
     };
   };

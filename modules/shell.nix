@@ -61,6 +61,7 @@ in
         jnv
         tokei
         croc
+        carapace
       ];
     };
   };

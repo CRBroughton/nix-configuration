@@ -10,19 +10,8 @@
   networking.networkmanager.enable = true;
   security.sudo.wheelNeedsPassword = false;
 
-  services.wayvnc = {
-    enable = true;
-    host = "0.0.0.0";
-    port = 5900;
-    extraConfig = ''
-      enable_auth=false
-    '';
-  };
-
-  # Allow wayvnc only from Tailscale CGNAT range
-  networking.firewall.extraInputRules = ''
-    ip saddr 100.64.0.0/10 tcp dport 5900 accept
-  '';
+  # Allow wayvnc only on the Tailscale interface
+  networking.firewall.interfaces.tailscale0.allowedTCPPorts = [ 5900 ];
 
   modules.ssh.enable = true;
   modules.gnome.enable = true;

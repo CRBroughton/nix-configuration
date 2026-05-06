@@ -6,6 +6,10 @@
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
     };
+    "org/gnome/settings-daemon/plugins/power" = {
+      sleep-inactive-ac-type = "nothing";
+      sleep-inactive-battery-type = "nothing";
+    };
     "org/gnome/shell" = {
       disable-user-extensions = false;
       favorite-apps = [

@@ -28,7 +28,7 @@
     };
     Service = {
       Type = "oneshot";
-      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.gnome-remote-desktop}/bin/grdctl rdp set-credentials mum $(cat /run/agenix/mum-rdp-password)'";
+      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.gnome-remote-desktop}/bin/grdctl rdp enable && ${pkgs.gnome-remote-desktop}/bin/grdctl rdp set-credentials mum $(cat /run/agenix/mum-rdp-password)'";
       RemainAfterExit = true;
     };
     Install = {

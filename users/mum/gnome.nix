@@ -26,7 +26,6 @@
         "org.gajim.Gajim.desktop"
         "steam.desktop"
         "com.obsproject.Studio.desktop"
-        "rustdesk.desktop"
       ];
       enabled-extensions = [
         "dash-to-dock@micxgx.gmail.com"
@@ -37,6 +36,11 @@
     };
     "org/gnome/desktop/notifications/application/org-gnome-nautilus" = {
       enable = false;
+    };
+    "org/gnome/desktop/remote-desktop/rdp" = {
+      screen-share-mode = "mirror-primary";
+      enable = true;
+      view-only = false;
     };
   };
 

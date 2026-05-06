@@ -38,6 +38,7 @@ in
         inputs.home-manager.nixosModules.home-manager
         inputs.nix-flatpak.nixosModules.nix-flatpak
         inputs.arion.nixosModules.arion
+        inputs.agenix.nixosModules.default
 
         # Shared modules
         ../modules/common.nix

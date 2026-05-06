@@ -60,6 +60,12 @@
       url = "github:crbroughton/nix-flakes?dir=nix-format";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Secrets management
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

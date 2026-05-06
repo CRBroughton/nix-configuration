@@ -10,8 +10,14 @@
   networking.networkmanager.enable = true;
   security.sudo.wheelNeedsPassword = false;
 
-  # Allow wayvnc only on the Tailscale interface
-  networking.firewall.interfaces.tailscale0.allowedTCPPorts = [ 5900 ];
+  # Decrypt RDP password secret for GNOME Remote Desktop
+  age.secrets.mum-rdp-password = {
+    file = ../../secrets/mum-rdp-password.age;
+    owner = "mum";
+  };
+
+  # Allow GNOME Remote Desktop (RDP) only on the Tailscale interface
+  networking.firewall.interfaces.tailscale0.allowedTCPPorts = [ 3389 ];
 
   modules.ssh.enable = true;
   modules.gnome.enable = true;

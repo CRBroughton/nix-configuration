@@ -11,7 +11,6 @@
   home.packages = with pkgs; [
     obs-studio
     git
-    rustdesk
     wayvnc
   ];
 
@@ -21,23 +20,19 @@
     port=5900
   '';
 
-  systemd.user.services.wayvnc = {
+  # Set GNOME Remote Desktop RDP credentials from agenix secret on each login
+  systemd.user.services.gnome-rdp-credentials = {
     Unit = {
-      Description = "WayVNC remote desktop server";
-      After = [ "graphical-session.target" ];
-      PartOf = [ "graphical-session.target" ];
+      Description = "Set GNOME Remote Desktop credentials";
+      After = [ "gnome-remote-desktop.service" ];
     };
     Service = {
-      ExecStart = "${pkgs.wayvnc}/bin/wayvnc";
-      Restart = "on-failure";
-      RestartSec = "5s";
-      Environment = [
-        "WAYLAND_DISPLAY=wayland-1"
-        "XDG_RUNTIME_DIR=/run/user/1000"
-      ];
+      Type = "oneshot";
+      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.gnome-remote-desktop}/bin/grdctl rdp set-credentials mum $(cat /run/agenix/mum-rdp-password)'";
+      RemainAfterExit = true;
     };
     Install = {
-      WantedBy = [ "graphical-session.target" ];
+      WantedBy = [ "default.target" ];
     };
   };
 }

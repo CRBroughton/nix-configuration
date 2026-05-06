@@ -52,4 +52,5 @@
   modules.autoUpgrade.enable = true;
   modules.monitoringNode.enable = true;
   modules.claude-desktop.enable = true;
+  modules.ascension.enable = true;
 }

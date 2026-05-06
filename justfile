@@ -322,6 +322,18 @@ fix-git-ownership:
     sudo git config --global --add safe.directory /etc/nixos
 
 #═══════════════════════════════════════════════════════════════════════════════
+# Ascension WoW
+#═══════════════════════════════════════════════════════════════════════════════
+
+# Install Ascension WoW launcher into Wine prefix
+ascension-install:
+    ascension-install
+
+# Launch Ascension WoW
+ascension:
+    ascension
+
+#═══════════════════════════════════════════════════════════════════════════════
 # Cache (push built packages to Harmonia on nixos-server)
 #═══════════════════════════════════════════════════════════════════════════════
 

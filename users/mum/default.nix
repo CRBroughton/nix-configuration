@@ -30,6 +30,10 @@
       ExecStart = "${pkgs.wayvnc}/bin/wayvnc";
       Restart = "on-failure";
       RestartSec = "5s";
+      Environment = [
+        "WAYLAND_DISPLAY=wayland-1"
+        "XDG_RUNTIME_DIR=/run/user/1000"
+      ];
     };
     Install = {
       WantedBy = [ "graphical-session.target" ];

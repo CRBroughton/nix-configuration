@@ -15,6 +15,7 @@
         "org.gajim.Gajim.desktop"
         "steam.desktop"
         "com.obsproject.Studio.desktop"
+        "com.rustdesk.RustDesk.desktop"
       ];
       enabled-extensions = [
         "dash-to-dock@micxgx.gmail.com"

@@ -11,5 +11,6 @@
   home.packages = with pkgs; [
     obs-studio
     git
+    rustdesk
   ];
 }

@@ -1,4 +1,5 @@
 {
+  pkgs,
   ...
 }:
 
@@ -19,5 +20,9 @@
     source = ../../fonts/shavian;
     recursive = true;
   };
+
+  home.packages = with pkgs; [
+    rustdesk
+  ];
 
 }

@@ -1,5 +1,5 @@
 # Mum's GNOME settings - dock and theme
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   dconf.settings = {
@@ -9,6 +9,13 @@
     "org/gnome/settings-daemon/plugins/power" = {
       sleep-inactive-ac-type = "nothing";
       sleep-inactive-battery-type = "nothing";
+      idle-dim = false;
+    };
+    "org/gnome/desktop/session" = {
+      idle-delay = lib.hm.gvariant.mkUint32 0;
+    };
+    "org/gnome/desktop/screensaver" = {
+      lock-enabled = false;
     };
     "org/gnome/shell" = {
       disable-user-extensions = false;
@@ -19,7 +26,7 @@
         "org.gajim.Gajim.desktop"
         "steam.desktop"
         "com.obsproject.Studio.desktop"
-        "com.rustdesk.RustDesk.desktop"
+        "rustdesk.desktop"
       ];
       enabled-extensions = [
         "dash-to-dock@micxgx.gmail.com"

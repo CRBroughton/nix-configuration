@@ -42,7 +42,7 @@ in
     home-manager.users.${user} = {
       home.packages = with pkgs; [
         lutris
-        wineWowPackages.wayland
+        # wineWowPackages.wayland
         winetricks
         lsfg-vk
         lsfg-vk-ui

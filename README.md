@@ -573,6 +573,105 @@ cd nix-configuration
 sudo nixos-rebuild switch --flake .#laptop
 ```
 
+## Remote Desktop (GNOME / Wayland)
+
+Machines running GNOME on Wayland use **GNOME Remote Desktop** (RDP) over Tailscale. Mouse and keyboard control are fully supported.
+
+### How it works
+
+- GNOME Remote Desktop listens on port 3389
+- The firewall opens 3389 only on the `tailscale0` interface
+- Credentials are managed declaratively via **agenix** — no manual setup on the remote machine
+- A systemd user service sets RDP credentials from the agenix secret on each login
+
+### Adding remote desktop to a new machine
+
+**1. Add the firewall rule and agenix secret to the host config** (`hosts/<hostname>/default.nix`):
+
+```nix
+age.secrets.<hostname>-rdp-password = {
+  file = ../../secrets/<hostname>-rdp-password.age;
+  owner = "<username>";
+};
+
+networking.firewall.interfaces.tailscale0.allowedTCPPorts = [ 3389 ];
+```
+
+**2. Register the secret in `secrets/secrets.nix`:**
+
+Get the machine's SSH host key:
+```bash
+cat /etc/ssh/ssh_host_ed25519_key.pub
+```
+
+Add it to `secrets/secrets.nix`:
+```nix
+let
+  new-machine = "ssh-ed25519 AAAA... root@new-machine";
+  craig = "ssh-ed25519 AAAA...";
+in {
+  "<hostname>-rdp-password.age".publicKeys = [ new-machine craig ];
+}
+```
+
+**3. Create the encrypted secret** (run from repo root):
+```bash
+cd secrets && nix run github:ryantm/agenix -- -e <hostname>-rdp-password.age
+```
+Type the RDP password, save and exit. Commit the `.age` file.
+
+**4. Add to the user's home-manager config** (`users/<username>/default.nix`):
+
+```nix
+systemd.user.services.gnome-rdp-credentials = {
+  Unit = {
+    Description = "Set GNOME Remote Desktop credentials";
+    After = [ "gnome-remote-desktop.service" ];
+  };
+  Service = {
+    Type = "oneshot";
+    ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.gnome-remote-desktop}/bin/grdctl rdp enable && ${pkgs.gnome-remote-desktop}/bin/grdctl rdp set-credentials <username> $(cat /run/agenix/<hostname>-rdp-password)'";
+    RemainAfterExit = true;
+  };
+  Install.WantedBy = [ "default.target" ];
+};
+```
+
+**5. Enable RDP in the user's GNOME dconf settings:**
+
+```nix
+"org/gnome/desktop/remote-desktop/rdp" = {
+  screen-share-mode = "mirror-primary";
+  enable = true;
+  view-only = false;
+};
+```
+
+### First-time TLS certificate setup
+
+GNOME Remote Desktop requires a TLS certificate. This must be generated once on the remote machine (it persists across rebuilds). From the repo directory on the remote machine:
+
+```bash
+nix shell nixpkgs#openssl --command bash gen-cert.sh
+```
+
+(`gen-cert.sh` is in the repo root — it generates a self-signed cert and registers it with `grdctl`.)
+
+Then restart the service:
+```bash
+systemctl --user restart gnome-remote-desktop
+```
+
+### Connecting
+
+Install `freerdp` on your machine (already in craig's packages). Connect with:
+
+```bash
+xfreerdp /v:<tailscale-ip> /u:<username> /p:<password> /cert:ignore /dynamic-resolution
+```
+
+> **Note:** Remmina does not work with GNOME Remote Desktop 49 — it fails to advertise the required Graphics Pipeline extension. Use `xfreerdp` directly.
+
 ## Troubleshooting
 
 ### Build fails with "file not found"

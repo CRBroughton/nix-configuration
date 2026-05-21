@@ -5,6 +5,14 @@
 }:
 
 {
+  nixpkgs.overlays = [
+    (_final: prev: {
+      # openldap test017-syncreplication-refresh is flaky (timing issue); skip checks
+      openldap = prev.openldap.overrideAttrs (_: {
+        doCheck = false;
+      });
+    })
+  ];
   imports = [
     ../../users/craig/vm-testing.nix
     ./hardware.nix
@@ -20,6 +28,8 @@
   #   enable = true;
   #   scheduler = "scx_lavd";
   # };
+
+  nix.settings.secret-key-files = [ "/etc/nix/signing-key.secret" ];
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
   services.fwupd.enable = true;

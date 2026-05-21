@@ -32,7 +32,7 @@ _:
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks."*".identityFile = "~/.ssh/id_ed25519";
+    settings."*".identityFile = "~/.ssh/id_ed25519";
   };
 
   services.ssh-agent.enable = true;

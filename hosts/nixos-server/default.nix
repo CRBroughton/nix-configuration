@@ -38,6 +38,9 @@
     externalInterface = "eno1";
   };
 
+  # Prevent NetworkManager from managing container veth interfaces
+  networking.networkmanager.unmanaged = [ "interface-name:ve-*" ];
+
   # Add podman group to user
   users.users.craig.extraGroups = [ "podman" ];
 

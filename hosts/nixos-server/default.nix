@@ -31,6 +31,13 @@
   # Network
   networking.networkmanager.enable = true;
 
+  # NAT for nixos-containers with privateNetwork = true
+  networking.nat = {
+    enable = true;
+    internalInterfaces = [ "ve-+" ];
+    externalInterface = "eno1";
+  };
+
   # Add podman group to user
   users.users.craig.extraGroups = [ "podman" ];
 

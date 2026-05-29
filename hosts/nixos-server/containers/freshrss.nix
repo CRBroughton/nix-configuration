@@ -50,19 +50,35 @@ in
           baseUrl = "https://freshrss.tail538465.ts.net";
         };
 
-        services.tailscale = {
-          enable = true;
-          authKeyFile = "/run/secrets/ts_authkey";
-          extraUpFlags = [ "--hostname=freshrss" ];
+        services.tailscale.enable = true;
+
+        # Type=simple so it doesn't block multi-user.target.
+        # Container reaches READY → host brings ve-freshrss up → internet → tailscale auths.
+        systemd.services.tailscaled-autoconnect = {
+          wantedBy = [ "multi-user.target" ];
+          after = [ "tailscaled.service" "network.target" ];
+          serviceConfig = {
+            Type = "simple";
+            Restart = "on-failure";
+            RestartSec = "5s";
+          };
+          script = ''
+            ${pkgs.tailscale}/bin/tailscale up \
+              --auth-key "$(cat /run/secrets/ts_authkey)" \
+              --hostname=freshrss
+          '';
         };
 
+        # Retry until tailscale is authenticated before serving
         systemd.services.tailscale-serve = {
           wantedBy = [ "multi-user.target" ];
-          after = [
-            "tailscaled.service"
-            "tailscaled-autoconnect.service"
-          ];
-          serviceConfig.Type = "oneshot";
+          after = [ "tailscaled.service" "tailscaled-autoconnect.service" ];
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+            Restart = "on-failure";
+            RestartSec = "10s";
+          };
           script = ''
             ${pkgs.tailscale}/bin/tailscale serve --bg https / http://127.0.0.1:80
           '';

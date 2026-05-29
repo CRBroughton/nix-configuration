@@ -7,7 +7,19 @@
 {
   imports = [
     ./hardware.nix
+    ./containers/freshrss.nix
   ];
+
+  age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+
+  age.secrets.freshrss_password = {
+    file = ../../secrets/nixos-server/freshrss_password.age;
+  };
+
+  # Shared ts_authkey used by all nixos-server containers
+  age.secrets.ts_authkey = {
+    file = ../../secrets/nixos-server/ts_authkey.age;
+  };
 
   # Boot loader
   boot.loader.systemd-boot.enable = true;
@@ -45,8 +57,6 @@
     enable = true;
     allowedTCPPorts = [
       22 # SSH
-      53 # Adguard DNS
-      3000 # Adguard web UI
       3923 # Copyparty
       4000 # Searxng
       5222 # XMPP (Prosody)
@@ -54,7 +64,6 @@
       6697 # IRC TLS
       8080 # Open WebUI
       8083 # Calibre
-      8787 # FreshRSS
       8888 # Glance
       9000 # TheLounge
       9090 # Linkding
@@ -62,7 +71,6 @@
       64738 # Mumble
     ];
     allowedUDPPorts = [
-      53 # Adguard DNS
       64738 # Mumble voice
     ];
   };
@@ -97,7 +105,5 @@
   modules.server.autoUpgrade.enable = true;
   modules.monitoringNode.enable = true;
   modules.server.containerAutoUpdate.enable = true;
-  modules.server.arion.enable = true;
-  modules.server.services.freshrss.enable = true;
   modules.server.services.harmonia.enable = true;
 }

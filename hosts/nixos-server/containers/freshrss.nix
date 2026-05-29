@@ -1,6 +1,6 @@
-{ config, ... }:
+{ config, modules, ... }:
 let
-  commonModule = ../../../../modules/containers/common.nix;
+  commonModule = modules + "/containers/common.nix";
 in
 {
   containers.freshrss = {

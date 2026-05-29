@@ -80,7 +80,7 @@ in
             RestartSec = "10s";
           };
           script = ''
-            ${pkgs.tailscale}/bin/tailscale serve --bg https / http://127.0.0.1:80
+            ${pkgs.tailscale}/bin/tailscale serve --bg http://127.0.0.1:80
           '';
         };
       };

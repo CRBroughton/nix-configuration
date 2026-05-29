@@ -1,4 +1,7 @@
 { config, ... }:
+let
+  commonModule = ../../../../modules/containers/common.nix;
+in
 {
   containers.freshrss = {
     autoStart = true;
@@ -38,7 +41,7 @@
     config =
       { pkgs, ... }:
       {
-        imports = [ ../../../../modules/containers/common.nix ];
+        imports = [ commonModule ];
 
         services.freshrss = {
           enable = true;

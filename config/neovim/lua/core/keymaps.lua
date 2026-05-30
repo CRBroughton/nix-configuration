@@ -64,7 +64,7 @@ local function smart_escape()
   end
 end
 
-vim.keymap.set('n', '<Esc>', smart_escape, { desc = 'Smart escape' })
+vim.keymap.set('n', '<S-Esc>', smart_escape, { desc = 'Smart escape' })
 -- In terminal mode, Esc exits to normal mode (then Esc again to close)
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
@@ -99,3 +99,4 @@ end
 
 vim.keymap.set('n', '<C-x>lg', function() open_term_buffer('lazygit') end, { desc = 'Open Lazygit' })
 vim.keymap.set('n', '<C-x>ld', function() open_term_buffer('lazydocker') end, { desc = 'Open Lazydocker' })
+vim.keymap.set('n', '<C-x>lj', function() open_term_buffer('jjui') end, { desc = 'Open jjui' })

@@ -13,6 +13,7 @@ return {
         vue = { 'eslint_d' },
         json = { 'eslint_d' },
         go = { 'goimports' },
+        odin = { 'odinfmt' },
       },
       format_on_save = {
         timeout_ms = 3000,

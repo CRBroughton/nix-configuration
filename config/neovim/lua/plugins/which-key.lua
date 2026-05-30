@@ -45,6 +45,7 @@ return {
       { '<C-x>l', group = 'Lazy apps' },
       { '<C-x>lg', desc = 'Lazygit' },
       { '<C-x>ld', desc = 'Lazydocker' },
+      { '<C-x>lj', desc = 'jjui' },
 
       -- Leader prefix groups
       { '<leader>h', group = 'Git hunks' },

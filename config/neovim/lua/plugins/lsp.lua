@@ -116,8 +116,13 @@ return {
       },
     })
 
+    -- Odin
+    vim.lsp.config('ols', {
+      capabilities = capabilities,
+    })
+
     -- Enable the configured servers
-    vim.lsp.enable({ 'lua_ls', 'ts_ls', 'vue_ls', 'eslint', 'tailwindcss', 'unocss', 'gopls', 'nil_ls' })
+    vim.lsp.enable({ 'lua_ls', 'ts_ls', 'vue_ls', 'eslint', 'tailwindcss', 'unocss', 'gopls', 'nil_ls', 'ols' })
 
     -- LSP keymaps (matching Emacs M-. and M-,)
     vim.api.nvim_create_autocmd('LspAttach', {

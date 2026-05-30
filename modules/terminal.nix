@@ -31,8 +31,8 @@ in
           font-style = "SemiBold";
           background = "#171717";
           foreground = "#dedacf";
-          background-opacity = 0.75;
-          background-blur-radius = 80;
+          background-opacity = 1;
+          background-blur-radius = 0;
         };
       };
     };

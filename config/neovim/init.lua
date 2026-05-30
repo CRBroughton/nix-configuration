@@ -19,6 +19,7 @@ require('lazy').setup({
   -- Existing plugins
   --require 'plugins.colourtheme',
   require 'plugins.catppuccin',
+  require 'plugins.themes',
 
   require 'plugins.neotree',
 
@@ -54,6 +55,7 @@ require('lazy').setup({
   require 'plugins.vimbegood',
   require 'plugins.lazygit',
   require 'plugins.lazydocker',
+  require 'plugins.jjui',
   require 'plugins.twilight',
   require 'plugins.flash',
 })

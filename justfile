@@ -10,6 +10,10 @@ default:
 switch:
     nh os switch .
 
+# Build and set as boot default without switching (requires reboot)
+boot:
+    nh os boot .
+
 # Switch with trace output for debugging
 switch-verbose:
     nh os switch . -- --show-trace

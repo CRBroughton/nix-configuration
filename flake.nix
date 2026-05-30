@@ -66,6 +66,12 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # jjui fork with conventional commits support
+    jjui = {
+      url = "github:CRBroughton/jjui/implement-conventional-commits-support";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

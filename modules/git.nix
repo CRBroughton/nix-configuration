@@ -3,6 +3,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   user,
   ...
 }:
@@ -26,7 +27,7 @@ in
 
       home.packages = with pkgs; [
         lazygit
-        jjui
+        inputs.jjui.packages.${pkgs.system}.default
         gh
         gource
       ];

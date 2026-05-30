@@ -216,6 +216,24 @@
         "type": "github"
       }
     },
+    "flake-parts_3": {
+      "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib_2"
+      },
+      "locked": {
+        "lastModified": 1768135262,
+        "narHash": "sha256-PVvu7OqHBGWN16zSi6tEmPwwHQ4rLPU9Plvs8/1TUBY=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "80daad04eddbbf5a4d883996a73f3f542fa437ac",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
     "flake-schemas": {
       "locked": {
         "lastModified": 1721999734,
@@ -359,6 +377,28 @@
         "type": "github"
       }
     },
+    "jjui": {
+      "inputs": {
+        "flake-parts": "flake-parts_3",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1779309573,
+        "narHash": "sha256-zhik1zFnzCDPD0qdad0xUdJvOVNssFti3P77sMZ9QDE=",
+        "owner": "CRBroughton",
+        "repo": "jjui",
+        "rev": "37975ec60746e162797c663f6977aa1445222b44",
+        "type": "github"
+      },
+      "original": {
+        "owner": "CRBroughton",
+        "ref": "implement-conventional-commits-support",
+        "repo": "jjui",
+        "type": "github"
+      }
+    },
     "jovian": {
       "inputs": {
         "nix-github-actions": "nix-github-actions",
@@ -491,6 +531,21 @@
         "type": "github"
       }
     },
+    "nixpkgs-lib_2": {
+      "locked": {
+        "lastModified": 1765674936,
+        "narHash": "sha256-k00uTP4JNfmejrCLJOwdObYC9jHRrr/5M/a/8L2EIdo=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "2075416fcb47225d9b68ac469a5c4801a9c4dd85",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1777207419,
@@ -556,6 +611,7 @@
         "firefox-addons": "firefox-addons",
         "home-manager": "home-manager_3",
         "import-tree": "import-tree",
+        "jjui": "jjui",
         "nix-flatpak": "nix-flatpak",
         "nix-format": "nix-format",
         "nix-vscode-extensions": "nix-vscode-extensions",

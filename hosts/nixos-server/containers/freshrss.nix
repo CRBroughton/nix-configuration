@@ -56,7 +56,10 @@ in
         # Container reaches READY → host brings ve-freshrss up → internet → tailscale auths.
         systemd.services.tailscaled-autoconnect = {
           wantedBy = [ "multi-user.target" ];
-          after = [ "tailscaled.service" "network.target" ];
+          after = [
+            "tailscaled.service"
+            "network.target"
+          ];
           serviceConfig = {
             Type = "simple";
             Restart = "on-failure";
@@ -72,7 +75,10 @@ in
         # Retry until tailscale is authenticated before serving
         systemd.services.tailscale-serve = {
           wantedBy = [ "multi-user.target" ];
-          after = [ "tailscaled.service" "tailscaled-autoconnect.service" ];
+          after = [
+            "tailscaled.service"
+            "tailscaled-autoconnect.service"
+          ];
           serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = true;

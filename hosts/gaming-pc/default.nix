@@ -14,7 +14,7 @@
     })
   ];
   imports = [
-    ../../users/craig/vm-testing.nix
+    # ../../users/craig/vm-testing.nix
     ./hardware.nix
     (disko + "/gaming-pc.nix")
 

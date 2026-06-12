@@ -11,17 +11,14 @@ let
 
   buildScript = pkgs.writeShellScript "nix-build-cache" ''
     set -uo pipefail
-    ${pkgs.git}/bin/git config --global --add safe.directory /etc/nixos
-    cd /etc/nixos
 
     GCROOT_DIR="/nix/var/nix/gcroots/nix-build-cache"
     mkdir -p "$GCROOT_DIR"
 
     for host in ${lib.escapeShellArgs cfg.hosts}; do
       echo "Building $host..."
-      ${pkgs.nix}/bin/nix build ".#nixosConfigurations.''${host}.config.system.build.toplevel" \
+      ${pkgs.nix}/bin/nix build "${cfg.flakeRef}#nixosConfigurations.''${host}.config.system.build.toplevel" \
         --out-link "$GCROOT_DIR/''${host}" \
-        --no-write-lock-file \
         --log-format raw \
         2>&1 || echo "WARN: failed to build $host, continuing"
     done
@@ -30,6 +27,10 @@ in
 {
   options.modules.server.buildCache = {
     enable = lib.mkEnableOption "pre-build all host configurations so Harmonia can serve them";
+    flakeRef = lib.mkOption {
+      type = lib.types.str;
+      description = "Flake ref to build from (e.g. github:user/repo)";
+    };
     hosts = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];

@@ -118,6 +118,7 @@
   modules.server.services.harmonia.enable = true;
   modules.server.buildCache = {
     enable = true;
+    flakeRef = "github:CRBroughton/nix-configuration";
     hosts = [
       "gaming-pc"
       "laptop"

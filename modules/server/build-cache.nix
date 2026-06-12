@@ -11,6 +11,7 @@ let
 
   buildScript = pkgs.writeShellScript "nix-build-cache" ''
     set -uo pipefail
+    ${pkgs.git}/bin/git config --global --add safe.directory /etc/nixos
     cd /etc/nixos
 
     GCROOT_DIR="/nix/var/nix/gcroots/nix-build-cache"
@@ -46,11 +47,6 @@ in
         "nixos-upgrade.service"
       ];
       wants = [ "network-online.target" ];
-      environment = {
-        GIT_CONFIG_COUNT = "1";
-        GIT_CONFIG_KEY_0 = "safe.directory";
-        GIT_CONFIG_VALUE_0 = "/etc/nixos";
-      };
       serviceConfig = {
         Type = "oneshot";
         ExecStart = buildScript;

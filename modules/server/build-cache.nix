@@ -46,11 +46,15 @@ in
         "nixos-upgrade.service"
       ];
       wants = [ "network-online.target" ];
+      environment = {
+        GIT_CONFIG_COUNT = "1";
+        GIT_CONFIG_KEY_0 = "safe.directory";
+        GIT_CONFIG_VALUE_0 = "/etc/nixos";
+      };
       serviceConfig = {
         Type = "oneshot";
         ExecStart = buildScript;
         TimeoutStartSec = "8h";
-        # Keep the last 3 runs in the journal
         StandardOutput = "journal";
         StandardError = "journal";
       };

@@ -22,21 +22,6 @@ in
       defaultNetwork.settings.dns_enabled = true;
     };
 
-    security.wrappers = {
-      newuidmap = {
-        source = "${pkgs.shadow.out}/bin/newuidmap";
-        setuid = true;
-        owner = "root";
-        group = "root";
-      };
-      newgidmap = {
-        source = "${pkgs.shadow.out}/bin/newgidmap";
-        setuid = true;
-        owner = "root";
-        group = "root";
-      };
-    };
-
     environment.systemPackages = with pkgs; [
       podman-compose
       lazydocker

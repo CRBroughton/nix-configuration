@@ -19,6 +19,7 @@ let
       echo "Building $host..."
       ${pkgs.nix}/bin/nix build "${cfg.flakeRef}#nixosConfigurations.''${host}.config.system.build.toplevel" \
         --out-link "$GCROOT_DIR/''${host}" \
+        --refresh \
         --log-format raw \
         2>&1 || echo "WARN: failed to build $host, continuing"
     done

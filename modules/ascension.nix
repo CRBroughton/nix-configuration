@@ -10,8 +10,8 @@ let
   cfg = config.modules.ascension;
 
   ascensionInstaller = pkgs.fetchurl {
-    url = "https://cdn-launcher.ascension-patch.com/update/ascension-setup-1.0.94.exe";
-    sha256 = "sha256-2iXmAimmJ3YrdouQOupF+otGyOMYvNY/151vrHPoAH4=";
+    url = "https://cdn-launcher.ascension-patch.com/update/ascension-setup-1.0.97.exe";
+    sha256 = "sha256-oYuAaBccoqCYmeYiRXyewFXlabvfaavEWbP/4sz7PzU=";
   };
 
   wine = pkgs.wineWow64Packages.stable;

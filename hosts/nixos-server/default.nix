@@ -116,4 +116,15 @@
   modules.monitoringNode.enable = true;
   modules.server.containerAutoUpdate.enable = true;
   modules.server.services.harmonia.enable = true;
+  modules.server.buildCache = {
+    enable = true;
+    hosts = [
+      "gaming-pc"
+      "laptop"
+      "brighton-pc"
+      "mum-pc"
+      "mums-laptop"
+      "moons-pc"
+    ];
+  };
 }

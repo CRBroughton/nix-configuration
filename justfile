@@ -62,6 +62,11 @@ delete-generation number:
     sudo nix-env --delete-generations {{number}} --profile /nix/var/nix/profiles/system
     sudo nix-collect-garbage
 
+# Delete a range of generations (e.g., just delete-generations-range 1 50)
+delete-generations-range from to:
+    sudo nix-env --delete-generations $(seq {{from}} {{to}}) --profile /nix/var/nix/profiles/system
+    sudo nix-collect-garbage
+
 # Show diff between current and previous generation
 diff:
     #!/usr/bin/env bash

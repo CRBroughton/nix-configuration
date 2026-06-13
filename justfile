@@ -61,11 +61,25 @@ generations:
 delete-generation number:
     sudo nix-env --delete-generations {{number}} --profile /nix/var/nix/profiles/system
     sudo nix-collect-garbage
+    just clean-boot-entries
 
 # Delete a range of generations (e.g., just delete-generations-range 1 50)
 delete-generations-range from to:
     sudo nix-env --delete-generations $(seq {{from}} {{to}}) --profile /nix/var/nix/profiles/system
     sudo nix-collect-garbage
+    just clean-boot-entries
+
+# Remove bootloader entries for deleted generations
+clean-boot-entries:
+    #!/usr/bin/env bash
+    valid_gens=$(sudo nix-env --list-generations --profile /nix/var/nix/profiles/system | awk '{print $1}')
+    sudo find /boot/loader/entries/ -name "*.conf" | while read f; do
+        gen=$(sudo grep -o "Generation [0-9]*" "$f" | awk '{print $2}')
+        if [ -n "$gen" ] && ! echo "$valid_gens" | grep -qw "$gen"; then
+            echo "Removing stale boot entry: generation $gen"
+            sudo rm "$f"
+        fi
+    done
 
 # Show diff between current and previous generation
 diff:

@@ -57,6 +57,11 @@ maintenance: clean optimise
 generations:
     sudo nix-env --list-generations --profile /nix/var/nix/profiles/system
 
+# Delete a specific generation by number (e.g., just delete-generation 42)
+delete-generation number:
+    sudo nix-env --delete-generations {{number}} --profile /nix/var/nix/profiles/system
+    sudo nix-collect-garbage
+
 # Show diff between current and previous generation
 diff:
     #!/usr/bin/env bash
@@ -251,7 +256,8 @@ disk-usage:
 
 # Rollback to previous generation
 rollback:
-    sudo nixos-rebuild switch --rollback
+    sudo nix-env --rollback --profile /nix/var/nix/profiles/system
+    sudo /nix/var/nix/profiles/system/bin/switch-to-configuration switch
 
 #═══════════════════════════════════════════════════════════════════════════════
 # Server / Containers (run on nixos-server)

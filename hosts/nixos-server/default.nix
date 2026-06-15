@@ -100,6 +100,16 @@
     systemctl-tui
   ];
 
+  systemd.services.podman-create-homelab-network = {
+    description = "Create podman homelab network";
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.podman}/bin/podman network inspect homelab &>/dev/null || ${pkgs.podman}/bin/podman network create homelab'";
+    };
+  };
+
   # Modules
   modules.freshrss.enable = true;
   modules.shell.enable = true;

@@ -8,7 +8,7 @@
 let
   cfg = config.modules.freshrss;
   dataDir = "/mnt/services/freshrss";
-  containerLib = import ../../lib/container.nix { inherit lib config pkgs; };
+  containerLib = import ../../lib/container.nix { inherit config pkgs; };
 in
 {
   options.modules.freshrss = {

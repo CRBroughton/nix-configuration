@@ -7,14 +7,9 @@
 {
   imports = [
     ./hardware.nix
-    ./containers/freshrss.nix
   ];
 
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-
-  age.secrets.freshrss_password = {
-    file = ../../secrets/nixos-server/freshrss_password.age;
-  };
 
   # Shared ts_authkey used by all nixos-server containers
   age.secrets.ts_authkey = {

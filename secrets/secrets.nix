@@ -13,11 +13,6 @@ in
     craig
   ];
 
-  "nixos-server/freshrss_password.age".publicKeys = [
-    nixos-server
-    craig
-  ];
-
   # Shared across all nixos-server containers
   "nixos-server/ts_authkey.age".publicKeys = [
     nixos-server

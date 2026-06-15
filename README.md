@@ -14,8 +14,7 @@ See [`template/README.md`](template/README.md) for setup instructions and guidan
 nix-configuration/
 ├── flake.nix                      # Entry point - defines inputs and hosts
 ├── lib/
-│   ├── default.nix                # Helper functions (mkHost, mkPi)
-│   └── arion.nix                  # Arion helpers (mkTailscaleService)
+│   └── default.nix                # Helper functions (mkHost, mkPi)
 ├── hosts/                         # One directory per machine
 │   ├── laptop/
 │   │   ├── default.nix            # NixOS config (modules, packages, services)
@@ -80,9 +79,7 @@ nix-configuration/
 │       ├── restic.nix             # Backups to Backblaze B2
 │       ├── auto-upgrade.nix       # Git pull + rebuild for servers
 │       ├── container-auto-update.nix  # Daily podman-compose updates
-│       ├── arion.nix              # Docker + Arion base config
-│       └── services/              # Arion service definitions
-│           ├── freshrss.nix       # FreshRSS + Tailscale sidecar
+│       └── services/
 │           └── harmonia.nix       # Nix binary cache server
 ├── services/                      # Podman compose services (for server)
 │   ├── adguard/                   # DNS ad blocker

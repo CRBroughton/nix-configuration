@@ -43,12 +43,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Arion - Docker/Podman compose in Nix
-    arion = {
-      url = "github:hercules-ci/arion";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Claude Desktop (Debian-based wrapper for NixOS)
     claude-desktop = {
       url = "github:aaddrick/claude-desktop-debian/a4fa9c8b24b42ebcee56b995bd57a93b69dc8de5";

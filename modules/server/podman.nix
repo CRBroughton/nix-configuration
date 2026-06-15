@@ -18,7 +18,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.podman = {
       enable = true;
-      dockerCompat = false; # Disabled - arion uses real docker
+      dockerCompat = false;
       defaultNetwork.settings.dns_enabled = true;
     };
 

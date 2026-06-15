@@ -101,6 +101,7 @@
   ];
 
   # Modules
+  modules.freshrss.enable = true;
   modules.shell.enable = true;
   modules.git.enable = true;
   modules.server.ssh.enable = true;

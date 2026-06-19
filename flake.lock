@@ -674,14 +674,18 @@
         ]
       },
       "locked": {
-        "lastModified": 1781854573,
-        "narHash": "sha256-Uxi7iEPFBw1zQwSPnegrT1Vi3dOrzIdP9ZH+9+g4rWw=",
-        "path": "/home/craig/code/relic",
-        "type": "path"
+        "lastModified": 1781855520,
+        "narHash": "sha256-vhYOjbt1GInDpWsogq9hFEqOzq1AdDfchizrAQMziWU=",
+        "ref": "master",
+        "rev": "6d13afbb87c76d1d7dee45b7a29b5550fff29d8e",
+        "revCount": 19,
+        "type": "git",
+        "url": "ssh://git@github.com/CRBroughton/trove"
       },
       "original": {
-        "path": "/home/craig/code/relic",
-        "type": "path"
+        "ref": "master",
+        "type": "git",
+        "url": "ssh://git@github.com/CRBroughton/trove"
       }
     },
     "zen-flatpak-config": {

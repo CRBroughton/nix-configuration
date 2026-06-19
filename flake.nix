@@ -69,7 +69,7 @@
 
     # Trove — self-hosted save-file sync for Anbernic handhelds
     trove = {
-      url = "path:/home/craig/code/relic";
+      url = "git+ssh://git@github.com/CRBroughton/trove?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

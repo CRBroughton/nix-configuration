@@ -24,6 +24,8 @@
   home.packages = with pkgs; [
     freerdp
     unzip
+    google-chrome
+    vlc
   ];
 
 }

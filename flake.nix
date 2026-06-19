@@ -66,6 +66,12 @@
       url = "github:CRBroughton/jjui/implement-conventional-commits-support";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Trove — self-hosted save-file sync for Anbernic handhelds
+    trove = {
+      url = "path:/home/craig/code/relic";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -84,7 +90,7 @@
           hostname = "laptop";
           users = [ "craig" ];
           inherit stateVersion;
-          extraModules = [ modules ];
+          extraModules = [ modules inputs.trove.nixosModules.default ];
         };
 
         gaming-pc = myLib.mkHost {
@@ -126,7 +132,7 @@
           hostname = "nixos-server";
           users = [ "craig" ];
           inherit stateVersion;
-          extraModules = [ modules ];
+          extraModules = [ modules inputs.trove.nixosModules.default ];
         };
 
         pi-monitor = myLib.mkPi {

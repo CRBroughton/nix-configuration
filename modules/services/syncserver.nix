@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.modules.syncserver;
@@ -32,7 +37,10 @@ in
     virtualisation.oci-containers.containers = containers // {
       syncserver = containers.syncserver // {
         entrypoint = "/usr/local/bin/gunicorn";
-        cmd = [ "--paste" "/app/syncserver.ini" ];
+        cmd = [
+          "--paste"
+          "/app/syncserver.ini"
+        ];
       };
     };
 

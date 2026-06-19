@@ -90,7 +90,10 @@
           hostname = "laptop";
           users = [ "craig" ];
           inherit stateVersion;
-          extraModules = [ modules inputs.trove.nixosModules.default ];
+          extraModules = [
+            modules
+            inputs.trove.nixosModules.default
+          ];
         };
 
         gaming-pc = myLib.mkHost {
@@ -132,7 +135,10 @@
           hostname = "nixos-server";
           users = [ "craig" ];
           inherit stateVersion;
-          extraModules = [ modules inputs.trove.nixosModules.default ];
+          extraModules = [
+            modules
+            inputs.trove.nixosModules.default
+          ];
         };
 
         pi-monitor = myLib.mkPi {

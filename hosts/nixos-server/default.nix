@@ -124,8 +124,8 @@
   modules.server.containerAutoUpdate.enable = true;
   modules.server.services.harmonia.enable = true;
   services.trove = {
-    enable      = true;
-    port        = 8082;
+    enable = true;
+    port = 8082;
     openFirewall = true;
   };
   modules.server.buildCache = {

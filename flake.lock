@@ -306,11 +306,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781976894,
-        "narHash": "sha256-/9ZQMiT9bHWyRhus54nqySEMk3g+faU29VTmVXBCIck=",
+        "lastModified": 1781981105,
+        "narHash": "sha256-/1nNBbA7PrSQpTc9Qazkhl4kIPg+TNl0CjxS3UQJKlw=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "ad026da57b154db4794f7b7f54c6c966ad7f4e86",
+        "rev": "7bfff44b465909f69a442701293bc0badcf476dc",
         "type": "github"
       },
       "original": {
@@ -601,11 +601,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781976957,
-        "narHash": "sha256-LH5/NOxlqAfpIMqLYwd6/SALM6nFzRoNBfDGvAqWMvA=",
+        "lastModified": 1781981819,
+        "narHash": "sha256-ilqbawnG9VFatvBvrAbLb3dhUgI/5Chm2YqRT99uRyA=",
         "ref": "master",
-        "rev": "daa46a47be885226606dfa7c837ef4f0fee93752",
-        "revCount": 52,
+        "rev": "f74a683742ebd3bfbd004a477e1fb18bc2921bb2",
+        "revCount": 55,
         "type": "git",
         "url": "ssh://git@github.com/CRBroughton/trove"
       },

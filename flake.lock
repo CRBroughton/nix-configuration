@@ -601,11 +601,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781967084,
-        "narHash": "sha256-sRqLFzB07CK+xr6A4Lr9Y3TMH8XliAhy59UqN4yha8o=",
+        "lastModified": 1781968478,
+        "narHash": "sha256-s0zQmk4mB2afr73KKJohA2LfnCbXhMp+lh/CYmIvTrk=",
         "ref": "master",
-        "rev": "6645b7f827449c4e7e2f1a1dd9ee9b60761274de",
-        "revCount": 30,
+        "rev": "6cb050a4fb45bf78b5f2f06f0e9388bc5bf065bc",
+        "revCount": 33,
         "type": "git",
         "url": "ssh://git@github.com/CRBroughton/trove"
       },

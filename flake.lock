@@ -30,11 +30,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1781936469,
-        "narHash": "sha256-2jlTK3IlBg7Ifi52Bj5y2SSmf3QtvkKl+PSyyTcYe4Q=",
+        "lastModified": 1781963277,
+        "narHash": "sha256-9LKn7DRqW1O1DKG0whSAtoy78yuypBzLMNBhBUVV32g=",
         "owner": "chaotic-cx",
         "repo": "nyx",
-        "rev": "dd75f823f33b25ef2619b538a7a26f6faea138d9",
+        "rev": "91cfcb4174640989fea661857d6fb8701ab8fb1b",
         "type": "github"
       },
       "original": {
@@ -601,11 +601,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781968478,
-        "narHash": "sha256-s0zQmk4mB2afr73KKJohA2LfnCbXhMp+lh/CYmIvTrk=",
+        "lastModified": 1781974615,
+        "narHash": "sha256-lJzfuLplwHBDD2RG/0gN2KWDHDcyvJzPPkmGEa1rPNU=",
         "ref": "master",
-        "rev": "6cb050a4fb45bf78b5f2f06f0e9388bc5bf065bc",
-        "revCount": 33,
+        "rev": "d1f952d85be59e89859a6d3ca9211138186a4da1",
+        "revCount": 41,
         "type": "git",
         "url": "ssh://git@github.com/CRBroughton/trove"
       },

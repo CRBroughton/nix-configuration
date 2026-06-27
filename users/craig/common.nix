@@ -13,6 +13,7 @@
       "wheel"
       "networkmanager"
       "libvirtd"
+      "podman"
       "audio"
       "video"
     ];

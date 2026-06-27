@@ -60,6 +60,14 @@
   modules.editors.zed.enable = true;
   modules.browsers.zen.enable = true;
   modules.autoUpgrade.enable = true;
+  modules.taskReminder = {
+    enable = true;
+    tasks = [
+      { every = 1;      task = "Check the sink for dishes"; }
+      { time = "12:00"; task = "Lunch time!"; }
+      { time = "21:30"; task = "Check the doors are locked and the PC is off"; }
+    ];
+  };
   modules.monitoringNode.enable = true;
   modules.claude-desktop.enable = true;
   modules.ascension.enable = true;

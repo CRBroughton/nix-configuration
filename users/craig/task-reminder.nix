@@ -31,7 +31,7 @@ let
 
   tasks = [
     { every = 1;    task = "Check the sink for dishes"; }
-    { time = "12:00"; task = "Lunch time!"; }
+    { time = "12:00"; task = "Lunch time"; }
     { time = "21:30"; task = "Check the doors are locked and the PC is off"; }
   ];
 

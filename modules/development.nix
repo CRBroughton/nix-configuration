@@ -33,6 +33,15 @@ in
     # ============================================
 
     home-manager.users.${user} = {
+      programs.direnv = {
+        enable = true;
+        silent = true;
+        nix-direnv.enable = true;
+        stdlib = ''
+          source ${pkgs.devenv.src}/devenv/direnvrc
+        '';
+      };
+
       home.packages = with pkgs; [
         # Languages
         go

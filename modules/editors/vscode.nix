@@ -37,6 +37,7 @@ in
             golang.go
             ziglang.vscode-zig
             bbenoist.nix
+            brettm12345.nixfmt-vscode
             jakebecker.elixir-ls
 
             # TypeScript/JavaScript

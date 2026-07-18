@@ -13,5 +13,6 @@ _:
     "net.runelite.RuneLite"
     "io.gitlab.news_flash.NewsFlash"
     "com.github.neithern.g4music"
+    "io.keet.Keet"
   ];
 }

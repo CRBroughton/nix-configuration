@@ -55,6 +55,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Shared home-manager modules (helix, zellij, etc.)
+    nix-modules = {
+      url = "path:/home/craig/code/nix-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Secrets management
     agenix = {
       url = "github:ryantm/agenix";

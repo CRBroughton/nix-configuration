@@ -57,7 +57,7 @@
 
     # Shared home-manager modules (helix, zellij, etc.)
     nix-modules = {
-      url = "path:/home/craig/code/nix-modules";
+      url = "github:crbroughton/nix-modules";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

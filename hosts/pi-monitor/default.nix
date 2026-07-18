@@ -1,4 +1,4 @@
-# Pi Monitor - Raspberry Pi 3 B+ running Uptime Kuma
+# Pi Monitor - Raspberry Pi 3 B+ running Radicale
 {
   pkgs,
   modulesPath,
@@ -8,6 +8,7 @@
 {
   imports = [
     (modulesPath + "/installer/sd-card/sd-image-aarch64.nix")
+    ../../modules/pi/services/radicale.nix
   ];
 
   # Pi 3 B+ specific settings
@@ -71,18 +72,9 @@
     btop
   ];
 
-  # Use OCI containers (lighter than full podman daemon)
-  virtualisation.oci-containers = {
-    backend = "podman";
-    containers.uptime-kuma = {
-      image = "louislam/uptime-kuma:2";
-      volumes = [
-        "uptime-kuma:/app/data"
-      ];
-      autoStart = true;
-      extraOptions = [ "--network=host" ]; # Use host network for Tailscale access
-    };
-  };
+  virtualisation.oci-containers.backend = "podman";
+
+  modules.pi.services.radicale.enable = true;
 
   # Prometheus node_exporter - report metrics to central Prometheus scraper
   # tailscale0 is trusted so no extra firewall rule needed
@@ -96,13 +88,9 @@
     "d /var/lib/prometheus-node-exporter/textfile 0755 root root -"
   ];
 
-  # Firewall
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [
-      22
-      3001
-    ]; # SSH + Uptime Kuma
+    allowedTCPPorts = [ 22 ];
     trustedInterfaces = [ "tailscale0" ];
   };
 

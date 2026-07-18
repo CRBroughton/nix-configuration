@@ -70,6 +70,8 @@ in
             sharedModules = [
               inputs.zen-flatpak-config.homeManagerModules.default
               inputs.podman-flake.homeManagerModules.default
+              inputs.nix-modules.homeManagerModules.helix
+              inputs.nix-modules.homeManagerModules.zellij
               { home.stateVersion = stateVersion; }
             ];
             users = lib.genAttrs users (

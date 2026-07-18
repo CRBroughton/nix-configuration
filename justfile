@@ -26,6 +26,30 @@ test:
 build:
     nh os build .
 
+# Build all machines (no result symlinks kept)
+build-all:
+    #!/usr/bin/env bash
+    set -e
+    hosts=(brighton-pc gaming-pc laptop moons-pc mum-pc mums-laptop nixos-server pi-monitor)
+    failed=()
+    for host in "${hosts[@]}"; do
+        echo "==> Building $host..."
+        if [ "$host" = "pi-monitor" ]; then
+            nix build --no-link .#images.pi-monitor || failed+=("$host")
+        else
+            nix build --no-link .#nixosConfigurations."$host".config.system.build.toplevel || failed+=("$host")
+        fi
+    done
+    if [ ${#failed[@]} -gt 0 ]; then
+        echo "FAILED: ${failed[*]}"
+        exit 1
+    fi
+    echo "All machines built successfully."
+
+# Build a specific host (e.g., just build-host gaming-pc)
+build-host host:
+    nix build .#nixosConfigurations.{{host}}.config.system.build.toplevel
+
 # Update all flake inputs
 update:
     nix flake update
@@ -402,7 +426,7 @@ flash-pi device:
 
 # Deploy to Pi (from another machine)
 deploy-pi:
-    nixos-rebuild switch --flake .#pi-monitor --target-host craig@pi-monitor --build-host localhost --use-remote-sudo
+    nixos-rebuild boot --flake .#pi-monitor --target-host craig@pi-monitor --build-host craig@nixos-server --sudo
 
 # Deploy to server (from another machine)
 deploy-server:

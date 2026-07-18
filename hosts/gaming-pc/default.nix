@@ -58,7 +58,10 @@
   modules.editors.vscode.enable = true;
   modules.editors.neovim.enable = true;
   modules.editors.zed.enable = true;
+  modules.editors.helix.enable = true;
   modules.browsers.zen.enable = true;
+  modules.tmux.enable = true;
+  modules.zellij.enable = true;
   modules.autoUpgrade.enable = true;
   modules.taskReminder = {
     enable = true;

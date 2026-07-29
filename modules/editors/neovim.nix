@@ -1,8 +1,7 @@
-# Neovim with external config
+# Neovim via nix-modules (shared home-manager module)
 {
   config,
   lib,
-  pkgs,
   user,
   ...
 }:
@@ -12,22 +11,28 @@ let
 in
 {
   options.modules.editors.neovim = {
-    enable = lib.mkEnableOption "Neovim with external config";
+    enable = lib.mkEnableOption "Neovim editor";
   };
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${user} = {
-      programs.neovim = {
+      programs.neovim-modules = {
         enable = true;
-        defaultEditor = false;
+
+        languages = {
+          typescript.enable = true;
+          vue.enable = true;
+          go.enable = true;
+          odin.enable = true;
+          nix.enable = true;
+          tailwind.enable = true;
+        };
+
+        plugins = {
+          telescope.enable = true;
+          theme.enable = true;
+        };
       };
-
-      xdg.configFile."nvim".source = ../../config/neovim;
-
-      home.packages = with pkgs; [
-        tree-sitter
-        ols
-      ];
     };
   };
 }

@@ -72,6 +72,7 @@ in
               inputs.podman-flake.homeManagerModules.default
               inputs.nix-modules.homeManagerModules.helix
               inputs.nix-modules.homeManagerModules.zellij
+              inputs.nix-modules.homeManagerModules.neovim
               { home.stateVersion = stateVersion; }
             ];
             users = lib.genAttrs users (

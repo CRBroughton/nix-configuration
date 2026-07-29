@@ -20,6 +20,7 @@ in
         enable = true;
 
         languages = {
+          gameboy.enable = true;
           typescript.enable = true;
           vue.enable = true;
           go.enable = true;
@@ -29,8 +30,13 @@ in
         };
 
         plugins = {
+          conventional-commit.enable = true;
+          bufferline.enable = false;
+          flash.enable = true;
+          harpoon.enable = true;
           telescope.enable = true;
           theme.enable = true;
+          which-key.enable = true;
         };
       };
     };

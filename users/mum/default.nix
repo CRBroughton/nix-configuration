@@ -12,6 +12,7 @@
     obs-studio
     git
     wayvnc
+    vlc
   ];
 
   xdg.configFile."wayvnc/config".text = ''

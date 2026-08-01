@@ -12,6 +12,7 @@
   networking.networkmanager.enable = true;
 
   modules.tailscale.enable = true;
+  modules.ssh.enable = true;
   modules.gnome.enable = true;
   modules.flatpak.enable = true;
   modules.gaming.enable = true;

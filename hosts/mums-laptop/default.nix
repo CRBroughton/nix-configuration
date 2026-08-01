@@ -8,6 +8,7 @@
     ../../users/mum/flatpaks.nix
   ];
 
+  hardware.enableAllFirmware = true;
   networking.networkmanager.enable = true;
 
   modules.gnome.enable = true;

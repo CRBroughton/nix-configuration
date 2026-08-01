@@ -3,9 +3,6 @@
 _:
 
 {
-  # Placeholder root filesystem - replace with output of nixos-generate-config
-  fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos";
-    fsType = "ext4";
-  };
+  # Replace with output of: nixos-generate-config --root /mnt --show-hardware-config
+  # Remove any fileSystems / swapDevices — disko manages those
 }

@@ -26,6 +26,7 @@
         "org.gajim.Gajim.desktop"
         "steam.desktop"
         "com.obsproject.Studio.desktop"
+        "vlc.desktop"
       ];
       enabled-extensions = [
         "dash-to-dock@micxgx.gmail.com"

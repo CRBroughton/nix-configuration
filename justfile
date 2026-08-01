@@ -209,6 +209,14 @@ install-brighton-pc:
 install-mum-pc:
     sudo nixos-install --flake .#mum-pc
 
+# Partition disk with disko (mums-laptop)
+disko-mums-laptop device="/dev/nvme0n1":
+    sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko ./disko/mums-laptop.nix --arg device '"{{device}}"'
+
+# Install NixOS (mums-laptop)
+install-mums-laptop:
+    sudo nixos-install --flake .#mums-laptop
+
 #═══════════════════════════════════════════════════════════════════════════════
 # VPN
 #═══════════════════════════════════════════════════════════════════════════════

@@ -16,4 +16,5 @@
   modules.gnome.enable = true;
   modules.flatpak.enable = true;
   modules.gaming.enable = true;
+  modules.autoUpgrade.enable = true;
 }

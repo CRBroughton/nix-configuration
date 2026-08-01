@@ -11,6 +11,7 @@
   hardware.enableAllFirmware = true;
   networking.networkmanager.enable = true;
 
+  modules.tailscale.enable = true;
   modules.gnome.enable = true;
   modules.flatpak.enable = true;
   modules.gaming.enable = true;

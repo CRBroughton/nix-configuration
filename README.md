@@ -537,7 +537,11 @@ just maintenance # Clean + optimise
 ### Fresh NixOS Install
 
 1. Boot NixOS installer USB (minimal ISO should work, you dont need to actually use the ISO steps)
-2. Connect to network
+2. Connect to network:
+   ```bash
+   nmtui   # interactive WiFi UI — or:
+   nmcli device wifi connect "SSID" password "yourpassword"
+   ```
 3. Clone this repo:
    ```bash
    nix-shell -p git just micro
@@ -561,6 +565,38 @@ just maintenance # Clean + optimise
    passwd
    ```
 8. Copy your SSH private key to `~/.ssh/id_ed25519`
+
+### Fresh NixOS Install (mums-laptop)
+
+1. Boot NixOS installer USB
+2. Connect to network:
+   ```bash
+   nmtui   # interactive WiFi UI — or:
+   nmcli device wifi connect "SSID" password "yourpassword"
+   ```
+3. Clone this repo:
+   ```bash
+   nix-shell -p git just micro
+   git clone https://github.com/CRBroughton/nix-configuration.git
+   cd nix-configuration
+   ```
+4. Partition disk:
+   ```bash
+   just disko-mums-laptop device="/dev/nvme0n1"
+   ```
+5. Generate hardware config:
+   ```bash
+   nixos-generate-config --root /mnt --show-hardware-config > hosts/mums-laptop/hardware.nix
+   ```
+   > Remove any `fileSystems` and `swapDevices` entries — disko manages those.
+6. Install:
+   ```bash
+   just install-mums-laptop
+   ```
+7. Reboot, then set password:
+   ```bash
+   passwd mum
+   ```
 
 ### Existing NixOS System
 

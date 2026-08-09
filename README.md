@@ -707,6 +707,25 @@ xfreerdp /v:<tailscale-ip> /u:<username> /p:<password> /cert:ignore /dynamic-res
 
 ## Troubleshooting
 
+### `nix flake update` fails with HTTP 401
+
+Nix uses a GitHub PAT to avoid API rate limits. The token is stored in `~/.config/nix/nix.conf` and expires periodically.
+
+Generate a new token at github.com/settings/tokens (needs `public_repo` scope), then update the file:
+
+```bash
+# Replace TOKEN with your new PAT
+sed -i 's/access-tokens = github.com=.*/access-tokens = github.com=TOKEN/' ~/.config/nix/nix.conf
+```
+
+Or edit `~/.config/nix/nix.conf` directly:
+
+```
+access-tokens = github.com=github_pat_...
+```
+
+> Never commit this file or share the token — treat it as a private credential.
+
 ### Build fails with "file not found"
 
 Make sure all new files are tracked by git:

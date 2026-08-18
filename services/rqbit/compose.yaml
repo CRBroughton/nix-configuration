@@ -56,7 +56,7 @@ services:
       - SYS_MODULE
 
   rqbit:
-    image: ikatson/rqbit:master
+    image: ikatson/rqbit:latest
     container_name: rqbit
     restart: unless-stopped
     network_mode: service:gluetun

@@ -19,7 +19,7 @@ services:
       - /dev/net/tun:/dev/net/tun
     environment:
       - VPN_SERVICE_PROVIDER=private internet access
-      - VPN_TYPE=wireguard
+      - VPN_TYPE=openvpn
       - OPENVPN_USER=${PIA_USER}
       - OPENVPN_PASSWORD=${PIA_PASSWORD}
       - SERVER_REGIONS=${PIA_SERVER_REGIONS:-UK London}
@@ -27,6 +27,12 @@ services:
       - FIREWALL_OUTBOUND_SUBNETS=100.64.0.0/10
     volumes:
       - ./gluetun:/gluetun
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:9999"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
   tailscale-rqbit:
     image: tailscale/tailscale:latest
@@ -58,12 +64,12 @@ services:
       gluetun:
         condition: service_healthy
     command: >
-      server start
       --http-api-listen-addr 0.0.0.0:3030
+      server start
       /downloads
     volumes:
       - rqbit-data:/downloads
-      - rqbit-config:/root/.config/rqbit
+      - rqbit-config:/home/rqbit
 
 volumes:
   rqbit-data:

@@ -39,7 +39,8 @@
 
   environment.systemPackages = with pkgs; [
     pciutils
-    usbutils
+    usbutils 
+    reaper
   ];
 
   # Modules

@@ -27,12 +27,6 @@ services:
       - FIREWALL_OUTBOUND_SUBNETS=100.64.0.0/10
     volumes:
       - ./gluetun:/gluetun
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "https://ipinfo.io/ip"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
 
   tailscale-rqbit:
     image: tailscale/tailscale:latest

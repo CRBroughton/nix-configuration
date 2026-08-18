@@ -37,6 +37,12 @@
     ];
   };
 
+  # NVMe storage drive
+  fileSystems."/mnt/nvme-storage" = {
+    device = "/dev/disk/by-uuid/a7543815-db35-4582-b95f-4f8b24074f2b";
+    fsType = "ext4";
+  };
+
   swapDevices = [ ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

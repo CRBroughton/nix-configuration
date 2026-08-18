@@ -12,8 +12,12 @@
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
   # Shared ts_authkey used by all nixos-server containers
+  # owner/group craig so rootless podman-compose services can read it via env_file
   age.secrets.ts_authkey = {
     file = ../../secrets/nixos-server/ts_authkey.age;
+    owner = "craig";
+    group = "users";
+    mode = "0400";
   };
 
   # Boot loader

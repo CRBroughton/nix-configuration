@@ -43,8 +43,9 @@ services:
     depends_on:
       gluetun:
         condition: service_healthy
+    env_file:
+      - /run/agenix/ts_authkey
     environment:
-      - TS_AUTHKEY=${TS_AUTHKEY}
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_SERVE_CONFIG=/config/serve.json
     volumes:

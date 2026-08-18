@@ -1,0 +1,75 @@
+# rqbit - Torrent client, routed exclusively through PIA (gluetun)
+# Run with: podman compose up -d
+#
+# Network topology: gluetun owns the network namespace and holds the PIA
+# tunnel + killswitch firewall. Both tailscale-rqbit and rqbit join that
+# namespace via network_mode: service:gluetun, so rqbit has no route to
+# the internet other than through the VPN tunnel - if the tunnel drops,
+# gluetun's firewall blocks all traffic (including rqbit's) until it's
+# back up.
+
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun-rqbit
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - VPN_SERVICE_PROVIDER=private internet access
+      - VPN_TYPE=wireguard
+      - OPENVPN_USER=${PIA_USER}
+      - OPENVPN_PASSWORD=${PIA_PASSWORD}
+      - SERVER_REGIONS=${PIA_SERVER_REGIONS:-UK London}
+      - FIREWALL=on
+      - FIREWALL_OUTBOUND_SUBNETS=100.64.0.0/10
+    volumes:
+      - ./gluetun:/gluetun
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "https://ipinfo.io/ip"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  tailscale-rqbit:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-rqbit
+    hostname: rqbit
+    restart: unless-stopped
+    network_mode: service:gluetun
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale:/var/lib/tailscale:Z
+      - ./serve.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
+  rqbit:
+    image: ikatson/rqbit:master
+    container_name: rqbit
+    restart: unless-stopped
+    network_mode: service:gluetun
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    command: >
+      server start
+      --http-api-listen-addr 0.0.0.0:3030
+      /downloads
+    volumes:
+      - rqbit-data:/downloads
+      - rqbit-config:/root/.config/rqbit
+
+volumes:
+  rqbit-data:
+  rqbit-config:

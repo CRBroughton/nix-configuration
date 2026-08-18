@@ -142,6 +142,10 @@ pages:
                 hide: true
               firefly-cron:
                 hide: true
+              gluetun-rqbit:
+                hide: true
+              tailscale-rqbit:
+                hide: true
               # HTTP services (Tailscale Funnel)
               thelounge:
                 name: The lounge
@@ -218,6 +222,10 @@ pages:
                 name: Prometheus
                 description: Metrics storage and query engine
                 url: https://prometheus.tail538465.ts.net
+              rqbit:
+                name: rqbit
+                description: Torrent client (via PIA VPN)
+                url: https://rqbit.tail538465.ts.net
               stirling-pdf:
                 name: Stirling PDF
                 description: PDF manipulation tools

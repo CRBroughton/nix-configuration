@@ -68,9 +68,8 @@ services:
       server start
       /downloads
     volumes:
-      - rqbit-data:/downloads
+      - /mnt/nvme-storage/rqbit:/downloads
       - rqbit-config:/home/rqbit
 
 volumes:
-  rqbit-data:
   rqbit-config:

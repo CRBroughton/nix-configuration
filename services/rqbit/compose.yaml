@@ -71,5 +71,40 @@ services:
       - /mnt/nvme-storage/rqbit:/downloads
       - rqbit-config:/home/rqbit
 
+  # Jellyfin - media frontend for downloaded files. Not routed through PIA;
+  # it only needs to serve the already-downloaded files over Tailscale, so it
+  # gets its own network namespace (own tailscale sidecar) instead of joining
+  # gluetun's.
+  tailscale-jellyfin:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-jellyfin
+    hostname: jellyfin
+    restart: unless-stopped
+    env_file:
+      - /run/agenix/ts_authkey
+    environment:
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale-jellyfin:/var/lib/tailscale:Z
+      - ./serve-jellyfin.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    network_mode: service:tailscale-jellyfin
+    depends_on:
+      - tailscale-jellyfin
+    volumes:
+      - jellyfin-config:/config
+      - jellyfin-cache:/cache
+      - /mnt/nvme-storage/rqbit:/data/downloads:ro
+
 volumes:
   rqbit-config:
+  jellyfin-config:
+  jellyfin-cache:

@@ -146,6 +146,8 @@ pages:
                 hide: true
               tailscale-rqbit:
                 hide: true
+              tailscale-jellyfin:
+                hide: true
               # HTTP services (Tailscale Funnel)
               thelounge:
                 name: The lounge
@@ -226,6 +228,10 @@ pages:
                 name: rqbit
                 description: Torrent client (via PIA VPN)
                 url: https://rqbit.tail538465.ts.net
+              jellyfin:
+                name: Jellyfin
+                description: Media frontend
+                url: https://jellyfin.tail538465.ts.net
               stirling-pdf:
                 name: Stirling PDF
                 description: PDF manipulation tools

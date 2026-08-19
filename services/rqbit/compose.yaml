@@ -7,6 +7,10 @@
 # the internet other than through the VPN tunnel - if the tunnel drops,
 # gluetun's firewall blocks all traffic (including rqbit's) until it's
 # back up.
+#
+# Storage layout: /mnt/nvme-storage/media/{movies,tv} - when adding a
+# torrent in rqbit, set its output folder to movies/ or tv/ so Jellyfin
+# picks it up as the right library type.
 
 services:
   gluetun:
@@ -68,7 +72,7 @@ services:
       server start
       /downloads
     volumes:
-      - /mnt/nvme-storage/rqbit:/downloads
+      - /mnt/nvme-storage/media:/downloads
       - rqbit-config:/home/rqbit
 
   # Jellyfin - media frontend for downloaded files. Not routed through PIA;
@@ -102,7 +106,8 @@ services:
     volumes:
       - jellyfin-config:/config
       - jellyfin-cache:/cache
-      - /mnt/nvme-storage/rqbit:/data/downloads:ro
+      - /mnt/nvme-storage/media/movies:/data/movies:ro
+      - /mnt/nvme-storage/media/tv:/data/tv:ro
 
 volumes:
   rqbit-config:

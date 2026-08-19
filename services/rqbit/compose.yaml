@@ -32,10 +32,11 @@ services:
     volumes:
       - ./gluetun:/gluetun
     ports:
-      # rqbit's API, published to localhost only so sonarr/radarr (outside
-      # gluetun's netns) can reach it as a download client via
-      # host.containers.internal:3030
+      # rqbit's API and qbittorrent's WebUI, published to localhost only so
+      # sonarr/radarr (outside gluetun's netns) can reach them as download
+      # clients via host.containers.internal:<port>
       - 127.0.0.1:3030:3030
+      - 127.0.0.1:8090:8090
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:9999"]
       interval: 15s
@@ -79,6 +80,26 @@ services:
     volumes:
       - /mnt/nvme-storage/media:/downloads
       - rqbit-config:/home/rqbit
+
+  # qBittorrent - download client for sonarr/radarr (rqbit isn't supported by
+  # the stable Sonarr/Radarr releases yet). Same PIA killswitch protection as
+  # rqbit - joins gluetun's netns instead of getting its own.
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: unless-stopped
+    network_mode: service:gluetun
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8090
+    volumes:
+      - qbittorrent-config:/config
+      - /mnt/nvme-storage/media:/downloads
 
   # Jellyfin - media frontend for downloaded files. Not routed through PIA;
   # it only needs to serve the already-downloaded files over Tailscale, so it
@@ -217,6 +238,7 @@ services:
 
 volumes:
   rqbit-config:
+  qbittorrent-config:
   jellyfin-config:
   jellyfin-cache:
   prowlarr-config:

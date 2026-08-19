@@ -31,6 +31,11 @@ services:
       - FIREWALL_OUTBOUND_SUBNETS=100.64.0.0/10
     volumes:
       - ./gluetun:/gluetun
+    ports:
+      # rqbit's API, published to localhost only so sonarr/radarr (outside
+      # gluetun's netns) can reach it as a download client via
+      # host.containers.internal:3030
+      - 127.0.0.1:3030:3030
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:9999"]
       interval: 15s
@@ -109,7 +114,111 @@ services:
       - /mnt/nvme-storage/media/movies:/data/movies:ro
       - /mnt/nvme-storage/media/tv:/data/tv:ro
 
+  # Prowlarr - indexer manager, feeds search results to sonarr/radarr.
+  # Not routed through PIA - only rqbit's actual downloads need the tunnel.
+  tailscale-prowlarr:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-prowlarr
+    hostname: prowlarr
+    restart: unless-stopped
+    env_file:
+      - /run/agenix/ts_authkey
+    environment:
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale-prowlarr:/var/lib/tailscale:Z
+      - ./serve-prowlarr.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    network_mode: service:tailscale-prowlarr
+    depends_on:
+      - tailscale-prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - prowlarr-config:/config
+
+  # Sonarr - TV show fetching/organizing, talks to rqbit as its download
+  # client (via host.containers.internal:3030, since rqbit lives inside
+  # gluetun's netns) and prowlarr for indexers.
+  tailscale-sonarr:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-sonarr
+    hostname: sonarr
+    restart: unless-stopped
+    env_file:
+      - /run/agenix/ts_authkey
+    environment:
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale-sonarr:/var/lib/tailscale:Z
+      - ./serve-sonarr.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    network_mode: service:tailscale-sonarr
+    depends_on:
+      - tailscale-sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - sonarr-config:/config
+      - /mnt/nvme-storage/media:/data
+
+  # Radarr - same as sonarr, for movies.
+  tailscale-radarr:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-radarr
+    hostname: radarr
+    restart: unless-stopped
+    env_file:
+      - /run/agenix/ts_authkey
+    environment:
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale-radarr:/var/lib/tailscale:Z
+      - ./serve-radarr.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    network_mode: service:tailscale-radarr
+    depends_on:
+      - tailscale-radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - radarr-config:/config
+      - /mnt/nvme-storage/media:/data
+
 volumes:
   rqbit-config:
   jellyfin-config:
   jellyfin-cache:
+  prowlarr-config:
+  sonarr-config:
+  radarr-config:

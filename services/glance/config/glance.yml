@@ -148,6 +148,12 @@ pages:
                 hide: true
               tailscale-jellyfin:
                 hide: true
+              tailscale-prowlarr:
+                hide: true
+              tailscale-sonarr:
+                hide: true
+              tailscale-radarr:
+                hide: true
               # HTTP services (Tailscale Funnel)
               thelounge:
                 name: The lounge
@@ -232,6 +238,18 @@ pages:
                 name: Jellyfin
                 description: Media frontend
                 url: https://jellyfin.tail538465.ts.net
+              prowlarr:
+                name: Prowlarr
+                description: Indexer manager
+                url: https://prowlarr.tail538465.ts.net
+              sonarr:
+                name: Sonarr
+                description: TV show fetching/organizing
+                url: https://sonarr.tail538465.ts.net
+              radarr:
+                name: Radarr
+                description: Movie fetching/organizing
+                url: https://radarr.tail538465.ts.net
               stirling-pdf:
                 name: Stirling PDF
                 description: PDF manipulation tools

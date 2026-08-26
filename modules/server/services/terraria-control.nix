@@ -71,11 +71,14 @@ in
         users = [ "terraria-control" ];
         commands = [
           {
-            command = "${config.systemd.package}/bin/systemctl start ${cfg.unit}";
+            # Must match the exact path terraria-control's SYSTEMCTL_BIN
+            # invokes (see main.go) — sudo matches commands by literal path,
+            # and this stable symlink is what the app is pinned to.
+            command = "/run/current-system/sw/bin/systemctl start ${cfg.unit}";
             options = [ "NOPASSWD" ];
           }
           {
-            command = "${config.systemd.package}/bin/systemctl stop ${cfg.unit}";
+            command = "/run/current-system/sw/bin/systemctl stop ${cfg.unit}";
             options = [ "NOPASSWD" ];
           }
         ];

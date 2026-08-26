@@ -17,6 +17,12 @@ var (
 	unit         = getEnv("UNIT", "terraria.service")
 	lanInterface = getEnv("LAN_INTERFACE", "eno1")
 	gamePort     = getEnv("GAME_PORT", "7777")
+	// Fixed paths, not resolved via $PATH: systemd gives services a minimal
+	// PATH, and the sudoers rule in terraria-control.nix matches against
+	// this exact systemctl path — resolving it differently here would
+	// silently fail to match and sudo would refuse.
+	sudoBin      = getEnv("SUDO_BIN", "/run/wrappers/bin/sudo")
+	systemctlBin = getEnv("SYSTEMCTL_BIN", "/run/current-system/sw/bin/systemctl")
 	token        = readToken(os.Getenv("TOKEN_FILE"))
 )
 
@@ -55,7 +61,7 @@ func lanIP() string {
 }
 
 func isActive() string {
-	out, _ := exec.Command("systemctl", "is-active", unit).Output()
+	out, _ := exec.Command(systemctlBin, "is-active", unit).Output()
 	return strings.TrimSpace(string(out))
 }
 
@@ -86,7 +92,7 @@ func handleAction(action string) http.HandlerFunc {
 			fmt.Fprint(w, "unauthorized")
 			return
 		}
-		out, err := exec.Command("sudo", "systemctl", action, unit).CombinedOutput()
+		out, err := exec.Command(sudoBin, systemctlBin, action, unit).CombinedOutput()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintf(w, "%s\n%s", err, out)

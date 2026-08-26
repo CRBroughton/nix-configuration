@@ -24,14 +24,14 @@ pages:
           - type: custom-api
             title: Terraria
             cache: 30s
-            url: http://nixos-server.tail538465.ts.net:8088/status
+            url: https://nixos-server.tail538465.ts.net:8443/status
             template: |
               Status: {{ if .JSON.Bool "active" }}running{{ else }}{{ .JSON.String "state" }}{{ end }}
               Connect: {{ .JSON.String "ip" }}:{{ .JSON.String "port" }}
 
           - type: iframe
             title: Terraria Control
-            source: http://nixos-server.tail538465.ts.net:8088/
+            source: https://nixos-server.tail538465.ts.net:8443/
             height: 220
 
       - size: full

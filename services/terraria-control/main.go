@@ -139,7 +139,10 @@ func main() {
 	http.HandleFunc("/start", handleAction("start"))
 	http.HandleFunc("/stop", handleAction("stop"))
 
-	addr := ":" + port
+	// Loopback-only: exposed to the tailnet exclusively via `tailscale serve`
+	// (see terraria-control.nix), which terminates HTTPS. Not bound to
+	// tailscale0 directly so there's no plain-http path onto the tailnet.
+	addr := "127.0.0.1:" + port
 	log.Printf("terraria-control listening on %s", addr)
 	log.Fatal(http.ListenAndServe(addr, nil))
 }

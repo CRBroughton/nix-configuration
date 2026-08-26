@@ -18,7 +18,18 @@ in
     port = lib.mkOption {
       type = lib.types.port;
       default = 8088;
-      description = "Port to listen on (Tailscale interface only).";
+      description = "Loopback-only port the API listens on.";
+    };
+
+    servePort = lib.mkOption {
+      type = lib.types.port;
+      default = 8443;
+      description = ''
+        HTTPS port `tailscale serve` exposes on the tailnet, proxying to
+        the loopback `port` above. Needed because Glance is served over
+        HTTPS — an iframe/fetch pointed at plain http gets blocked as
+        mixed content by the browser.
+      '';
     };
 
     unit = lib.mkOption {
@@ -96,7 +107,21 @@ in
       };
     };
 
-    # Tailnet-only — same pattern as harmonia.nix.
-    networking.firewall.interfaces."tailscale0".allowedTCPPorts = [ cfg.port ];
+    # Terminates HTTPS on the tailnet (valid cert for the MagicDNS name) and
+    # proxies to the loopback-only API — not exposed via the host firewall
+    # at all, only reachable through tailscaled's own serve mechanism.
+    systemd.services.terraria-control-serve = {
+      description = "Tailscale HTTPS proxy for terraria-control";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "tailscaled.service" "terraria-control.service" ];
+      wants = [ "tailscaled.service" "terraria-control.service" ];
+
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "${pkgs.tailscale}/bin/tailscale serve --bg --https=${toString cfg.servePort} http://127.0.0.1:${toString cfg.port}";
+        ExecStop = "${pkgs.tailscale}/bin/tailscale serve --https=${toString cfg.servePort} off";
+      };
+    };
   };
 }

@@ -144,4 +144,19 @@
       "moons-pc"
     ];
   };
+
+  services.terraria-server = {
+    enable = true;
+    difficulty = "expert";
+    # nixpkgs' terraria-server (1.4.5.6) lags the current client (1.4.5.8) —
+    # fetch the matching version directly from terraria.org until nixpkgs
+    # catches up.
+    package = pkgs.terraria-server.overrideAttrs (old: {
+      version = "1.4.5.8";
+      src = pkgs.fetchurl {
+        url = "https://terraria.org/api/download/pc-dedicated-server/terraria-server-1458.zip";
+        sha256 = "sha256-9ROkrJeJ00r3Zika4hfJzX2UcuE3gqDisXUS9w16gzQ=";
+      };
+    });
+  };
 }

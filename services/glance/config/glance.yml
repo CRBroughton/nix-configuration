@@ -144,7 +144,7 @@ pages:
                 hide: true
               gluetun-rqbit:
                 hide: true
-              tailscale-rqbit:
+              tailscale-qbittorrent:
                 hide: true
               tailscale-jellyfin:
                 hide: true
@@ -230,10 +230,10 @@ pages:
                 name: Prometheus
                 description: Metrics storage and query engine
                 url: https://prometheus.tail538465.ts.net
-              rqbit:
-                name: rqbit
+              qbittorrent:
+                name: qBittorrent
                 description: Torrent client (via PIA VPN)
-                url: https://rqbit.tail538465.ts.net
+                url: https://qbittorrent.tail538465.ts.net
               jellyfin:
                 name: Jellyfin
                 description: Media frontend

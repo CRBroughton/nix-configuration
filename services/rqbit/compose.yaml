@@ -1,16 +1,16 @@
-# rqbit - Torrent client, routed exclusively through PIA (gluetun)
+# Media stack - torrent download (PIA killswitch), *arr automation, Jellyfin.
 # Run with: podman compose up -d
 #
 # Network topology: gluetun owns the network namespace and holds the PIA
-# tunnel + killswitch firewall. Both tailscale-rqbit and rqbit join that
-# namespace via network_mode: service:gluetun, so rqbit has no route to
-# the internet other than through the VPN tunnel - if the tunnel drops,
-# gluetun's firewall blocks all traffic (including rqbit's) until it's
-# back up.
+# tunnel + killswitch firewall. qbittorrent and tailscale-qbittorrent join
+# that namespace via network_mode: service:gluetun, so qbittorrent has no
+# route to the internet other than through the VPN tunnel - if the tunnel
+# drops, gluetun's firewall blocks all traffic (including qbittorrent's)
+# until it's back up.
 #
-# Storage layout: /mnt/nvme-storage/media/{movies,tv} - when adding a
-# torrent in rqbit, set its output folder to movies/ or tv/ so Jellyfin
-# picks it up as the right library type.
+# Storage layout: /mnt/nvme-storage/media/{movies,tv} - sonarr/radarr manage
+# this automatically; for manual adds in qbittorrent, set save path to
+# /downloads/movies or /downloads/tv so Jellyfin picks it up correctly.
 
 services:
   gluetun:
@@ -32,11 +32,13 @@ services:
     volumes:
       - ./gluetun:/gluetun
     ports:
-      # rqbit's API and qbittorrent's WebUI, published to localhost only so
-      # sonarr/radarr (outside gluetun's netns) can reach them as download
-      # clients via host.containers.internal:<port>
-      - 127.0.0.1:3030:3030
-      - 127.0.0.1:8090:8090
+      # qbittorrent's WebUI, so sonarr/radarr (outside gluetun's netns) can
+      # reach it as a download client via host.containers.internal:8090.
+      # Bound to 0.0.0.0 rather than 127.0.0.1 because rootless podman's NAT
+      # (pasta/slirp4netns) doesn't present as true loopback traffic - not
+      # exposed externally since this port isn't in the host firewall's
+      # allowed list.
+      - 8090:8090
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:9999"]
       interval: 15s
@@ -44,10 +46,12 @@ services:
       retries: 3
       start_period: 20s
 
-  tailscale-rqbit:
+  # Tailscale sidecar for gluetun's netns - exposes qbittorrent's WebUI (see
+  # serve.json: plain TCP forward on 8090, no HTTPS termination needed).
+  tailscale-qbittorrent:
     image: tailscale/tailscale:latest
-    container_name: tailscale-rqbit
-    hostname: rqbit
+    container_name: tailscale-qbittorrent
+    hostname: qbittorrent
     restart: unless-stopped
     network_mode: service:gluetun
     depends_on:
@@ -59,31 +63,14 @@ services:
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_SERVE_CONFIG=/config/serve.json
     volumes:
-      - ./tailscale:/var/lib/tailscale:Z
+      - ./tailscale-qbittorrent:/var/lib/tailscale:Z
       - ./serve.json:/config/serve.json:ro,Z
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
 
-  rqbit:
-    image: ikatson/rqbit:latest
-    container_name: rqbit
-    restart: unless-stopped
-    network_mode: service:gluetun
-    depends_on:
-      gluetun:
-        condition: service_healthy
-    command: >
-      --http-api-listen-addr 0.0.0.0:3030
-      server start
-      /downloads
-    volumes:
-      - /mnt/nvme-storage/media:/downloads
-      - rqbit-config:/home/rqbit
-
-  # qBittorrent - download client for sonarr/radarr (rqbit isn't supported by
-  # the stable Sonarr/Radarr releases yet). Same PIA killswitch protection as
-  # rqbit - joins gluetun's netns instead of getting its own.
+  # qBittorrent - download client for sonarr/radarr. Same PIA killswitch
+  # protection - joins gluetun's netns instead of getting its own.
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -237,7 +224,6 @@ services:
       - /mnt/nvme-storage/media:/data
 
 volumes:
-  rqbit-config:
   qbittorrent-config:
   jellyfin-config:
   jellyfin-cache:

@@ -127,6 +127,7 @@
   modules.monitoringNode.enable = true;
   modules.server.containerAutoUpdate.enable = true;
   modules.server.services.harmonia.enable = true;
+  modules.server.services.terraria-control.enable = true;
   services.trove = {
     enable = true;
     port = 8082;

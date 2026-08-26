@@ -18,4 +18,9 @@ in
     nixos-server
     craig
   ];
+
+  "nixos-server/terraria_control_token.age".publicKeys = [
+    nixos-server
+    craig
+  ];
 }

@@ -38,6 +38,8 @@ in
         inputs.home-manager.nixosModules.home-manager
         inputs.nix-flatpak.nixosModules.nix-flatpak
         inputs.agenix.nixosModules.default
+        inputs.nix-modules.nixosModules.factorio-server
+        inputs.nix-modules.nixosModules.terraria-server
 
         # Shared modules
         ../modules/common.nix

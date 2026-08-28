@@ -41,6 +41,20 @@ let
 
     tail --pid="$1" -f /dev/null
   '';
+
+  # -difficulty/-seed aren't real CLI flags (TerrariaServer silently
+  # ignores unrecognized args instead of erroring) — they only exist as
+  # serverconfig.txt keys loaded via -config. See nix-modules'
+  # terraria-server module for the same fix applied to the main server.
+  terrariaExpertConfigFile = pkgs.writeText "terraria-expert-serverconfig.txt" ''
+    world=${terrariaExpertDataDir}/Worlds/world.wld
+    autocreate=2
+    seed=441227047
+    difficulty=1
+    maxplayers=255
+    port=7778
+    upnp=1
+  '';
 in
 {
   imports = [
@@ -215,8 +229,7 @@ in
       Type = "forking";
       GuessMainPID = true;
       UMask = 7;
-      ExecStart = "${terrariaExpertTmuxCmd} new -d ${lib.getExe terrariaServerPkg} "
-        + ''-port 7778 -maxPlayers 255 -world "${terrariaExpertDataDir}/Worlds/world.wld" -autocreate 2 -difficulty 1 -seed "441227047"'';
+      ExecStart = "${terrariaExpertTmuxCmd} new -d ${lib.getExe terrariaServerPkg} -config ${terrariaExpertConfigFile}";
       ExecStop = "${terrariaExpertStopScript} $MAINPID";
     };
   };

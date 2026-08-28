@@ -1,9 +1,47 @@
 # NixOS Server - Home server running Podman containers
 {
   pkgs,
+  lib,
   ...
 }:
 
+let
+  # nixpkgs' terraria-server (1.4.5.6) lags the current client (1.4.5.8) —
+  # fetch the matching version directly from terraria.org until nixpkgs
+  # catches up. Shared by the main server and terraria-expert below.
+  terrariaServerPkg = pkgs.terraria-server.overrideAttrs (old: {
+    version = "1.4.5.8";
+    src = pkgs.fetchurl {
+      url = "https://terraria.org/api/download/pc-dedicated-server/terraria-server-1458.zip";
+      sha256 = "sha256-9ROkrJeJ00r3Zika4hfJzX2UcuE3gqDisXUS9w16gzQ=";
+    };
+  });
+
+  terrariaExpertDataDir = "/var/lib/terraria-expert";
+
+  # nixpkgs' services.terraria is a singleton (one systemd unit, one
+  # hardcoded user), so a second parallel server can't go through our
+  # terraria-server module a second time — this reimplements the same
+  # tmux-wrapped ExecStart/ExecStop pattern nixpkgs' terraria.nix uses,
+  # scoped to its own user/dataDir/port.
+  terrariaExpertTmuxCmd = "${lib.getExe pkgs.tmux} -S ${terrariaExpertDataDir}/terraria-expert.sock";
+
+  terrariaExpertStopScript = pkgs.writeShellScript "terraria-expert-stop" ''
+    if ! [ -d "/proc/$1" ]; then
+      exit 0
+    fi
+
+    lastline=$(${terrariaExpertTmuxCmd} capture-pane -p | grep . | tail -n1)
+
+    if [[ "$lastline" =~ ^'Choose World' ]]; then
+      ${terrariaExpertTmuxCmd} kill-session
+    else
+      ${terrariaExpertTmuxCmd} send-keys Enter exit Enter
+    fi
+
+    tail --pid="$1" -f /dev/null
+  '';
+in
 {
   imports = [
     ./hardware.nix
@@ -78,9 +116,11 @@
       9090 # Linkding
       9925 # Mealie
       64738 # Mumble
+      7778 # Terraria (expert)
     ];
     allowedUDPPorts = [
       64738 # Mumble voice
+      7778 # Terraria (expert)
     ];
   };
 
@@ -149,15 +189,35 @@
   services.terraria-server = {
     enable = true;
     difficulty = "expert";
-    # nixpkgs' terraria-server (1.4.5.6) lags the current client (1.4.5.8) —
-    # fetch the matching version directly from terraria.org until nixpkgs
-    # catches up.
-    package = pkgs.terraria-server.overrideAttrs (old: {
-      version = "1.4.5.8";
-      src = pkgs.fetchurl {
-        url = "https://terraria.org/api/download/pc-dedicated-server/terraria-server-1458.zip";
-        sha256 = "sha256-9ROkrJeJ00r3Zika4hfJzX2UcuE3gqDisXUS9w16gzQ=";
-      };
-    });
+    package = terrariaServerPkg;
+  };
+
+  # Second, parallel server: expert mode, generated with the same seed as
+  # the main (classic) world so the terrain matches. See the
+  # terrariaExpert* let-bindings above for why this isn't just a second
+  # services.terraria-server block.
+  users.users.terraria-expert = {
+    isSystemUser = true;
+    group = "terraria-expert";
+    home = terrariaExpertDataDir;
+    createHome = true;
+  };
+  users.groups.terraria-expert = { };
+
+  systemd.services.terraria-expert = {
+    description = "Terraria Expert Server Service";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network.target" ];
+
+    serviceConfig = {
+      User = "terraria-expert";
+      Group = "terraria-expert";
+      Type = "forking";
+      GuessMainPID = true;
+      UMask = 7;
+      ExecStart = "${terrariaExpertTmuxCmd} new -d ${lib.getExe terrariaServerPkg} "
+        + ''-port 7778 -maxPlayers 255 -world "${terrariaExpertDataDir}/Worlds/world.wld" -autocreate 2 -difficulty 1 -seed "441227047"'';
+      ExecStop = "${terrariaExpertStopScript} $MAINPID";
+    };
   };
 }

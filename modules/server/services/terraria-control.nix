@@ -124,6 +124,12 @@ in
         RemainAfterExit = true;
         ExecStart = "${pkgs.tailscale}/bin/tailscale serve --bg --https=${toString cfg.servePort} http://127.0.0.1:${toString cfg.port}";
         ExecStop = "${pkgs.tailscale}/bin/tailscale serve --https=${toString cfg.servePort} off";
+        # tailscaled reports itself "active" before its backend socket is
+        # ready to accept `tailscale serve` calls, which occasionally fails
+        # this unit right after a switch restarts tailscaled. Retry instead
+        # of leaving the activation in a failed state.
+        Restart = "on-failure";
+        RestartSec = "2s";
       };
     };
   };

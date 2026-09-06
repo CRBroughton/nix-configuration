@@ -223,6 +223,39 @@ services:
       - radarr-config:/config
       - /mnt/nvme-storage/media:/data
 
+  # Lidarr - music fetching/organizing, same pattern as sonarr/radarr.
+  tailscale-lidarr:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-lidarr
+    hostname: lidarr
+    restart: unless-stopped
+    env_file:
+      - /run/agenix/ts_authkey
+    environment:
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+      - ./tailscale-lidarr:/var/lib/tailscale:Z
+      - ./serve-lidarr.json:/config/serve.json:ro,Z
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    restart: unless-stopped
+    network_mode: service:tailscale-lidarr
+    depends_on:
+      - tailscale-lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - lidarr-config:/config
+      - /mnt/nvme-storage/media:/data
+
 volumes:
   qbittorrent-config:
   jellyfin-config:
@@ -230,3 +263,4 @@ volumes:
   prowlarr-config:
   sonarr-config:
   radarr-config:
+  lidarr-config:

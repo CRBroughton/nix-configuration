@@ -121,6 +121,7 @@ services:
       - jellyfin-cache:/cache
       - /mnt/nvme-storage/media/movies:/data/movies:ro
       - /mnt/nvme-storage/media/tv:/data/tv:ro
+      - /mnt/nvme-storage/media/music:/data/music:ro
 
   # Prowlarr - indexer manager, feeds search results to sonarr/radarr.
   # Not routed through PIA - only rqbit's actual downloads need the tunnel.

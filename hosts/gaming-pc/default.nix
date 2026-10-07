@@ -41,6 +41,7 @@
     pciutils
     usbutils 
     reaper
+    libreoffice
   ];
 
   # Modules

@@ -14,7 +14,7 @@ let
 
   src = pkgs.fetchurl {
     url = "https://live.albiononline.com/clients/${version}/albion-online-setup";
-    hash = "sha256-ynI9RglRofEDbNQttBdsxBqMGDzHSaTQTZf5KiYDCps=";
+    hash = "sha256-S/vDrKJn28v5weLJHWCqxU5/ozSDCFmETdbtnNlDSW0=";
   };
 
   gameDeps =

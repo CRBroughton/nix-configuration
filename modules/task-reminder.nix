@@ -12,7 +12,10 @@ let
   mkReminder =
     { time ? null, every ? null, task }:
     let
-      safeTask = builtins.replaceStrings [ " " ":" "/" ] [ "-" "-" "-" ] task;
+      # systemd unit names only allow [A-Za-z0-9:_.\-@]; map anything else to "-"
+      safeTask = lib.concatMapStrings (
+        c: if builtins.match "[A-Za-z0-9_.-]" c != null then c else "-"
+      ) (lib.stringToCharacters task);
       safeKey =
         if every != null then "every-${toString every}h" else builtins.replaceStrings [ ":" ] [ "-" ] time;
       unitName = "task-reminder-${safeKey}-${safeTask}";

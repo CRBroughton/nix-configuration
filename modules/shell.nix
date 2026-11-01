@@ -28,6 +28,10 @@ in
           set -gx CGO_ENABLED 1
           set -gx PNPM_HOME "$HOME/.local/share/pnpm"
           set -gx PATH "$PNPM_HOME" $PATH
+          # Claude Code self-updates to ~/.local/bin, ahead of nixpkgs' pinned
+          # claude-code (which lags upstream releases) — put it first so the
+          # self-updated binary wins over the nix profile one.
+          set -gx PATH "$HOME/.local/bin" $PATH
         '';
         functions = {
           # Use local justfile if exists, otherwise fallback to nix-configuration

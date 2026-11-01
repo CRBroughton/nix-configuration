@@ -19,9 +19,16 @@
   programs.fish.enable = true;
   security.sudo.wheelNeedsPassword = false;
 
+  # macOS test VM (quickemu), see ~/code/nix-mac-vm/PLAN.md
+  # macOS guests trip over unsupported MSRs without this
+  boot.extraModprobeConfig = "options kvm ignore_msrs=1 report_ignored_msrs=0";
+  users.users.craig.extraGroups = [ "kvm" ];
+
   environment.systemPackages = with pkgs; [
     pciutils
     usbutils
+    libreoffice
+    quickemu
   ];
 
   # Laptop power management

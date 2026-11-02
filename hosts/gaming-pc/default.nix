@@ -76,5 +76,6 @@
   modules.monitoringNode.enable = true;
   modules.claude-desktop.enable = true;
   modules.ascension.enable = true;
+  modules.battlenet.enable = true;
   modules.albionOnline.enable = true;
 }

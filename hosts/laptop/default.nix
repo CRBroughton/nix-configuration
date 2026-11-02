@@ -66,4 +66,5 @@
   modules.editors.zed.enable = true;
   modules.browsers.zen.enable = true;
   modules.albionOnline.enable = true;
+  modules.battlenet.enable = true;
 }
